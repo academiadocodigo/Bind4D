@@ -66,7 +66,7 @@ var
   aJson : TJsonObject;
 begin
   Memo1.Lines.Clear;
-  aJson := TBindFormJson.New.FormToJson(Self, fbGet);
+  aJson := TBind4D.New.FormToJson(Self, fbGet);
   try
     Memo1.Lines.Add(aJson.ToString);
   finally
@@ -79,7 +79,7 @@ var
   aJson : TJsonObject;
 begin
   Memo1.Lines.Clear;
-  aJson := TBindFormJson.New.FormToJson(Self, fbPost);
+  aJson := TBind4D.New.FormToJson(Self, fbPost);
   try
     Memo1.Lines.Add(aJson.ToString);
   finally
@@ -92,7 +92,7 @@ var
   aJson : TJsonObject;
 begin
   Memo1.Lines.Clear;
-  aJson := TBindFormJson.New.FormToJson(Self, fbPut);
+  aJson := TBind4D.New.FormToJson(Self, fbPut);
   try
     Memo1.Lines.Add(aJson.ToString);
   finally
@@ -105,7 +105,7 @@ var
   aJson : TJsonObject;
 begin
   Memo1.Lines.Clear;
-  aJson := TBindFormJson.New.FormToJson(Self, fbDelete);
+  aJson := TBind4D.New.FormToJson(Self, fbDelete);
   try
     Memo1.Lines.Add(aJson.ToString);
   finally
