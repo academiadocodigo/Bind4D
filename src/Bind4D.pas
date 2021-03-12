@@ -145,7 +145,7 @@ type
     function FormToJson(aForm : TForm; aType : TTypeBindFormJson) : TJsonObject;
     procedure ClearFieldForm(aForm : TForm);
     procedure BindDataSetToForm(aForm : TForm; aDataSet : TDataSet);
-    procedure BindFormatListDataSet(aForm : TForm; aDataSet : TDataSet);
+    procedure BindFormatListDataSet(aForm : TForm; aDataSet : TDataSet; aDBGrid : TDBGrid);
     procedure BindClassToForm (aForm : TForm; var aEndPoint : String; var aPK : String; var aTitle : String);
     function GetFieldsByType (aForm : TForm; aType : TTypeBindFormJson) : String;
     procedure SetStyleComponents (aForm : TForm);
@@ -162,7 +162,7 @@ type
       function FormToJson(aForm : TForm; aType : TTypeBindFormJson) : TJsonObject;
       procedure ClearFieldForm(aForm : TForm);
       procedure BindDataSetToForm(aForm : TForm; aDataSet : TDataSet);
-      procedure BindFormatListDataSet(aForm : TForm; aDataSet : TDataSet);
+      procedure BindFormatListDataSet(aForm : TForm; aDataSet : TDataSet; aDBGrid : TDBGrid);
       procedure BindClassToForm (aForm : TForm; var aEndPoint : String; var aPK : String; var aTitle : String);
       function GetFieldsByType (aForm : TForm; aType : TTypeBindFormJson) : String;
       procedure SetStyleComponents (aForm : TForm);
@@ -261,11 +261,14 @@ begin
 
 end;
 
-procedure TBind4D.BindFormatListDataSet(aForm: TForm; aDataSet: TDataSet);
+procedure TBind4D.BindFormatListDataSet(aForm : TForm; aDataSet : TDataSet; aDBGrid : TDBGrid);
 var
   ctxRtti : TRttiContext;
   typRtti : TRttiType;
   prpRtti : TRttiField;
+  aAux1: Integer;
+  aAux2: Integer;
+  i: Integer;
 begin
   ctxRtti := TRttiContext.Create;
   try
@@ -276,10 +279,23 @@ begin
         if prpRtti.Tem<FieldDataSetBind> then
         begin
           aDataSet.FieldByName(prpRtti.GetAttribute<FieldDataSetBind>.FFieldName).Visible := prpRtti.GetAttribute<FieldDataSetBind>.FVisible;
-          aDataSet.FieldByName(prpRtti.GetAttribute<FieldDataSetBind>.FFieldName).DisplayLabel := prpRtti.GetAttribute<FieldDataSetBind>.FDisplayName;
-          aDataSet.FieldByName(prpRtti.GetAttribute<FieldDataSetBind>.FFieldName).DisplayWidth := prpRtti.GetAttribute<FieldDataSetBind>.FWidth;
+          if aDataSet.FieldByName(prpRtti.GetAttribute<FieldDataSetBind>.FFieldName).Visible then
+          begin
+            aDataSet.FieldByName(prpRtti.GetAttribute<FieldDataSetBind>.FFieldName).DisplayLabel := prpRtti.GetAttribute<FieldDataSetBind>.FDisplayName;
+            aDataSet.FieldByName(prpRtti.GetAttribute<FieldDataSetBind>.FFieldName).DisplayWidth := Round((prpRtti.GetAttribute<FieldDataSetBind>.FWidth * aDBGrid.Width ) / 1000);
+          end;
         end;
       end;
+
+      aAux1 := 0;
+      for i := 0 to aDBGrid.Columns.Count-1 do
+        aAux1 := aAux1 + aDBGrid.Columns[i].Width;
+
+      aAux2 := Round(((aDBGrid.Width - 29) - aAux1) / aDBGrid.Columns.Count);
+
+      for i := 0 to aDBGrid.Columns.Count-1 do
+        aDBGrid.Columns[i].Width := aDBGrid.Columns[i].Width + aAux2;
+
     except
       //
     end;
