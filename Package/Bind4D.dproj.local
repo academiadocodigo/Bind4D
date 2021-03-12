@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
-  <Transactions>
-    <Transaction>2021/03/11 09:07:53.600,=rtl.dcp</Transaction>
-    <Transaction>2021/03/11 09:08:00.510,C:\Users\thuli\Documents\Embarcadero\Studio\Projects\BindFormJson.dproj=C:\Users\thuli\Documents\Embarcadero\Studio\Projects\Package1.dproj</Transaction>
-    <Transaction>2021/03/11 09:08:29.017,D:\Projetos\Componentes\BindFormJson\BindFormJson.git\trunk\Package\BindFormJson.dproj=C:\Users\thuli\Documents\Embarcadero\Studio\Projects\BindFormJson.dproj</Transaction>
-    <Transaction>2021/03/11 09:08:42.003,=D:\Projetos\Componentes\BindFormJson\BindFormJson.git\trunk\src\BindFormJson.pas</Transaction>
-    <Transaction>2021/03/11 09:08:49.027,=vcl.dcp</Transaction>
-    <Transaction>2021/03/11 14:09:08.753,D:\Projetos\Componentes\BindFormJson\BindFormJson.git\trunk\Package\Bind4D.dproj=D:\Projetos\Componentes\BindFormJson\BindFormJson.git\trunk\Package\BindFormJson.dproj</Transaction>
+	<Transactions>
+    <Transaction>2021/03/11 09:07:53.000.600,=rtl.dcp</Transaction>
+    <Transaction>2021/03/11 09:08:00.000.510,C:\Users\thuli\Documents\Embarcadero\Studio\Projects\BindFormJson.dproj=C:\Users\thuli\Documents\Embarcadero\Studio\Projects\Package1.dproj</Transaction>
+    <Transaction>2021/03/11 09:08:29.000.017,D:\Projetos\Componentes\BindFormJson\BindFormJson.git\trunk\Package\BindFormJson.dproj=C:\Users\thuli\Documents\Embarcadero\Studio\Projects\BindFormJson.dproj</Transaction>
+    <Transaction>2021/03/11 09:08:42.000.003,=D:\Projetos\Componentes\BindFormJson\BindFormJson.git\trunk\src\BindFormJson.pas</Transaction>
+    <Transaction>2021/03/11 09:08:49.000.027,=vcl.dcp</Transaction>
+    <Transaction>2021/03/11 14:09:08.000.753,D:\Projetos\Componentes\BindFormJson\BindFormJson.git\trunk\Package\Bind4D.dproj=D:\Projetos\Componentes\BindFormJson\BindFormJson.git\trunk\Package\BindFormJson.dproj</Transaction>
   </Transactions>
 </BorlandProject>
