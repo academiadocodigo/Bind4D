@@ -14,6 +14,8 @@ uses
   Vcl.Dialogs,
   Vcl.StdCtrls,
   Vcl.ExtCtrls,
+  Vcl.DBGrids,
+  Vcl.Buttons,
   Data.DB;
 
 type
@@ -43,6 +45,24 @@ type
       property EndPoint : String read FEndPoint write SetEndPoint;
       property PK : String read FPK write SetPK;
       property Title : String read FTitle write SetTitle;
+  end;
+
+  ComponentBindStyle = class(TCustomAttribute)
+    private
+    FFontSize: Integer;
+    FColor: TColor;
+    FFontColor: TColor;
+    FFontName: String;
+    procedure SetColor(const Value: TColor);
+    procedure SetFontColor(const Value: TColor);
+    procedure SetFontSize(const Value: Integer);
+    procedure SetFontName(const Value: String);
+    public
+      constructor Create( aColor : TColor; aFontSize : Integer; aFontColor : TColor; aFontName : String = 'Tahoma');
+      property Color : TColor read FColor write SetColor;
+      property FontSize : Integer read FFontSize write SetFontSize;
+      property FontColor : TColor read FFontColor write SetFontColor;
+      property FontName : String read FFontName write SetFontName;
   end;
 
 
@@ -87,7 +107,7 @@ type
 
   TTypeBindFormJson = (fbGet, fbPost, fbPut, fbDelete);
 
-  iBindFormJson = interface
+  iBind4D = interface
     ['{2846B843-7533-4987-B7B4-72F7B5654D1A}']
     function FormToJson(aForm : TForm; aType : TTypeBindFormJson) : TJsonObject;
     procedure ClearFieldForm(aForm : TForm);
@@ -95,22 +115,24 @@ type
     procedure BindFormatListDataSet(aForm : TForm; aDataSet : TDataSet);
     procedure BindClassToForm (aForm : TForm; var aEndPoint : String; var aPK : String; var aTitle : String);
     function GetFieldsByType (aForm : TForm; aType : TTypeBindFormJson) : String;
+    procedure SetStyleComponents (aForm : TForm);
   end;
 
-  TBindFormJson = class(TInterfacedObject, iBindFormJson)
+  TBind4D = class(TInterfacedObject, iBind4D)
     private
       function __GetComponentToValue(aComponent: TComponent): TValue;
       procedure __BindValueToComponent(aComponent: TComponent; aValue: Variant);
     public
       constructor Create;
       destructor Destroy; override;
-      class function New : iBindFormJson;
+      class function New : iBind4D;
       function FormToJson(aForm : TForm; aType : TTypeBindFormJson) : TJsonObject;
       procedure ClearFieldForm(aForm : TForm);
       procedure BindDataSetToForm(aForm : TForm; aDataSet : TDataSet);
       procedure BindFormatListDataSet(aForm : TForm; aDataSet : TDataSet);
       procedure BindClassToForm (aForm : TForm; var aEndPoint : String; var aPK : String; var aTitle : String);
       function GetFieldsByType (aForm : TForm; aType : TTypeBindFormJson) : String;
+      procedure SetStyleComponents (aForm : TForm);
   end;
 
 implementation
@@ -131,9 +153,9 @@ begin
   FJsonName := Value;
 end;
 
-{ TBindFormJson }
+{ TBind4D }
 
-procedure TBindFormJson.__BindValueToComponent(aComponent: TComponent;
+procedure TBind4D.__BindValueToComponent(aComponent: TComponent;
   aValue: Variant);
 begin
   if VarIsNull(aValue) then exit;
@@ -153,7 +175,7 @@ begin
     (aComponent as TShape).Brush.Color := aValue;
 end;
 
-procedure TBindFormJson.BindClassToForm(aForm : TForm; var aEndPoint : String; var aPK : String; var aTitle : String);
+procedure TBind4D.BindClassToForm(aForm : TForm; var aEndPoint : String; var aPK : String; var aTitle : String);
 var
   vCtxRtti: TRttiContext;
   vTypRtti: TRttiType;
@@ -170,7 +192,7 @@ begin
   end;
 end;
 
-procedure TBindFormJson.BindDataSetToForm(aForm: TForm; aDataSet: TDataSet);
+procedure TBind4D.BindDataSetToForm(aForm: TForm; aDataSet: TDataSet);
 var
   ctxRtti : TRttiContext;
   typRtti : TRttiType;
@@ -195,7 +217,7 @@ begin
 
 end;
 
-procedure TBindFormJson.BindFormatListDataSet(aForm: TForm; aDataSet: TDataSet);
+procedure TBind4D.BindFormatListDataSet(aForm: TForm; aDataSet: TDataSet);
 var
   ctxRtti : TRttiContext;
   typRtti : TRttiType;
@@ -223,7 +245,7 @@ begin
 
 end;
 
-procedure TBindFormJson.ClearFieldForm(aForm : TForm);
+procedure TBind4D.ClearFieldForm(aForm : TForm);
 var
   ctxRtti : TRttiContext;
   typRtti : TRttiType;
@@ -257,18 +279,18 @@ begin
 
 end;
 
-constructor TBindFormJson.Create;
+constructor TBind4D.Create;
 begin
 
 end;
 
-destructor TBindFormJson.Destroy;
+destructor TBind4D.Destroy;
 begin
 
   inherited;
 end;
 
-function TBindFormJson.FormToJson(aForm : TForm; aType : TTypeBindFormJson) : TJsonObject;
+function TBind4D.FormToJson(aForm : TForm; aType : TTypeBindFormJson) : TJsonObject;
 var
   ctxRtti : TRttiContext;
   typRtti : TRttiType;
@@ -326,7 +348,7 @@ begin
   end;
 end;
 
-function TBindFormJson.GetFieldsByType(aForm : TForm; aType : TTypeBindFormJson) : String;
+function TBind4D.GetFieldsByType(aForm : TForm; aType : TTypeBindFormJson) : String;
 var
   ctxRtti : TRttiContext;
   typRtti : TRttiType;
@@ -370,7 +392,7 @@ begin
 
 end;
 
-function TBindFormJson.__GetComponentToValue(aComponent: TComponent): TValue;
+function TBind4D.__GetComponentToValue(aComponent: TComponent): TValue;
 var
   a: string;
 begin
@@ -391,12 +413,101 @@ begin
   a := Result.TOString;
 end;
 
-class function TBindFormJson.New: iBindFormJson;
+class function TBind4D.New: iBind4D;
 begin
   Result := Self.Create;
 end;
 
 
+
+procedure TBind4D.SetStyleComponents(aForm: TForm);
+var
+  ctxRtti : TRttiContext;
+  typRtti : TRttiType;
+  prpRtti : TRttiField;
+  aComponent : TComponent;
+begin
+  ctxRtti := TRttiContext.Create;
+  try
+    typRtti := ctxRtti.GetType(aForm.ClassInfo);
+    for prpRtti in typRtti.GetFields do
+    begin
+      if prpRtti.Tem<ComponentBindStyle> then
+      begin
+        aComponent := aForm.FindComponent(prpRtti.Name);
+
+        if aComponent is TPanel then
+        begin
+          (aComponent as TPanel).ParentBackground := False;
+          (aComponent as TPanel).Color := prpRtti.GetAttribute<ComponentBindStyle>.FColor;
+          (aComponent as TPanel).Font.Size := prpRtti.GetAttribute<ComponentBindStyle>.FFontSize;
+          (aComponent as TPanel).Font.Color := prpRtti.GetAttribute<ComponentBindStyle>.FFontColor;
+          (aComponent as TPanel).Font.Name := prpRtti.GetAttribute<ComponentBindStyle>.FFontName;
+        end;
+
+        if aComponent is TLabel then
+        begin
+          (aComponent as TLabel).StyleElements := [seClient, seBorder];
+          (aComponent as TLabel).Color := prpRtti.GetAttribute<ComponentBindStyle>.FColor;
+          (aComponent as TLabel).Font.Size := prpRtti.GetAttribute<ComponentBindStyle>.FFontSize;
+          (aComponent as TLabel).Font.Color := prpRtti.GetAttribute<ComponentBindStyle>.FFontColor;
+          (aComponent as TLabel).Font.Name := prpRtti.GetAttribute<ComponentBindStyle>.FFontName;
+        end;
+
+        if aComponent is TEdit then
+        begin
+          (aComponent as TEdit).StyleElements := [seClient, seBorder];
+          (aComponent as TEdit).Color := prpRtti.GetAttribute<ComponentBindStyle>.FColor;
+          (aComponent as TEdit).Font.Size := prpRtti.GetAttribute<ComponentBindStyle>.FFontSize;
+          (aComponent as TEdit).Font.Color := prpRtti.GetAttribute<ComponentBindStyle>.FFontColor;
+          (aComponent as TEdit).Font.Name := prpRtti.GetAttribute<ComponentBindStyle>.FFontName;
+        end;
+
+        if aComponent is TDBGrid then
+        begin
+          (aComponent as TDBGrid).StyleElements := [seClient, seBorder];
+          (aComponent as TDBGrid).Color := prpRtti.GetAttribute<ComponentBindStyle>.FColor;
+          (aComponent as TDBGrid).Font.Size := prpRtti.GetAttribute<ComponentBindStyle>.FFontSize;
+          (aComponent as TDBGrid).Font.Color := prpRtti.GetAttribute<ComponentBindStyle>.FFontColor;
+          (aComponent as TDBGrid).Font.Name := prpRtti.GetAttribute<ComponentBindStyle>.FFontName;
+        end;
+
+        if aComponent is TSpeedButton then
+        begin
+          (aComponent as TSpeedButton).StyleElements := [seClient, seBorder];
+          (aComponent as TSpeedButton).Font.Size := prpRtti.GetAttribute<ComponentBindStyle>.FFontSize;
+          (aComponent as TSpeedButton).Font.Color := prpRtti.GetAttribute<ComponentBindStyle>.FFontColor;
+          (aComponent as TSpeedButton).Font.Name := prpRtti.GetAttribute<ComponentBindStyle>.FFontName;
+        end;
+
+//        if aComponent is TComboBox then
+//        begin
+//          (aComponent as TComboBox).ItemIndex := -1;
+//        end;
+//
+//        if aComponent is TRadioGroup then
+//        begin
+//          (aComponent as TRadioGroup).ItemIndex := -1;
+//        end;
+//
+//        if aComponent is TTrackBar then
+//        begin
+//          (aComponent as TTrackBar).Position := 0;
+//        end;
+//
+//        if aComponent is TDateTimePicker then
+//        begin
+//          (aComponent as TDateTimePicker).Date := now;
+//        end;
+
+      end;
+
+    end;
+  finally
+    ctxRtti.Free;
+  end;
+
+end;
 
 { TRttiFieldHelper }
 
@@ -485,6 +596,36 @@ end;
 function TRttiTypeHelper.Tem<T>: Boolean;
 begin
   Result := GetAttribute<T> <> nil
+end;
+
+{ ComponentBindStyle }
+
+constructor ComponentBindStyle.Create( aColor : TColor; aFontSize : Integer; aFontColor : TColor; aFontName : String = 'Tahoma');
+begin
+  FColor := aColor;
+  FFontSize := aFontSize;
+  FFontColor := aFontColor;
+  FFontName := aFontName;
+end;
+
+procedure ComponentBindStyle.SetColor(const Value: TColor);
+begin
+  FColor := Value;
+end;
+
+procedure ComponentBindStyle.SetFontColor(const Value: TColor);
+begin
+  FFontColor := Value;
+end;
+
+procedure ComponentBindStyle.SetFontName(const Value: String);
+begin
+  FFontName := Value;
+end;
+
+procedure ComponentBindStyle.SetFontSize(const Value: Integer);
+begin
+  FFontSize := Value;
 end;
 
 end.
