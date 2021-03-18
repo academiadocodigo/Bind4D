@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Bind4D,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, BindFormJson,
   Vcl.ComCtrls, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client;
@@ -66,7 +66,7 @@ var
   aJson : TJsonObject;
 begin
   Memo1.Lines.Clear;
-  aJson := TBind4D.New.FormToJson(Self, fbGet);
+  aJson := TBindFormJson.New.FormToJson(Self, fbGet);
   try
     Memo1.Lines.Add(aJson.ToString);
   finally
@@ -79,7 +79,7 @@ var
   aJson : TJsonObject;
 begin
   Memo1.Lines.Clear;
-  aJson := TBind4D.New.FormToJson(Self, fbPost);
+  aJson := TBindFormJson.New.FormToJson(Self, fbPost);
   try
     Memo1.Lines.Add(aJson.ToString);
   finally
@@ -92,7 +92,7 @@ var
   aJson : TJsonObject;
 begin
   Memo1.Lines.Clear;
-  aJson := TBind4D.New.FormToJson(Self, fbPut);
+  aJson := TBindFormJson.New.FormToJson(Self, fbPut);
   try
     Memo1.Lines.Add(aJson.ToString);
   finally
@@ -105,7 +105,7 @@ var
   aJson : TJsonObject;
 begin
   Memo1.Lines.Clear;
-  aJson := TBind4D.New.FormToJson(Self, fbDelete);
+  aJson := TBindFormJson.New.FormToJson(Self, fbDelete);
   try
     Memo1.Lines.Add(aJson.ToString);
   finally

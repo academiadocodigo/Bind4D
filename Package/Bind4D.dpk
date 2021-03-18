@@ -29,9 +29,14 @@ package Bind4D;
 
 requires
   rtl,
-  vcl;
+  vcl,
+  vclwinx,
+  dbrtl,
+  vcldb;
 
 contains
-  BindFormJson in '..\src\BindFormJson.pas';
+  Bind4D in '..\src\Bind4D.pas',
+  Bind4D.Utils in '..\src\Bind4D.Utils.pas',
+  Bind4D.ChangeCommand in '..\src\Bind4D.ChangeCommand.pas';
 
 end.
