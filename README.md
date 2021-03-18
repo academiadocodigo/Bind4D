@@ -15,7 +15,7 @@ Para utilizar o Bind4D você deve adicionar a uses Bind4D.
 
 Existem 2 atributos para o formulário que permitem que você deixe pré-configurados informações para recuperar em momentos distintos.
 
-#### FormRest
+#### [FormRest(EndPoint, Key, Sort, Order)]
 
 O atributo FormRest permite que você deixe configurado a qual endpoint rest as ações de crud deste formulario devem responder
 
@@ -31,10 +31,33 @@ Exemplo
 ```delphi
 
 [FormRest('/users', 'guuid', 'name', 'asc')]
-TPageUsuarios = class(TTemplateList)
+TPageTemplate = class(TForm)
 private
 public
 end;
+```
 
+Para recuperar esses dados, você pode a qualquer momento no seu projeto chamar a função abaixo,
+passando o Form como parametro e as variaveis as quais você deseja armazenar o retorno
 
+```delphi
+TBind4D.New.Form(Self).BindFormRest(FEndPoint,FPK,FSort,FOrder);
+```
 
+####  [FormDefault(Title)]
+
+O atributo FormDefault permite que você deixe configurado o Titulo para o Formulário.
+
+Os parametros destre atributo são:
+
+Title = Titulo do Formulários
+
+Exemplo
+
+```delphi
+[FormDefault('Cadastro de Usuários')]
+TPageTemplate = class(TForm)
+private
+public
+end;
+```
