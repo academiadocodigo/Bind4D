@@ -191,3 +191,20 @@ Exemplo
 ```delphi
 TBind4D.New.Form(Self).BindDataSetToForm(FDataSet);
 ```
+
+####  [fvNotNull(Message)]
+
+O atributo fvNotNull valida automaticamente se o valor no componente é nulo e apresenta a mensagem informada caso ele esteja vazio, esse processo ocorre durante o processo de bind do form para json.
+
+Os parametros destre atributo são:
+
+Message = Mensagem de Erro apresentada 
+
+Exemplo
+
+```delphi
+[fvNotNull('Campo Nome não pode ser Nulo')]
+edtName: TEdit;
+```
+
+
