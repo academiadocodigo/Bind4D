@@ -61,3 +61,39 @@ private
 public
 end;
 ```
+
+## Atributos do Componentes
+
+Os atributos dos componentes permitem que você adicione funcionalidades e determine configurações que podem ser adicionadas em lote a todos os componentes do formulário, além de prover configurações para as demais funções de bind.
+
+
+####  [FieldJsonBind(FieldName)]
+
+O atributo FieldJsonBind permite que você deixe configurado a qual Field do Json o componente irá corresponder na hora do bind do formulário para Json;
+
+Os parametros destre atributo são:
+
+FieldName = Nome do Campo que você deseja que ele se transforme no JSON
+
+Exemplo
+
+```delphi
+[FieldJsonBind('guuid')]
+edtCodigo: TEdit;
+```
+
+Você ainda pode passar alguns atributos especiais para determinar em quais tipos de requisição aquele campo de ser ignorado ou não.
+
+Os atributos especiais são:
+
+FbIgnorePut = O campo será ignorado se o parametro de Put for enviado na hora do bind para json
+FbIgnorePost = O campo será ignorado se o parametro de Post for enviado na hora do bind para json
+FbIgnoreDelete = O campo será ignorado se o parametro de Delete for enviado na hora do bind para json
+FbIgnoreGet = O campo será ignorado se o parametro de Put Get enviado na hora do bind para json
+
+Exemplo
+
+```delphi
+[FieldJsonBind('guuid'), FbIgnorePut, FbIgnorePost]
+edtCodigo: TEdit;
+```
