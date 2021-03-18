@@ -97,3 +97,23 @@ Exemplo
 [FieldJsonBind('guuid'), FbIgnorePut, FbIgnorePost]
 edtCodigo: TEdit;
 ```
+
+##### Converter o Formulário para JSON
+
+Uma vez tendo configurado todos os componentes desejados com o atributo FieldJsonBind, basta executar o comando abaixo passando qual o tipo de json você quer gerar para obter o Json com os valores presentes nos componentes.
+
+Os Parametros deste atributo são:
+
+fbGet, fbPost, fbPut, fbDelete
+
+```delphi
+var
+  aJson: TJSONObject;
+begin
+  aJson := TBind4D.New.Form(FForm).FormToJson(fbPost);
+  try
+    //Seu Código
+  finally
+    aJson.Free;
+  end;
+```
