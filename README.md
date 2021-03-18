@@ -117,3 +117,40 @@ begin
     aJson.Free;
   end;
 ```
+
+####  [ComponentBindStyle(COLOR, FONTSIZE, FONTCOLOR, FONTNAME, ESPECIALTYPE)]
+
+O atributo ComponentBindStyle permite que você determine as configurações visuais do componente para elas serem aplicadas de forma automatica, incluindo formatação de Edits e outros
+
+Os parametros destre atributo são:
+
+COLOR = Cor do componentes
+FONTSIZE = Tamanho da Fonte do Componente
+FONTCOLOR = Cor da Fonte do Componente
+FONTNAME =  Nome da Fonte do Componente
+ESPECIALTYPE = Tipo Especial usado para formatação.
+
+Os Tipos especiais de formatação disponíveis são:
+
+teNull = Não aplica nenhuma configuração
+teCoin = Formatação para Moeda
+teCell = Formatação para Número de Celular com 9 digitos
+teDate = Formatação para Data
+teDateTime = Formatação para Data e Hora
+teCPF = Formatação para CPF 
+teCNPJ = Formatação para CNPJ
+
+Exemplo
+
+```delphi
+[ComponentBindStyle(COLOR_BACKGROUND, FONT_H5, FONT_COLOR3, FONT_NAME, teCell)]
+edtCodigo: TEdit;
+```
+
+Para que os estilos e formatações sejam aplicados você deve executar o comando abaixo
+
+Exemplo
+
+```delphi
+TBind4D.New.Form(Self).SetStyleComponents;
+```
