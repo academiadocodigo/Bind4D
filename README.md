@@ -154,3 +154,40 @@ Exemplo
 ```delphi
 TBind4D.New.Form(Self).SetStyleComponents;
 ```
+
+
+####  [FieldDataSetBind(Field, Type, Visible, DisplayWidh_Percent, DisplayName, MaskEdit, Alignment)]
+
+O atributo FieldDataSetBind permite você configurar o componente tanto para sua exibição no DBGrid quanto para o Bind automatico entre o DataSet e o Componente na Tela
+
+Os parametros destre atributo são:
+
+Key = Nome do Field no DataSet
+Type = Tipo de Dado do Campo
+DisplayWidh_Percent = Tamanho da Coluna no DBGrid em Porcentagem
+DisplayName =  Nome da Coluna a ser Exibido no DBGrid
+MaskEdit = Mascara para exibição do valor
+Alignment = Posicionamento na Exibição no DBGrid 
+
+Exemplo
+
+```delphi
+[FieldDataSetBind('balance', ftCurrency, True, 8, 'Saldo', 'R$ ###,###,##0.00', taLeftJustify)]
+edtSaldo: TEdit;
+```
+
+Para que as configurações sejam aplicadas nos FieldsDataSet você deve executar o comando abaixo informando o Form, o DataSet que esta com os dados e o DBGrid de Exibição
+
+Exemplo
+
+```delphi
+TBind4D.New.Form(Self).BindFormatListDataSet(FDataSet, DBGrid1);
+```
+
+Para que os dados do DataSet sejam automaticamente preenchidos nos componentes da tela simulando o que acontece com os componentes DBEdit e outros, você deve executar o comando abaixo.
+
+Exemplo
+
+```delphi
+TBind4D.New.Form(Self).BindDataSetToForm(FDataSet);
+```
