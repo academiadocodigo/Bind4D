@@ -11,6 +11,7 @@ object Form2: TForm2
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object Edit1: TEdit
@@ -45,7 +46,7 @@ object Form2: TForm2
     Width = 186
     Height = 21
     TabOrder = 3
-    Text = 'Edit2'
+    Text = '22996857484'
   end
   object ComboBox1: TComboBox
     Left = 24
@@ -94,7 +95,7 @@ object Form2: TForm2
     Width = 186
     Height = 21
     TabOrder = 8
-    Text = 'ID'
+    Text = '5456445-654654'
   end
   object Button2: TButton
     Left = 543
