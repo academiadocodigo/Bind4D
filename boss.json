@@ -1,0 +1,14 @@
+{
+	"name": "bind4d",
+	"description": "",
+	"version": "1.0.0",
+	"homepage": "",
+	"mainsrc": "./",
+	"projects": [],
+	"dependencies": {
+		"https://github.com/bittencourtthulio/aws4d": "^1.0.0",
+		"https://github.com/bittencourtthulio/localcache4d": "^1.0.1",
+		"https://github.com/bittencourtthulio/translator4d": "^1.0.1",
+		"https://github.com/viniciussanchez/restrequest4delphi": "^v3.0.5"
+	}
+}

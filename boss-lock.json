@@ -1,0 +1,46 @@
+{
+	"hash": "d41d8cd98f00b204e9800998ecf8427e",
+	"updated": "2021-03-27T21:28:55.6450536-03:00",
+	"installedModules": {
+		"github.com/viniciussanchez/dataset-serialize": {
+			"name": "dataset-serialize",
+			"version": "v2.2.9",
+			"hash": "4141c40e2906a59ed5aacd74bbd5499f",
+			"artifacts": {},
+			"failed": false,
+			"changed": false
+		},
+		"https://github.com/bittencourtthulio/aws4d": {
+			"name": "aws4d",
+			"version": "1.0.0",
+			"hash": "873d84831be282886a613a8d4a6abd61",
+			"artifacts": {},
+			"failed": false,
+			"changed": false
+		},
+		"https://github.com/bittencourtthulio/localcache4d": {
+			"name": "localcache4d",
+			"version": "1.0.1",
+			"hash": "aa0209716a9240a685b2700a6fe11582",
+			"artifacts": {},
+			"failed": false,
+			"changed": false
+		},
+		"https://github.com/bittencourtthulio/translator4d": {
+			"name": "translator4d",
+			"version": "1.0.1",
+			"hash": "e5495e637775d7e64c5376189bf2ebf8",
+			"artifacts": {},
+			"failed": false,
+			"changed": false
+		},
+		"https://github.com/viniciussanchez/restrequest4delphi": {
+			"name": "restrequest4delphi",
+			"version": "v3.0.5",
+			"hash": "c4ead963093502712c6af02f86b819d0",
+			"artifacts": {},
+			"failed": false,
+			"changed": false
+		}
+	}
+}

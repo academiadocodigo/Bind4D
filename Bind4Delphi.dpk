@@ -1,0 +1,55 @@
+package Bind4Delphi;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  vcl,
+  vclwinx,
+  dbrtl,
+  vcldb,
+  xmlrtl,
+  soaprtl,
+  bindcomp,
+  RESTComponents,
+  CloudService,
+  FireDAC,
+  FireDACCommonDriver,
+  FireDACCommon;
+
+contains
+  Bind4D in 'src\Bind4D.pas',
+  Bind4D.Utils in 'src\Bind4D.Utils.pas',
+  Bind4D.ChangeCommand in 'src\Bind4D.ChangeCommand.pas',
+  Bind4D.Helpers in 'src\Bind4D.Helpers.pas',
+  Bind4D.Interfaces in 'src\Bind4D.Interfaces.pas',
+  Bind4D.Types in 'src\Bind4D.Types.pas',
+  Bind4D.Attributes in 'src\Bind4D.Attributes.pas';
+
+end.
+
