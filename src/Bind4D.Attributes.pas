@@ -74,20 +74,11 @@ type
 
   Translation = class(TCustomAttribute)
     private
-    FKey: String;
-    FSource: String;
-    FQuery: String;
-    FTarget: String;
-    procedure SetKey(const Value: String);
+      FQuery: String;
     procedure SetQuery(const Value: String);
-    procedure SetSource(const Value: String);
-    procedure SetTarget(const Value: String);
     public
-      constructor Create( aQuery : String; aSource : String; aTarget : String; aKey : String);
+      constructor Create(aQuery : String);
       property Query : String read FQuery write SetQuery;
-      property Source : String read FSource write SetSource;
-      property Target : String read FTarget write SetTarget;
-      property Key : String read FKey write SetKey;
   end;
   {$endregion}
 
@@ -246,32 +237,14 @@ end;
 
 { Translation }
 
-constructor Translation.Create(aQuery, aSource, aTarget, aKey: String);
+constructor Translation.Create(aQuery : String);
 begin
   FQuery := aQuery;
-  FSource := aSource;
-  FTarget := aTarget;
-  FKey := aKey;
-end;
-
-procedure Translation.SetKey(const Value: String);
-begin
-  FKey := Value;
 end;
 
 procedure Translation.SetQuery(const Value: String);
 begin
   FQuery := Value;
-end;
-
-procedure Translation.SetSource(const Value: String);
-begin
-  FSource := Value;
-end;
-
-procedure Translation.SetTarget(const Value: String);
-begin
-  FTarget := Value;
 end;
 
 { S3Storage }

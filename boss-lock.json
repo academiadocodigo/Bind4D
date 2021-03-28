@@ -12,24 +12,24 @@
 		},
 		"https://github.com/bittencourtthulio/aws4d": {
 			"name": "aws4d",
-			"version": "1.0.0",
-			"hash": "873d84831be282886a613a8d4a6abd61",
+			"version": "1.0.1",
+			"hash": "5c3492b832d44eef567d6f9c6f6c15d0",
 			"artifacts": {},
 			"failed": false,
 			"changed": false
 		},
 		"https://github.com/bittencourtthulio/localcache4d": {
 			"name": "localcache4d",
-			"version": "1.0.1",
-			"hash": "aa0209716a9240a685b2700a6fe11582",
+			"version": "1.0.3",
+			"hash": "a7158204540e4b8518fa0e53c2b9024b",
 			"artifacts": {},
 			"failed": false,
 			"changed": false
 		},
 		"https://github.com/bittencourtthulio/translator4d": {
 			"name": "translator4d",
-			"version": "1.0.1",
-			"hash": "e5495e637775d7e64c5376189bf2ebf8",
+			"version": "1.0.3",
+			"hash": "b9f27579217e70834a98dd445a818a5f",
 			"artifacts": {},
 			"failed": false,
 			"changed": false

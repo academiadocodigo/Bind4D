@@ -49,6 +49,9 @@ type
       function Translator : iTranslator4D;
   end;
 
+var
+  vBind4D : iBind4D;
+
 implementation
 
 uses
@@ -75,13 +78,8 @@ begin
         TTranslator4D
           .New
             .Google
-              .Credential
-                .Key(pRtti.GetAttribute<Translation>.Key)
-              .&End
               .Params
                 .Query(pRtti.GetAttribute<Translation>.Query)
-                .Source(pRtti.GetAttribute<Translation>.Source)
-                .Target(pRtti.GetAttribute<Translation>.Target)
               .&End
             .Execute;
 
@@ -91,13 +89,8 @@ begin
         TTranslator4D
           .New
             .Google
-              .Credential
-                .Key(pRtti.GetAttribute<Translation>.Key)
-              .&End
               .Params
                 .Query(pRtti.GetAttribute<Translation>.Query)
-                .Source(pRtti.GetAttribute<Translation>.Source)
-                .Target(pRtti.GetAttribute<Translation>.Target)
               .&End
             .Execute;
 end;
@@ -308,13 +301,8 @@ begin
                 TTranslator4D
                   .New
                     .Google
-                      .Credential
-                        .Key(prpRtti.GetAttribute<Translation>.Key)
-                      .&End
                       .Params
                         .Query(prpRtti.GetAttribute<Translation>.Query)
-                        .Source(prpRtti.GetAttribute<Translation>.Source)
-                        .Target(prpRtti.GetAttribute<Translation>.Target)
                       .&End
                     .Execute
             else
@@ -604,7 +592,10 @@ end;
 
 class function TBind4D.New: iBind4D;
 begin
-  Result := Self.Create;
+  if not Assigned(vBind4D) then
+    vBind4D := Self.Create;
+
+  Result := vBind4D;
 end;
 
 function TBind4D.SetStyleComponents: iBind4D;
@@ -796,5 +787,8 @@ begin
   aDataSet.First;
   aDataSet.EnableControls;
 end;
+
+initialization
+  vBind4D := TBind4D.New;
 
 end.
