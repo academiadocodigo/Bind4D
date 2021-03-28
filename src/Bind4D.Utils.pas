@@ -462,7 +462,12 @@ begin
   try
     aImageName := TBind4DUtils.SendGuuidPrepare(TGuid.NewGuid.ToString) + '.' + pRtti.GetAttribute<S3Storage>.FileExtension;
     if Trim(aImage.HelpKeyword) <> '' then aImageName := aImage.HelpKeyword;
-
+    if Length(aImageName) > 40 then
+    begin
+      aImageName := ReverseString(aImageName);
+      aImageName := Copy(aImageName, 0, Pos('/', aImageName)-1);
+      aImageName := ReverseString(aImageName);
+    end;
     Result :=
       TAWS4D
       .New
