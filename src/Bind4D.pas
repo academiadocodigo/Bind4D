@@ -227,10 +227,12 @@ begin
   try
     vTypRtti := vCtxRtti.GetType(FForm.ClassInfo);
     if vTypRtti.Tem<FormRest> then
+    begin
       aEndPoint := vTypRtti.GetAttribute<FormRest>.EndPoint;
       aPK := vTypRtti.GetAttribute<FormRest>.PK;
       aOrder := vTypRtti.GetAttribute<FormRest>.Order;
       aSort := vTypRtti.GetAttribute<FormRest>.Sort;
+    end;
   finally
     vCtxRtti.Free;
   end;
