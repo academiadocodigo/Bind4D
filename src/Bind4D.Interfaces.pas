@@ -8,6 +8,7 @@ uses
   Data.DB,
   Translator4D.Interfaces,
   Bind4D.Types,
+  Bind4D.Attributes,
   Vcl.DBGrids;
 
 type
