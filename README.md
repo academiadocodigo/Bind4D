@@ -17,7 +17,11 @@ O Bind4D tem o objetivo de facilitar a transição de dados entre a camada de vi
 
 ## Instalação
 
-Basta registrar no Library Path do seu Delphi o caminho da pasta SRC da Biblioteca ou utilizar o Boss (https://github.com/HashLoad/boss) para facilitar ainda mais, executando o comando boss install https://github.com/bittencourtthulio/Bind4D
+Basta registrar no Library Path do seu Delphi o caminho da pasta SRC da Biblioteca ou utilizar o Boss (https://github.com/HashLoad/boss) para facilitar ainda mais, executando o comando 
+
+```
+boss install https://github.com/bittencourtthulio/Bind4D
+```
 
 ## Primeiros Passos - Tutorial
 
