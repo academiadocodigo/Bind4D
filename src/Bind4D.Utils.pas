@@ -37,7 +37,7 @@ type
       class function FormatarCelular(valor : string) : string;
       class function ApenasNumeros(valor : String) : String;
       class function SendImageS3Storage( var aImage : TImage; pRtti : TRttiField) : String;
-      class procedure GetImageS3Storage ( aImage : TImage; aName : String; pRtti : TRttiField);
+      class procedure GetImageS3Storage (aImage : TImage; aName : String; pRtti : TRttiField; out aFileName : string);
       class function SendGuuidPrepare ( aGuuid : String ) : String;
       class procedure LoadDefaultResourceImage( aImage : TImage; aDefaultResource : String);
   end;
@@ -396,32 +396,26 @@ begin
   Result := hora + minuto + segundo;
 end;
 
-class procedure TBind4DUtils.GetImageS3Storage(aImage: TImage; aName: String;
-  pRtti: TRttiField);
+class procedure TBind4DUtils.GetImageS3Storage(aImage : TImage; aName : String; pRtti : TRttiField; out aFileName : string);
 var
   InStream: TResourceStream;
 begin
   if Trim(aName) <> '' then
   begin
-    TAWS4D.New
+    TBind4D.New
+     .AWSService
       .S3
-        .Credential
-          .AccountKey(pRtti.GetAttribute<S3Storage>.AccountKey)
-          .AccountName(pRtti.GetAttribute<S3Storage>.AccountName)
-          .StorageEndPoint(pRtti.GetAttribute<S3Storage>.StorageEndPoint)
-          .Bucket(pRtti.GetAttribute<S3Storage>.Bucket)
-        .&End
         .GetFile
           .FileName(aName)
         .Get
       .FromImage(aImage);
-      aImage.HelpKeyword := aName;
+      aFileName := aName;
   end
   else
   begin
     InStream := TResourceStream.Create(HInstance, pRtti.GetAttribute<ImageAttribute>.DefaultResourceImage, RT_RCDATA);
       try
-        aImage.HelpKeyword := '';
+        aFileName := '';
         aImage.Picture.LoadFromStream(InStream);
       finally
         InStream.Free;
@@ -469,15 +463,9 @@ begin
       aImageName := ReverseString(aImageName);
     end;
     Result :=
-      TAWS4D
-      .New
+      TBind4D.New
+       .AWSService
         .S3
-          .Credential
-            .AccountKey(pRtti.GetAttribute<S3Storage>.AccountKey)
-            .AccountName(pRtti.GetAttribute<S3Storage>.AccountName)
-            .StorageEndPoint(pRtti.GetAttribute<S3Storage>.StorageEndPoint)
-            .Bucket(pRtti.GetAttribute<S3Storage>.Bucket)
-          .&End
           .SendFile
             .FileName(aImageName)
             .ContentType(pRtti.GetAttribute<S3Storage>.ContentType)

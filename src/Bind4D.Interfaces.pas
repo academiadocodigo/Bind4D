@@ -9,7 +9,8 @@ uses
   Translator4D.Interfaces,
   Bind4D.Types,
   Bind4D.Attributes,
-  Vcl.DBGrids;
+  Vcl.DBGrids,
+  AWS4D.Interfaces;
 
 type
    iBind4D = interface
@@ -24,6 +25,7 @@ type
     function GetFieldsByType (aType : TTypeBindFormJson) : String;
     function SetStyleComponents : iBind4D;
     function Translator : iTranslator4D;
+    function AWSService : iAWS4D;
   end;
 
 implementation

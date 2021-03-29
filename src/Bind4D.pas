@@ -21,12 +21,15 @@ uses
   Translator4D.Interfaces,
   Bind4D.Types,
   Bind4D.Interfaces,
-  Bind4D.Utils;
+  Bind4D.Utils,
+  AWS4D.Interfaces,
+  AWS4D;
 
 type
   TBind4D = class(TInterfacedObject, iBind4D)
     private
       FForm : TForm;
+      FAWSService : iAWS4D;
       function __GetComponentToValue(aComponent: TComponent; pRtti : TRttiField): String;
       procedure __BindValueToComponent(aComponent: TComponent; aFieldType : TFieldType; aValue : Variant; aTField : TField; pRtti : TRttiField; aEspecialType : TEspecialType = teNull);
       procedure __BindCaptionToComponent(aComponent : TComponent; pRtti : TRttiField);
@@ -47,6 +50,7 @@ type
       function GetFieldsByType (aType : TTypeBindFormJson) : String;
       function SetStyleComponents : iBind4D;
       function Translator : iTranslator4D;
+      function AWSService : iAWS4D;
   end;
 
 var
@@ -63,7 +67,6 @@ uses
   Data.Cloud.CloudAPI,
   Data.Cloud.AmazonAPI,
   System.Types,
-  AWS4D,
   Bind4D.Helpers,
   Bind4D.Attributes;
 
@@ -96,6 +99,8 @@ begin
 end;
 
 procedure TBind4D.__BindValueToComponent(aComponent: TComponent; aFieldType : TFieldType; aValue : Variant; aTField : TField; pRtti : TRttiField; aEspecialType : TEspecialType = teNull);
+var
+  FFileName: string;
 begin
   if VarIsNull(aValue) then
   begin
@@ -207,7 +212,12 @@ begin
 
   if aComponent is TImage then
     if pRtti.Tem<S3Storage> then
-      TBind4DUtils.GetImageS3Storage((aComponent as TImage),  aValue, pRtti);
+    begin
+      TBind4DUtils.GetImageS3Storage((aComponent as TImage), aValue, pRtti, FFileName);
+      (aComponent as TImage).HelpKeyword := FFileName;
+    end;
+
+      //TBind4DUtils.GetImageS3Storage((aComponent as TImage),  aValue, pRtti);
 end;
 
 function TBind4D.BindFormRest(var aEndPoint : String; var aPK : String; var aSort : String; var aOrder : String) : iBind4D;
@@ -786,6 +796,14 @@ begin
   end;
   aDataSet.First;
   aDataSet.EnableControls;
+end;
+
+function TBind4D.AWSService: iAWS4D;
+begin
+  if not Assigned(FAWSService) then
+    FAWSService := TAWS4D.New;
+
+  Result := FAWSService;
 end;
 
 initialization

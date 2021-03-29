@@ -50,24 +50,12 @@ type
    {$region 'Services Attributes'}
   S3Storage = class(TCustomAttribute)
     private
-    FStorageEndPoint: String;
-    FAccountKey: String;
-    FAccountName: String;
-    FBucket: String;
     FFileExtension: String;
     FContentType: String;
-    procedure SetAccountKey(const Value: String);
-    procedure SetAccountName(const Value: String);
-    procedure SetStorageEndPoint(const Value: String);
-    procedure SetBucket(const Value: String);
     procedure SetContentType(const Value: String);
     procedure SetFileExtension(const Value: String);
     public
-      constructor Create(aFileExtension : String; aContentType : String; aBucket: String; aAccounKey : String; aAccountName : String; aStorageEndPoint : String);
-      property AccountKey : String read FAccountKey write SetAccountKey;
-      property AccountName : String read FAccountName write SetAccountName;
-      property StorageEndPoint : String read FStorageEndPoint write SetStorageEndPoint;
-      property Bucket : String read FBucket write SetBucket;
+      constructor Create(aFileExtension : String; aContentType : String);
       property ContentType : String read FContentType write SetContentType;
       property FileExtension : String read FFileExtension write SetFileExtension;
   end;
@@ -249,30 +237,10 @@ end;
 
 { S3Storage }
 
-constructor S3Storage.Create(aFileExtension, aContentType, aBucket, aAccounKey,
-  aAccountName, aStorageEndPoint: String);
+constructor S3Storage.Create(aFileExtension : String; aContentType : String);
 begin
-  FAccountKey := aAccounKey;
-  FAccountName := aAccountName;
-  FStorageEndPoint := aStorageEndPoint;
-  FBucket := aBucket;
   FFileExtension := aFileExtension;
   FContentType := aContentType;
-end;
-
-procedure S3Storage.SetAccountKey(const Value: String);
-begin
-  FAccountKey := Value;
-end;
-
-procedure S3Storage.SetAccountName(const Value: String);
-begin
-  FAccountName := Value;
-end;
-
-procedure S3Storage.SetBucket(const Value: String);
-begin
-  FBucket := Value;
 end;
 
 procedure S3Storage.SetContentType(const Value: String);
@@ -283,11 +251,6 @@ end;
 procedure S3Storage.SetFileExtension(const Value: String);
 begin
   FFileExtension := Value;
-end;
-
-procedure S3Storage.SetStorageEndPoint(const Value: String);
-begin
-  FStorageEndPoint := Value;
 end;
 
 { ComponentBindFormat }
