@@ -184,18 +184,18 @@ O atributo FieldDataSetBind permite você configurar o componente tanto para sua
 
 Os parametros destre atributo são:
 
-Key = Nome do Field no DataSet
-Type = Tipo de Dado do Campo
-DisplayWidh_Percent = Tamanho da Coluna no DBGrid em Porcentagem
-DisplayName =  Nome da Coluna a ser Exibido no DBGrid
-MaskEdit = Mascara para exibição do valor
-Alignment = Posicionamento na Exibição no DBGrid 
-LimitWidth = Determina qual o tamanho limite de exibição da Coluna no DBGrid, se o formulario for menor que o tamanho informado a coluna é automaticamente oculta
+Key = Nome do Field no DataSet<br>
+Type = Tipo de Dado do Campo<br>
+DisplayWidh_Percent = Tamanho da Coluna no DBGrid em Porcentagem<br>
+DisplayName =  Nome da Coluna a ser Exibido no DBGrid<br>
+MaskEdit = Mascara para exibição do valor<br>
+Alignment = Posicionamento na Exibição no DBGrid<br>
+LimitWidth = Determina qual o tamanho limite de exibição da Coluna no DBGrid, se o formulario for menor que o tamanho informado a coluna é automaticamente oculta<br>
 
 Exemplo
 
 ```delphi
-[FieldDataSetBind('balance', ftCurrency, True, 8, 'Saldo', 'R$ ###,###,##0.00', taLeftJustify)]
+[FieldDataSetBind('balance', ftCurrency, True, 8, 'Saldo', 'R$ ###,###,##0.00', taLeftJustify, 600)]
 edtSaldo: TEdit;
 ```
 
