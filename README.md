@@ -226,9 +226,9 @@ edtName: TEdit;
 
 ## Tradução com Google API Translator
 
-O Bind4D executa a tradução automática dos componentes utilizando o framework Translator4D (https://github.com/bittencourtthulio/translator4d), Para realizar a tradução é necessário configurar préviamente o Bind4D com os parametros do Google API.
+O Bind4D executa a tradução automática dos componentes utilizando o framework Translator4D (https://github.com/bittencourtthulio/translator4d). 
 
-
+Para realizar a tradução é necessário configurar préviamente o Bind4D com os parametros do Google API.
 
 ```delphi
 TBind4D
