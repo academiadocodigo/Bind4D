@@ -50,10 +50,10 @@ O atributo FormRest permite que você deixe configurado a qual endpoint rest as 
 
 Os parametros deste atributo são:
 
-EndPoint = EndPoint da requisição rest;
-Key = Chave das Requisições para Put e Delete;
-Sort = Campos default da ordenação do Get podendo ser passado mais de um campo separado por virgula
-Order = Ordem da Listagem asc ou desc;
+<b>EndPoint</b> = EndPoint da requisição rest;<br>
+<b>Key</b> = Chave das Requisições para Put e Delete;<br>
+<b>Sort</b> = Campos default da ordenação do Get podendo ser passado mais de um campo separado por virgula;<br>
+<b>Order</b> = Ordem da Listagem asc ou desc;<br>
 
 Exemplo
 
@@ -79,7 +79,7 @@ O atributo FormDefault permite que você deixe configurado o Titulo para o Formu
 
 Os parametros destre atributo são:
 
-Title = Titulo do Formulários
+<b>Title</b> = Titulo do Formulários<br>
 
 Exemplo
 
@@ -102,7 +102,7 @@ O atributo FieldJsonBind permite que você deixe configurado a qual Field do Jso
 
 Os parametros destre atributo são:
 
-FieldName = Nome do Campo que você deseja que ele se transforme no JSON
+<b>FieldName</b> = Nome do Campo que você deseja que ele se transforme no JSON<br>
 
 Exemplo
 
@@ -115,10 +115,10 @@ Você ainda pode passar alguns atributos especiais para determinar em quais tipo
 
 Os atributos especiais são:
 
-FbIgnorePut = O campo será ignorado se o parametro de Put for enviado na hora do bind para json
-FbIgnorePost = O campo será ignorado se o parametro de Post for enviado na hora do bind para json
-FbIgnoreDelete = O campo será ignorado se o parametro de Delete for enviado na hora do bind para json
-FbIgnoreGet = O campo será ignorado se o parametro de Put Get enviado na hora do bind para json
+<b>FbIgnorePut</b> = O campo será ignorado se o parametro de Put for enviado na hora do bind para json<br>
+<b>FbIgnorePost</b> = O campo será ignorado se o parametro de Post for enviado na hora do bind para json<br>
+<b>FbIgnoreDelete</b> = O campo será ignorado se o parametro de Delete for enviado na hora do bind para json<br>
+<b>FbIgnoreGet</b> = O campo será ignorado se o parametro de Put Get enviado na hora do bind para json<br>
 
 Exemplo
 
@@ -133,7 +133,7 @@ Uma vez tendo configurado todos os componentes desejados com o atributo FieldJso
 
 Os Parametros deste atributo são:
 
-fbGet, fbPost, fbPut, fbDelete
+<b>fbGet, fbPost, fbPut, fbDelete</b><br>
 
 ```delphi
 var
@@ -153,21 +153,21 @@ O atributo ComponentBindStyle permite que você determine as configurações vis
 
 Os parametros destre atributo são:
 
-COLOR = Cor do componentes
-FONTSIZE = Tamanho da Fonte do Componente
-FONTCOLOR = Cor da Fonte do Componente
-FONTNAME =  Nome da Fonte do Componente
-ESPECIALTYPE = Tipo Especial usado para formatação.
+<b>COLOR</b> = Cor do componentes<br>
+<b>FONTSIZE</b> = Tamanho da Fonte do Componente<br>
+<b>FONTCOLOR</b> = Cor da Fonte do Componente<br>
+<b>FONTNAME</b> =  Nome da Fonte do Componente<br>
+<b>ESPECIALTYPE</b> = Tipo Especial usado para formatação.<br>
 
 Os Tipos especiais de formatação disponíveis são:
 
-teNull = Não aplica nenhuma configuração
-teCoin = Formatação para Moeda
-teCell = Formatação para Número de Celular com 9 digitos
-teDate = Formatação para Data
-teDateTime = Formatação para Data e Hora
-teCPF = Formatação para CPF 
-teCNPJ = Formatação para CNPJ
+<b>teNull</b> = Não aplica nenhuma configuração<br>
+<b>teCoin</b> = Formatação para Moeda<br>
+<b>teCell</b> = Formatação para Número de Celular com 9 digitos<br>
+<b>teDate</b> = Formatação para Data<br>
+<b>teDateTime</b> = Formatação para Data e Hora<br>
+<b>teCPF</b> = Formatação para CPF<br> 
+<b>teCNPJ</b> = Formatação para CNPJ<br>
 
 Exemplo
 
@@ -228,7 +228,7 @@ O atributo fvNotNull valida automaticamente se o valor no componente é nulo e a
 
 Os parametros destre atributo são:
 
-Message = Mensagem de Erro apresentada 
+<b>Message</b> = Mensagem de Erro apresentada<br> 
 
 Exemplo
 
