@@ -23,7 +23,7 @@ Basta registrar no Library Path do seu Delphi o caminho da pasta SRC da Bibliote
 boss install https://github.com/bittencourtthulio/Bind4D
 ```
 
-*Prerequisites*:<br> 
+*Pré-Requisitos*:<br> 
 
 [**aws4d**](https://github.com/bittencourtthulio/aws4d) - Biblioteca para Envio de Arquivos para a AWS S3 <br>
 [**localcache4d**](https://github.com/bittencourtthulio/localcache4d) - Mini Banco de Dados Chave-Valor para Cache local <br>
