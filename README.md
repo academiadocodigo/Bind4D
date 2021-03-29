@@ -184,13 +184,13 @@ O atributo FieldDataSetBind permite você configurar o componente tanto para sua
 
 Os parametros destre atributo são:
 
-Key = Nome do Field no DataSet<br>
-Type = Tipo de Dado do Campo<br>
-DisplayWidh_Percent = Tamanho da Coluna no DBGrid em Porcentagem<br>
-DisplayName =  Nome da Coluna a ser Exibido no DBGrid<br>
-MaskEdit = Mascara para exibição do valor<br>
-Alignment = Posicionamento na Exibição no DBGrid<br>
-LimitWidth = Determina qual o tamanho limite de exibição da Coluna no DBGrid, se o formulario for menor que o tamanho informado a coluna é automaticamente oculta<br>
+<b>Key</b> = Nome do Field no DataSet<br>
+<b>Type</b> = Tipo de Dado do Campo<br>
+<b>DisplayWidh_Percent</b> = Tamanho da Coluna no DBGrid em Porcentagem<br>
+<b>DisplayName</b> =  Nome da Coluna a ser Exibido no DBGrid<br>
+<b>MaskEdit</b> = Mascara para exibição do valor<br>
+<b>Alignment</b> = Posicionamento na Exibição no DBGrid<br>
+<b>LimitWidth</b> = Determina qual o tamanho limite de exibição da Coluna no DBGrid, se o formulario for menor que o tamanho informado a coluna é automaticamente oculta<br>
 
 Exemplo
 
