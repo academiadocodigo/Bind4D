@@ -224,3 +224,40 @@ edtName: TEdit;
 ```
 
 
+## Tradução com Google API Translator
+
+O Bind4D executa a tradução automática dos componentes utilizando o framework Translator4D (https://github.com/bittencourtthulio/translator4d), Para realizar a tradução é necessário configurar préviamente o Bind4D com os parametros do Google API.
+
+Os código das linguagem do Google você pode ver aqui (https://cloud.google.com/translate/docs/languages?hl=pt-br)
+
+```delphi
+TBind4D
+    .New
+      .Translator
+        .Google
+          .Credential
+            .Key('SUA APIKEY DO GOOGLE API TRANSLATOR')
+          .&End
+          .Options
+            .Cache(True) //Permite que o Bind4d faça o cache automatico das traduções para não refazer as consultas que ele já fez.
+          .&End
+          .Params
+            .Source(TranslateSource) //Código da Linguagem origem que você está usando
+            .Target(TranslateTarget); //Código da Linguagem de destino que você deseja traduzir.
+```
+
+O Bind4D trabalha com o padrão Singleton, sendo assim você pode realizar essa configuração a qualquer momento no seu sistema, com a configuração feita você pode adicionar os atributos de tradução nos seus componentes.
+
+```delphi
+[Translation('Nome')]
+Label1: TLabel;
+```
+
+Dessa forma ao chamar o método abaixo ele automaticamente atribuirá a tradução da palavra "Nome" no idioma que você configurou no Target ao Label1.
+
+```delphi
+ TBind4D
+    .New
+      .Form(Self)
+      .SetStyleComponents;
+```
