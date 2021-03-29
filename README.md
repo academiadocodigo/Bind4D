@@ -120,7 +120,7 @@ Exemplo
 edtCodigo: TEdit;
 ```
 
-##### Converter o Formulário para JSON
+### Converter o Formulário para JSON
 
 Uma vez tendo configurado todos os componentes desejados com o atributo FieldJsonBind, basta executar o comando abaixo passando qual o tipo de json você quer gerar para obter o Json com os valores presentes nos componentes.
 
