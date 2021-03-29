@@ -228,7 +228,7 @@ edtName: TEdit;
 
 O Bind4D executa a tradução automática dos componentes utilizando o framework Translator4D (https://github.com/bittencourtthulio/translator4d), Para realizar a tradução é necessário configurar préviamente o Bind4D com os parametros do Google API.
 
-Os código das linguagem do Google você pode ver aqui (https://cloud.google.com/translate/docs/languages?hl=pt-br)
+
 
 ```delphi
 TBind4D
@@ -245,6 +245,10 @@ TBind4D
             .Source(TranslateSource) //Código da Linguagem origem que você está usando
             .Target(TranslateTarget); //Código da Linguagem de destino que você deseja traduzir.
 ```
+
+Os código das linguagem do Google você pode ver aqui: 
+https://cloud.google.com/translate/docs/languages?hl=pt-br
+
 
 O Bind4D trabalha com o padrão Singleton, sendo assim você pode realizar essa configuração a qualquer momento no seu sistema, com a configuração feita você pode adicionar os atributos de tradução nos seus componentes.
 
