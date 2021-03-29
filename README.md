@@ -25,7 +25,13 @@ boss install https://github.com/bittencourtthulio/Bind4D
 
 ## Primeiros Passos - Tutorial
 
-Para utilizar o Bind4D você deve adicionar a uses Bind4D.
+Para utilizar o Bind4D você deve adicionar as uses:
+
+```
+Bind4D,
+Bind4D.Attributes,
+Bind4D.Types;
+```
 
 ## Atributos do Formulário
 
