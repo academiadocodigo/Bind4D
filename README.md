@@ -23,6 +23,13 @@ Basta registrar no Library Path do seu Delphi o caminho da pasta SRC da Bibliote
 boss install https://github.com/bittencourtthulio/Bind4D
 ```
 
+*Prerequisites*:<br> 
+
+[**aws4d**](https://github.com/bittencourtthulio/aws4d) - Biblioteca para Envio de Arquivos para a AWS S3
+[**localcache4d**](https://github.com/bittencourtthulio/localcache4d) - Mini Banco de Dados Chave-Valor para Cache local
+[**translator4d**](https://github.com/bittencourtthulio/translator4d) - Biblioteca para Tradução com Google API
+[**restrequest4delphi**](https://github.com/viniciussanchez/restrequest4delphi) - Biblioteca para Requisições REST
+
 ## Primeiros Passos - Tutorial
 
 Para utilizar o Bind4D você deve adicionar as uses:
