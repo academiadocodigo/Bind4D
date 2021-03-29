@@ -4,17 +4,39 @@ interface
 
 uses
   System.JSON,
-  Vcl.Forms,
   System.Classes,
   System.Rtti,
   System.Variants,
-  Vcl.Graphics,
-  Vcl.Controls,
-  Vcl.Dialogs,
-  Vcl.StdCtrls,
-  Vcl.ExtCtrls,
-  Vcl.DBGrids,
-  Vcl.Buttons,
+  {$IFDEF HAS_FMX}
+    FMX.Types,
+    FMX.Controls,
+    FMX.Forms,
+    FMX.Graphics,
+    FMX.Dialogs,
+    FMX.Layouts,
+    FMX.Objects,
+    FMX.Grid.Style,
+    FMX.Controls.Presentation,
+    FMX.ScrollBox,
+    FMX.Grid,
+    FMX.StdCtrls,
+    FMX.Edit,
+    FMX.ListBox,
+    FMX.DateTimeCtrls,
+    FMX.ComboEdit,
+  {$ELSE}
+    Vcl.Forms,
+    Vcl.Graphics,
+    Vcl.Controls,
+    Vcl.Dialogs,
+    Vcl.StdCtrls,
+    Vcl.ExtCtrls,
+    Vcl.DBGrids,
+    Vcl.Buttons,
+    Vcl.ComCtrls,
+    Vcl.Mask,
+  {$ENDIF}
+
   Data.DB,
   System.SysUtils,
   Translator4D,
@@ -44,7 +66,11 @@ type
       function FormToJson(aType : TTypeBindFormJson) : TJsonObject;
       function ClearFieldForm : iBind4D;
       function BindDataSetToForm(aDataSet : TDataSet) : iBind4D;
-      function BindFormatListDataSet(aDataSet : TDataSet; aDBGrid : TDBGrid) : iBind4D;
+      {$IFDEF HAS_FMX}
+        function BindFormatListDataSet(aDataSet : TDataSet; aDBGrid : TStringGrid) : iBind4D;
+      {$ELSE}
+        function BindFormatListDataSet(aDataSet : TDataSet; aDBGrid : TDBGrid) : iBind4D;
+      {$ENDIF}
       function BindFormRest (var aEndPoint : String; var aPK : String; var aSort : String; var aOrder : String) : iBind4D;
       function BindFormDefault (var aTitle : String) : iBind4D;
       function GetFieldsByType (aType : TTypeBindFormJson) : String;
@@ -59,8 +85,6 @@ var
 implementation
 
 uses
-  Vcl.ComCtrls,
-  Vcl.Mask,
   StrUtils,
   Bind4D.ChangeCommand,
   System.NetEncoding,
@@ -77,6 +101,16 @@ procedure TBind4D.__BindCaptionToComponent(aComponent: TComponent;
 begin
   if aComponent is TLabel then
     if pRtti.Tem<Translation> then
+    {$IFDEF HAS_FMX}
+      (aComponent as TLabel).Text :=
+        TTranslator4D
+          .New
+            .Google
+              .Params
+                .Query(pRtti.GetAttribute<Translation>.Query)
+              .&End
+            .Execute;
+    {$ELSE}
       (aComponent as TLabel).Caption :=
         TTranslator4D
           .New
@@ -85,9 +119,21 @@ begin
                 .Query(pRtti.GetAttribute<Translation>.Query)
               .&End
             .Execute;
+    {$ENDIF}
+
 
   if aComponent is TSpeedButton then
     if pRtti.Tem<Translation> then
+    {$IFDEF HAS_FMX}
+      (aComponent as TSpeedButton).Text :=
+        TTranslator4D
+          .New
+            .Google
+              .Params
+                .Query(pRtti.GetAttribute<Translation>.Query)
+              .&End
+            .Execute;
+    {$ELSE}
       (aComponent as TSpeedButton).Caption :=
         TTranslator4D
           .New
@@ -96,6 +142,8 @@ begin
                 .Query(pRtti.GetAttribute<Translation>.Query)
               .&End
             .Execute;
+    {$ENDIF}
+
 end;
 
 procedure TBind4D.__BindValueToComponent(aComponent: TComponent; aFieldType : TFieldType; aValue : Variant; aTField : TField; pRtti : TRttiField; aEspecialType : TEspecialType = teNull);
@@ -181,40 +229,70 @@ begin
     end;
   end;
 
-  if aComponent is TMaskEdit then
-    (aComponent as TMaskEdit).Text := FloatToStr(aValue);
+  {$IFDEF HAS_FMX}
+    if aComponent is TCheckBox then
+      (aComponent as TCheckBox).IsChecked := aValue;
+    if aComponent is TTrackBar then
+      (aComponent as TTrackBar).Value := aValue;
+
+    if aComponent is TDateEdit then
+    begin
+      case aFieldType of
+        ftDate,
+        ftDateTime :
+        begin
+          (aComponent as TDateEdit).Date := TBind4DUtils.FormatStrJsonToDateTime(aValue);
+        end;
+        ftTime :
+        begin
+          (aComponent as TDateEdit).Date := TBind4DUtils.FormatStrJsonToTime(aValue);
+        end;
+      end;
+      exit;
+    end;
+
+
+  {$ELSE}
+    if aComponent is TMaskEdit then
+      (aComponent as TMaskEdit).Text := FloatToStr(aValue);
+    if aComponent is TRadioGroup then
+      (aComponent as TRadioGroup).ItemIndex := (aComponent as TRadioGroup).Items.IndexOf(aValue);
+    if aComponent is TCheckBox then
+      (aComponent as TCheckBox).Checked := aValue;
+    if aComponent is TTrackBar then
+      (aComponent as TTrackBar).Position := aValue;
+    if aComponent is TShape then
+      (aComponent as TShape).Brush.Color := aValue;
+    if aComponent is TDateTimePicker then
+    begin
+      case aFieldType of
+        ftDate,
+        ftDateTime :
+        begin
+          (aComponent as TDateTimePicker).Date := TBind4DUtils.FormatStrJsonToDateTime(aValue);
+        end;
+        ftTime :
+        begin
+          (aComponent as TDateTimePicker).Date := TBind4DUtils.FormatStrJsonToTime(aValue);
+        end;
+      end;
+      exit;
+    end;
+  {$ENDIF}
+
   if aComponent is TComboBox then
     (aComponent as TComboBox).ItemIndex := (aComponent as TComboBox).Items.IndexOf(aValue);
-  if aComponent is TRadioGroup then
-    (aComponent as TRadioGroup).ItemIndex := (aComponent as TRadioGroup).Items.IndexOf(aValue);
-  if aComponent is TCheckBox then
-    (aComponent as TCheckBox).Checked := aValue;
-  if aComponent is TTrackBar then
-    (aComponent as TTrackBar).Position := aValue;
-  if aComponent is TDateTimePicker then
-  begin
-    case aFieldType of
-      ftDate,
-      ftDateTime :
-      begin
-        (aComponent as TDateTimePicker).Date := TBind4DUtils.FormatStrJsonToDateTime(aValue);
-      end;
-      ftTime :
-      begin
-        (aComponent as TDateTimePicker).Date := TBind4DUtils.FormatStrJsonToTime(aValue);
-      end;
-    end;
-    exit;
-  end;
-
-  if aComponent is TShape then
-    (aComponent as TShape).Brush.Color := aValue;
 
   if aComponent is TImage then
     if pRtti.Tem<S3Storage> then
     begin
       TBind4DUtils.GetImageS3Storage((aComponent as TImage), aValue, pRtti, FFileName);
-      (aComponent as TImage).HelpKeyword := FFileName;
+      {$IFDEF HAS_FMX}
+        (aComponent as TImage).Hint := FFileName;
+      {$ELSE}
+        (aComponent as TImage).HelpKeyword := FFileName;
+      {$ENDIF}
+
     end;
 
       //TBind4DUtils.GetImageS3Storage((aComponent as TImage),  aValue, pRtti);
@@ -276,6 +354,12 @@ begin
 
 end;
 
+{$IFDEF HAS_FMX}
+function TBind4D.BindFormatListDataSet(aDataSet : TDataSet; aDBGrid : TStringGrid) : iBind4D;
+begin
+  //
+end;
+{$ELSE}
 function TBind4D.BindFormatListDataSet(aDataSet : TDataSet; aDBGrid : TDBGrid) : iBind4D;
 var
   ctxRtti : TRttiContext;
@@ -370,6 +454,7 @@ begin
     ctxRtti.Free;
   end;
 end;
+{$ENDIF}
 
 function TBind4D.BindFormDefault(var aTitle : String) : iBind4D;
 var
@@ -401,18 +486,31 @@ begin
     for prpRtti in typRtti.GetFields do
     begin
       aComponent := FForm.FindComponent(prpRtti.Name);
+      {$IFDEF HAS_FMX}
+        if aComponent is TTrackBar then
+          (aComponent as TTrackBar).Value := 0;
+        if aComponent is TDateEdit then
+          (aComponent as TDateEdit).Date := now;
+      {$ELSE}
+        if aComponent is TMaskEdit then
+          (aComponent as TMaskEdit).Text := '';
+        if aComponent is TRadioGroup then
+          (aComponent as TRadioGroup).ItemIndex := -1;
+        if aComponent is TTrackBar then
+          (aComponent as TTrackBar).Position := 0;
+        if aComponent is TDateTimePicker then
+          (aComponent as TDateTimePicker).Date := now;
+      {$ENDIF}
+
+
       if aComponent is TEdit then
         (aComponent as TEdit).Text := '';
-      if aComponent is TMaskEdit then
-        (aComponent as TMaskEdit).Text := '';
+
       if aComponent is TComboBox then
         (aComponent as TComboBox).ItemIndex := -1;
-      if aComponent is TRadioGroup then
-        (aComponent as TRadioGroup).ItemIndex := -1;
-      if aComponent is TTrackBar then
-        (aComponent as TTrackBar).Position := 0;
-      if aComponent is TDateTimePicker then
-        (aComponent as TDateTimePicker).Date := now;
+
+
+
       if aComponent is TImage then
         if prpRtti.Tem<ImageAttribute> then
           TBind4DUtils.LoadDefaultResourceImage((aComponent as TImage), prpRtti.GetAttribute<ImageAttribute>.DefaultResourceImage);
@@ -583,18 +681,30 @@ begin
     exit;
   end;
 
-  if aComponent is TMaskEdit then
-    Result := (aComponent as TMaskEdit).Text;
+  {$IFDEF HAS_FMX}
+    if aComponent is TCheckBox then
+      Result := (aComponent as TCheckBox).IsChecked.ToString();
+    if aComponent is TTrackBar then
+      Result := (aComponent as TTrackBar).Value.ToString;
+    if aComponent is TDateEdit then
+      Result := TBind4DUtils.FormatDateTimeToJson((aComponent as TDateEdit).DateTime);
+  {$ELSE}
+    if aComponent is TMaskEdit then
+      Result := (aComponent as TMaskEdit).Text;
+    if aComponent is TRadioGroup then
+      Result := (aComponent as TRadioGroup).Items[(aComponent as TRadioGroup).ItemIndex];
+    if aComponent is TCheckBox then
+      Result := (aComponent as TCheckBox).Checked.ToString();
+    if aComponent is TTrackBar then
+      Result := (aComponent as TTrackBar).Position.ToString;
+    if aComponent is TDateTimePicker then
+      Result := TBind4DUtils.FormatDateTimeToJson((aComponent as TDateTimePicker).DateTime);
+  {$ENDIF}
+
+
   if aComponent is TComboBox then
     Result := (aComponent as TComboBox).Items[(aComponent as TComboBox).ItemIndex];
-  if aComponent is TRadioGroup then
-    Result := (aComponent as TRadioGroup).Items[(aComponent as TRadioGroup).ItemIndex];
-  if aComponent is TCheckBox then
-    Result := (aComponent as TCheckBox).Checked.ToString();
-  if aComponent is TTrackBar then
-    Result := (aComponent as TTrackBar).Position.ToString;
-  if aComponent is TDateTimePicker then
-    Result := TBind4DUtils.FormatDateTimeToJson((aComponent as TDateTimePicker).DateTime);
+
   if aComponent is TImage then
     if pRtti.Tem<S3Storage> then
       Result := TBind4DUtils.SendImageS3Storage(TImage(aComponent), pRtti);
@@ -627,12 +737,17 @@ begin
         aComponent := FForm.FindComponent(prpRtti.Name);
         if aComponent is TEdit then
         begin
-
-          (aComponent as TEdit).StyleElements := [seClient, seBorder];
-          (aComponent as TEdit).Color := prpRtti.GetAttribute<ComponentBindStyle>.Color;
+          {$IFDEF HAS_FMX}
+            (aComponent as TEdit).StyledSettings := [TStyledSetting.Other];
+            (aComponent as TEdit).TextSettings.FontColor := prpRtti.GetAttribute<ComponentBindStyle>.FontColor;
+            (aComponent as TEdit).TextSettings.Font.Family := prpRtti.GetAttribute<ComponentBindStyle>.FontName;
+          {$ELSE}
+            (aComponent as TEdit).StyleElements := [seClient, seBorder];
+            (aComponent as TEdit).Color := prpRtti.GetAttribute<ComponentBindStyle>.Color;
+            (aComponent as TEdit).Font.Color := prpRtti.GetAttribute<ComponentBindStyle>.FontColor;
+            (aComponent as TEdit).Font.Name := prpRtti.GetAttribute<ComponentBindStyle>.FontName;
+          {$ENDIF}
           (aComponent as TEdit).Font.Size := prpRtti.GetAttribute<ComponentBindStyle>.FontSize;
-          (aComponent as TEdit).Font.Color := prpRtti.GetAttribute<ComponentBindStyle>.FontColor;
-          (aComponent as TEdit).Font.Name := prpRtti.GetAttribute<ComponentBindStyle>.FontName;
 
           (aComponent as TEdit).OnChange :=
             TBind4DUtils.AnonProc2NotifyEvent(
@@ -694,55 +809,110 @@ begin
 
         if aComponent is TPanel then
         begin
-          (aComponent as TPanel).ParentBackground := False;
-          (aComponent as TPanel).Color := prpRtti.GetAttribute<ComponentBindStyle>.Color;
-          (aComponent as TPanel).Font.Size := prpRtti.GetAttribute<ComponentBindStyle>.FontSize;
-          (aComponent as TPanel).Font.Color := prpRtti.GetAttribute<ComponentBindStyle>.FontColor;
-          (aComponent as TPanel).Font.Name := prpRtti.GetAttribute<ComponentBindStyle>.FontName;
+          {$IFDEF HAS_FMX}
+          {$ELSE}
+            (aComponent as TPanel).ParentBackground := False;
+            (aComponent as TPanel).Color := prpRtti.GetAttribute<ComponentBindStyle>.Color;
+            (aComponent as TPanel).Font.Size := prpRtti.GetAttribute<ComponentBindStyle>.FontSize;
+            (aComponent as TPanel).Font.Color := prpRtti.GetAttribute<ComponentBindStyle>.FontColor;
+            (aComponent as TPanel).Font.Name := prpRtti.GetAttribute<ComponentBindStyle>.FontName;
+          {$ENDIF}
         end;
 
         if aComponent is TLabel then
         begin
-          (aComponent as TLabel).StyleElements := [seClient, seBorder];
-          (aComponent as TLabel).Color := prpRtti.GetAttribute<ComponentBindStyle>.Color;
+          {$IFDEF HAS_FMX}
+            (aComponent as TLabel).StyledSettings := [TStyledSetting.Other];
+            (aComponent as TLabel).TextSettings.FontColor := prpRtti.GetAttribute<ComponentBindStyle>.FontColor;
+            (aComponent as TLabel).TextSettings.Font.Family := prpRtti.GetAttribute<ComponentBindStyle>.FontName;
+          {$ELSE}
+            (aComponent as TLabel).StyleElements := [seClient, seBorder];
+            (aComponent as TLabel).Color := prpRtti.GetAttribute<ComponentBindStyle>.Color;
+            (aComponent as TLabel).Font.Color := prpRtti.GetAttribute<ComponentBindStyle>.FontColor;
+            (aComponent as TLabel).Font.Name := prpRtti.GetAttribute<ComponentBindStyle>.FontName;
+          {$ENDIF}
           (aComponent as TLabel).Font.Size := prpRtti.GetAttribute<ComponentBindStyle>.FontSize;
-          (aComponent as TLabel).Font.Color := prpRtti.GetAttribute<ComponentBindStyle>.FontColor;
-          (aComponent as TLabel).Font.Name := prpRtti.GetAttribute<ComponentBindStyle>.FontName;
         end;
 
-        if aComponent is TMaskEdit then
-        begin
-          (aComponent as TMaskEdit).StyleElements := [seClient, seBorder];
-          (aComponent as TMaskEdit).Color := prpRtti.GetAttribute<ComponentBindStyle>.Color;
-          (aComponent as TMaskEdit).Font.Size := prpRtti.GetAttribute<ComponentBindStyle>.FontSize;
-          (aComponent as TMaskEdit).Font.Color := prpRtti.GetAttribute<ComponentBindStyle>.FontColor;
-          (aComponent as TMaskEdit).Font.Name := prpRtti.GetAttribute<ComponentBindStyle>.FontName;
-        end;
+        {$IFDEF HAS_FMX}
+          if aComponent is TDateEdit then
+          begin
+            (aComponent as TDateEdit).StyledSettings := [TStyledSetting.Other];
+            (aComponent as TDateEdit).TextSettings.FontColor := prpRtti.GetAttribute<ComponentBindStyle>.Color;
+            (aComponent as TDateEdit).TextSettings.Font.Family := prpRtti.GetAttribute<ComponentBindStyle>.FontName;
+            (aComponent as TDateEdit).TextSettings.Font.Size := prpRtti.GetAttribute<ComponentBindStyle>.FontSize;
+          end;
 
-        if aComponent is TDBGrid then
-        begin
-          (aComponent as TDBGrid).StyleElements := [seClient, seBorder];
-          (aComponent as TDBGrid).Color := prpRtti.GetAttribute<ComponentBindStyle>.Color;
-          (aComponent as TDBGrid).Font.Size := prpRtti.GetAttribute<ComponentBindStyle>.FontSize;
-          (aComponent as TDBGrid).Font.Color := prpRtti.GetAttribute<ComponentBindStyle>.FontColor;
-          (aComponent as TDBGrid).Font.Name := prpRtti.GetAttribute<ComponentBindStyle>.FontName;
-        end;
+          if aComponent is TRectangle then
+          begin
+            (aComponent as TRectangle).Fill.Color := prpRtti.GetAttribute<ComponentBindStyle>.Color
+          end;
+
+          if aComponent is TComboEdit then
+          begin
+            (aComponent as TComboEdit).StyledSettings := [TStyledSetting.Other];
+            (aComponent as TComboEdit).TextSettings.FontColor := prpRtti.GetAttribute<ComponentBindStyle>.FontColor;
+            (aComponent as TComboEdit).TextSettings.Font.Family := prpRtti.GetAttribute<ComponentBindStyle>.FontName;
+          end;
+
+          if aComponent is TCheckBox then
+          begin
+            (aComponent as TCheckBox).StyledSettings := [TStyledSetting.Other];
+            (aComponent as TCheckBox).TextSettings.FontColor := prpRtti.GetAttribute<ComponentBindStyle>.FontColor;
+            (aComponent as TCheckBox).TextSettings.Font.Family := prpRtti.GetAttribute<ComponentBindStyle>.FontName;
+            (aComponent as TCheckBox).TextSettings.Font.Size := prpRtti.GetAttribute<ComponentBindStyle>.FontSize;
+          end;
+
+        {$ELSE}
+          if aComponent is TMaskEdit then
+          begin
+            (aComponent as TMaskEdit).StyleElements := [seClient, seBorder];
+            (aComponent as TMaskEdit).Color := prpRtti.GetAttribute<ComponentBindStyle>.Color;
+            (aComponent as TMaskEdit).Font.Size := prpRtti.GetAttribute<ComponentBindStyle>.FontSize;
+            (aComponent as TMaskEdit).Font.Color := prpRtti.GetAttribute<ComponentBindStyle>.FontColor;
+            (aComponent as TMaskEdit).Font.Name := prpRtti.GetAttribute<ComponentBindStyle>.FontName;
+          end;
+
+          if aComponent is TDBGrid then
+          begin
+            (aComponent as TDBGrid).StyleElements := [seClient, seBorder];
+            (aComponent as TDBGrid).Color := prpRtti.GetAttribute<ComponentBindStyle>.Color;
+            (aComponent as TDBGrid).Font.Size := prpRtti.GetAttribute<ComponentBindStyle>.FontSize;
+            (aComponent as TDBGrid).Font.Color := prpRtti.GetAttribute<ComponentBindStyle>.FontColor;
+            (aComponent as TDBGrid).Font.Name := prpRtti.GetAttribute<ComponentBindStyle>.FontName;
+          end;
+
+          if aComponent is TDateTimePicker then
+          begin
+            (aComponent as TDateTimePicker).StyleElements := [seClient, seBorder];
+            (aComponent as TDateTimePicker).Font.Size := prpRtti.GetAttribute<ComponentBindStyle>.FontSize;
+            (aComponent as TDateTimePicker).Font.Color := prpRtti.GetAttribute<ComponentBindStyle>.FontColor;
+            (aComponent as TDateTimePicker).Font.Name := prpRtti.GetAttribute<ComponentBindStyle>.FontName;
+          end;
+
+          if aComponent is TComboBox then
+          begin
+            (aComponent as TComboBox).StyleElements := [seClient, seBorder];
+            (aComponent as TComboBox).Color := prpRtti.GetAttribute<ComponentBindStyle>.Color;
+            (aComponent as TComboBox).Font.Color := prpRtti.GetAttribute<ComponentBindStyle>.FontColor;
+            (aComponent as TComboBox).Font.Name := prpRtti.GetAttribute<ComponentBindStyle>.FontName;
+            (aComponent as TComboBox).Font.Size := prpRtti.GetAttribute<ComponentBindStyle>.FontSize;
+          end;
+        {$ENDIF}
 
         if aComponent is TSpeedButton then
         begin
-          (aComponent as TSpeedButton).StyleElements := [seClient, seBorder];
-          (aComponent as TSpeedButton).Font.Size := prpRtti.GetAttribute<ComponentBindStyle>.FontSize;
-          (aComponent as TSpeedButton).Font.Color := prpRtti.GetAttribute<ComponentBindStyle>.FontColor;
-          (aComponent as TSpeedButton).Font.Name := prpRtti.GetAttribute<ComponentBindStyle>.FontName;
-        end;
-
-        if aComponent is TDateTimePicker then
-        begin
-          (aComponent as TDateTimePicker).StyleElements := [seClient, seBorder];
-          (aComponent as TDateTimePicker).Font.Size := prpRtti.GetAttribute<ComponentBindStyle>.FontSize;
-          (aComponent as TDateTimePicker).Font.Color := prpRtti.GetAttribute<ComponentBindStyle>.FontColor;
-          (aComponent as TDateTimePicker).Font.Name := prpRtti.GetAttribute<ComponentBindStyle>.FontName;
-        end;
+          {$IFDEF HAS_FMX}
+            (aComponent as TSpeedButton).StyledSettings := [TStyledSetting.Other];
+            (aComponent as TSpeedButton).TextSettings.FontColor := prpRtti.GetAttribute<ComponentBindStyle>.Color;
+            (aComponent as TSpeedButton).TextSettings.Font.Family := prpRtti.GetAttribute<ComponentBindStyle>.FontName;
+          {$ELSE}
+            (aComponent as TSpeedButton).StyleElements := [seClient, seBorder];
+            (aComponent as TSpeedButton).Font.Size := prpRtti.GetAttribute<ComponentBindStyle>.FontSize;
+            (aComponent as TSpeedButton).Font.Color := prpRtti.GetAttribute<ComponentBindStyle>.FontColor;
+            (aComponent as TSpeedButton).Font.Name := prpRtti.GetAttribute<ComponentBindStyle>.FontName;
+          {$ENDIF}
+          end;
       end;
     end;
   finally

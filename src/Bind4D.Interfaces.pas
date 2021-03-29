@@ -3,13 +3,22 @@ unit Bind4D.Interfaces;
 interface
 
 uses
-  Vcl.Forms,
+
   System.JSON,
   Data.DB,
-  Translator4D.Interfaces,
+  {$IFDEF HAS_FMX}
+    FMX.Forms,
+    FMX.Grid.Style,
+    FMX.Controls.Presentation,
+    FMX.ScrollBox,
+    FMX.Grid,
+  {$ELSE}
+    Vcl.Forms,
+    Vcl.DBGrids,
+  {$ENDIF}
   Bind4D.Types,
   Bind4D.Attributes,
-  Vcl.DBGrids,
+  Translator4D.Interfaces,
   AWS4D.Interfaces;
 
 type
@@ -19,7 +28,11 @@ type
     function FormToJson(aType : TTypeBindFormJson) : TJsonObject;
     function ClearFieldForm : iBind4D;
     function BindDataSetToForm(aDataSet : TDataSet) : iBind4D;
-    function BindFormatListDataSet(aDataSet : TDataSet; aDBGrid : TDBGrid) : iBind4D;
+    {$IFDEF HAS_FMX}
+      function BindFormatListDataSet(aDataSet : TDataSet; aDBGrid : TStringGrid) : iBind4D;
+    {$ELSE}
+      function BindFormatListDataSet(aDataSet : TDataSet; aDBGrid : TDBGrid) : iBind4D;
+    {$ENDIF}
     function BindFormRest (var aEndPoint : String; var aPK : String; var aSort : String; var aOrder : String) : iBind4D;
     function BindFormDefault (var aTitle : String) : iBind4D;
     function GetFieldsByType (aType : TTypeBindFormJson) : String;

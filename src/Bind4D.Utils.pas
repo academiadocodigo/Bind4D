@@ -5,7 +5,12 @@ interface
 uses
   System.Classes,
   System.SysUtils,
-  Vcl.ExtCtrls,
+  {$IFDEF HAS_FMX}
+    FMX.Objects,
+  {$ELSE}
+    Vcl.ExtCtrls,
+  {$ENDIF}
+
   System.RTTI;
 
 type
@@ -416,7 +421,12 @@ begin
     InStream := TResourceStream.Create(HInstance, pRtti.GetAttribute<ImageAttribute>.DefaultResourceImage, RT_RCDATA);
       try
         aFileName := '';
-        aImage.Picture.LoadFromStream(InStream);
+        {$IFDEF HAS_FMX}
+          aImage.Bitmap.LoadFromStream(InStream);
+        {$ELSE}
+          aImage.Picture.LoadFromStream(InStream);
+        {$ENDIF}
+
       finally
         InStream.Free;
       end;
@@ -430,10 +440,19 @@ class procedure TBind4DUtils.LoadDefaultResourceImage(aImage: TImage;
 var
   InStream: TResourceStream;
 begin
-  aImage.HelpKeyword := '';
+  {$IFDEF HAS_FMX}
+    aImage.Hint := '';
+  {$ELSE}
+    aImage.HelpKeyword := '';
+  {$ENDIF}
+
   InStream := TResourceStream.Create(HInstance, aDefaultResource, RT_RCDATA);
   try
-    aImage.Picture.LoadFromStream(InStream);
+    {$IFDEF HAS_FMX}
+      aImage.Bitmap.LoadFromStream(InStream);
+    {$ELSE}
+      aImage.Picture.LoadFromStream(InStream);
+    {$ENDIF}
   finally
     InStream.Free;
   end;
@@ -455,7 +474,12 @@ begin
   Result := '';
   try
     aImageName := TBind4DUtils.SendGuuidPrepare(TGuid.NewGuid.ToString) + '.' + pRtti.GetAttribute<S3Storage>.FileExtension;
-    if Trim(aImage.HelpKeyword) <> '' then aImageName := aImage.HelpKeyword;
+    {$IFDEF HAS_FMX}
+      if Trim(aImage.Hint) <> '' then aImageName := aImage.Hint;
+    {$ELSE}
+      if Trim(aImage.HelpKeyword) <> '' then aImageName := aImage.HelpKeyword;
+    {$ENDIF}
+
     if Length(aImageName) > 40 then
     begin
       aImageName := ReverseString(aImageName);
@@ -474,7 +498,12 @@ begin
         .ToString;
 
   finally
-    aImage.HelpKeyword := '';
+    {$IFDEF HAS_FMX}
+      aImage.Hint := '';
+    {$ELSE}
+      aImage.HelpKeyword := '';
+    {$ENDIF}
+
   end;
 
 end;
