@@ -13,6 +13,7 @@ O Bind4D tem o objetivo de facilitar a transição de dados entre a camada de vi
 <p align="center">
   <img src="https://img.shields.io/github/v/release/bittencourtthulio/Bind4D?style=flat-square">
   <img src="https://img.shields.io/github/stars/bittencourtthulio/Bind4D?style=flat-square">
+  [![All Contributors](https://img.shields.io/github/contributors/bittencourtthulio/Bind4D?color=orange&style=flat-square)](/CONTRIBUTORS.md) 
 </p>
 
 ## Instalação
