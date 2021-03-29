@@ -25,10 +25,10 @@ boss install https://github.com/bittencourtthulio/Bind4D
 
 *Prerequisites*:<br> 
 
-[**aws4d**](https://github.com/bittencourtthulio/aws4d) - Biblioteca para Envio de Arquivos para a AWS S3
-[**localcache4d**](https://github.com/bittencourtthulio/localcache4d) - Mini Banco de Dados Chave-Valor para Cache local
-[**translator4d**](https://github.com/bittencourtthulio/translator4d) - Biblioteca para Tradução com Google API
-[**restrequest4delphi**](https://github.com/viniciussanchez/restrequest4delphi) - Biblioteca para Requisições REST
+[**aws4d**](https://github.com/bittencourtthulio/aws4d) - Biblioteca para Envio de Arquivos para a AWS S3 <br>
+[**localcache4d**](https://github.com/bittencourtthulio/localcache4d) - Mini Banco de Dados Chave-Valor para Cache local <br>
+[**translator4d**](https://github.com/bittencourtthulio/translator4d) - Biblioteca para Tradução com Google API <br>
+[**restrequest4delphi**](https://github.com/viniciussanchez/restrequest4delphi) - Biblioteca para Requisições REST <br>
 
 ## Primeiros Passos - Tutorial
 
