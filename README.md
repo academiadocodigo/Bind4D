@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://github.com/bittencourtthulio/Bind4D/blob/main/assets/logo-bind4d.jpg">
+    <img alt="bind4d" src="https://github.com/bittencourtthulio/Bind4D/blob/main/assets/logo-bind4d.jpg">
+  </a>  
+</p><br>
+
 # Bind4D
 Framework para realização de Bind via notação de Atributos nos componentes do formulário.
 
