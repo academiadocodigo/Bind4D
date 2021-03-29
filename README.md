@@ -178,7 +178,7 @@ TBind4D.New.Form(Self).SetStyleComponents;
 ```
 
 
-####  [FieldDataSetBind(Field, Type, Visible, DisplayWidh_Percent, DisplayName, MaskEdit, Alignment)]
+####  [FieldDataSetBind(Field, Type, Visible, DisplayWidh_Percent, DisplayName, MaskEdit, Alignment, LimitWidth)]
 
 O atributo FieldDataSetBind permite você configurar o componente tanto para sua exibição no DBGrid quanto para o Bind automatico entre o DataSet e o Componente na Tela
 
@@ -190,6 +190,7 @@ DisplayWidh_Percent = Tamanho da Coluna no DBGrid em Porcentagem
 DisplayName =  Nome da Coluna a ser Exibido no DBGrid
 MaskEdit = Mascara para exibição do valor
 Alignment = Posicionamento na Exibição no DBGrid 
+LimitWidth = Determina qual o tamanho limite de exibição da Coluna no DBGrid, se o formulario for menor que o tamanho informado a coluna é automaticamente oculta
 
 Exemplo
 
