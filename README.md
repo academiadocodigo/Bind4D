@@ -4,17 +4,22 @@
   </a>  
 </p><br>
 
+<p align="center">
+  <img src="https://img.shields.io/github/v/release/bittencourtthulio/Bind4D?style=flat-square">
+  <img src="https://img.shields.io/github/stars/bittencourtthulio/Bind4D?style=flat-square">
+  <img src="https://img.shields.io/github/contributors/bittencourtthulio/Bind4D?color=orange&style=flat-square">
+   <img src="https://tokei.rs/b1/github/bittencourtthulio/Bind4D?color=red&category=lines">
+  <img src="https://tokei.rs/b1/github/bittencourtthulio/Bind4D?color=green&category=code">
+  <img src="https://tokei.rs/b1/github/bittencourtthulio/Bind4D?color=yellow&category=files">
+</p>
+
 # Bind4D
 Framework para realização de Bind via notação de Atributos nos componentes do formulário.
 
 O Bind4D tem o objetivo de facilitar a transição de dados entre a camada de visão e as demais camadas do seu sistema, realizando de forma automatica mediante notação a conversão dos dados de um formulário para JSON, atribuindo estilos a componentes, realizando validação de campos, configuração de exibição de dados do dataset em um DbGrid e muito mais.
 
 <br>
-<p align="center">
-  <img src="https://img.shields.io/github/v/release/bittencourtthulio/Bind4D?style=flat-square">
-  <img src="https://img.shields.io/github/stars/bittencourtthulio/Bind4D?style=flat-square">
-  <img src="https://img.shields.io/github/contributors/bittencourtthulio/Bind4D?color=orange&style=flat-square">
-</p>
+
 
 ## Instalação
 
