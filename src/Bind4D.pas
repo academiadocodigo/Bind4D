@@ -54,6 +54,7 @@ type
       FAWSService : iAWS4D;
       function __GetComponentToValue(aComponent: TComponent; pRtti : TRttiField): String;
       procedure __BindValueToComponent(aComponent: TComponent; aFieldType : TFieldType; aValue : Variant; aTField : TField; pRtti : TRttiField; aEspecialType : TEspecialType = teNull);
+      procedure __BindResourceImageToComponent(pRtti : TRttiField);
       procedure __BindCaptionToComponent(aComponent : TComponent; pRtti : TRttiField);
       procedure AdjustDateTimeDataSet(prpRtti: TRttiField; aDataSet: TDataSet);
       procedure AdjustDateDataSet(prpRtti: TRttiField; aDataSet: TDataSet);
@@ -92,7 +93,9 @@ uses
   Data.Cloud.AmazonAPI,
   System.Types,
   Bind4D.Helpers,
-  Bind4D.Attributes;
+  Bind4D.Attributes, 
+  Bind4D.ImageList,
+  Bind4D.Image;
 
 { TBind4D }
 
@@ -144,6 +147,44 @@ begin
             .Execute;
     {$ENDIF}
 
+end;
+
+procedure TBind4D.__BindResourceImageToComponent(pRtti : TRttiField);
+var
+  aComponent : TComponent;
+begin
+  aComponent := FForm.FindComponent(pRtti.Name);
+  if (aComponent is TSpeedButton) then
+  begin
+    if pRtti.Tem<ImageAttribute> then
+    begin
+      {$IFDEF HAS_FMX}
+      {$ELSE}
+        TBind4DImageList
+        .New(
+          pRtti.GetAttribute<ImageAttribute>.Width,
+          pRtti.GetAttribute<ImageAttribute>.Heigth)
+        .LoadImageResource(
+          pRtti.GetAttribute<ImageAttribute>.DefaultResourceImage,
+          (aComponent as TSpeedButton).Glyph
+        );
+      {$ENDIF}
+    end;
+  end;
+
+  if (aComponent is TImage) then
+  begin
+    if pRtti.Tem<ImageAttribute> then
+    begin
+      TBind4DImage
+        .New
+          .LoadResource(
+            pRtti.GetAttribute<ImageAttribute>.DefaultResourceImage,
+            (aComponent as TImage)
+          )
+    end;
+  end;
+    
 end;
 
 procedure TBind4D.__BindValueToComponent(aComponent: TComponent; aFieldType : TFieldType; aValue : Variant; aTField : TField; pRtti : TRttiField; aEspecialType : TEspecialType = teNull);
@@ -356,8 +397,108 @@ end;
 
 {$IFDEF HAS_FMX}
 function TBind4D.BindFormatListDataSet(aDataSet : TDataSet; aDBGrid : TStringGrid) : iBind4D;
+var
+  ctxRtti : TRttiContext;
+  typRtti : TRttiType;
+  prpRtti : TRttiField;
+  aAux1, aColCount: Integer;
+  aAux2: Integer;
+  i: Integer;
 begin
-  //
+  Result := Self;
+  ctxRtti := TRttiContext.Create;
+  try
+    try
+      typRtti := ctxRtti.GetType(FForm.ClassInfo);
+      for prpRtti in typRtti.GetFields do
+      begin
+        if prpRtti.Tem<FieldDataSetBind> then
+        begin
+          aDataSet.FieldByName(prpRtti.GetAttribute<FieldDataSetBind>.FieldName).Visible := prpRtti.GetAttribute<FieldDataSetBind>.Visible;
+
+          if aDBGrid.Width < prpRtti.GetAttribute<FieldDataSetBind>.FLimitWidth then
+            aDataSet.FieldByName(prpRtti.GetAttribute<FieldDataSetBind>.FieldName).Visible := False;
+
+
+          if aDataSet.FieldByName(prpRtti.GetAttribute<FieldDataSetBind>.FieldName).Visible then
+          begin
+
+            if prpRtti.Tem<Translation> then
+              aDataSet
+                .FieldByName(
+                    prpRtti.GetAttribute<FieldDataSetBind>.FieldName
+                ).DisplayLabel :=
+                TTranslator4D
+                  .New
+                    .Google
+                      .Params
+                        .Query(prpRtti.GetAttribute<Translation>.Query)
+                      .&End
+                    .Execute
+            else
+              aDataSet.FieldByName(prpRtti.GetAttribute<FieldDataSetBind>.FieldName).DisplayLabel := prpRtti.GetAttribute<FieldDataSetBind>.DisplayName;
+
+
+            aDataSet.FieldByName(prpRtti.GetAttribute<FieldDataSetBind>.FieldName).DisplayWidth := Round((prpRtti.GetAttribute<FieldDataSetBind>.Width * aDBGrid.Width ) / 1000);
+            aDataSet.FieldByName(prpRtti.GetAttribute<FieldDataSetBind>.FieldName).Alignment := prpRtti.GetAttribute<FieldDataSetBind>.Alignment;
+
+            if prpRtti.GetAttribute<FieldDataSetBind>.EditMask <> '' then
+              case prpRtti.GetAttribute<FieldDataSetBind>.FDType of
+                ftString :
+                  TStringField(aDataSet.FieldByName(prpRtti.GetAttribute<FieldDataSetBind>.FieldName)).EditMask := prpRtti.GetAttribute<FieldDataSetBind>.EditMask;
+                ftCurrency,
+                ftInteger :
+                  TNumericField(aDataSet.FieldByName(prpRtti.GetAttribute<FieldDataSetBind>.FieldName)).DisplayFormat := prpRtti.GetAttribute<FieldDataSetBind>.EditMask;
+                ftDateTime :
+                begin
+                  AdjustDateTimeDataSet(prpRtti, aDataSet);
+                  TStringField(aDataSet.FieldByName(prpRtti.GetAttribute<FieldDataSetBind>.FieldName)).EditMask := prpRtti.GetAttribute<FieldDataSetBind>.EditMask;
+                end;
+                ftDate :
+                begin
+                  AdjustDateDataSet(prpRtti, aDataSet);
+                  TStringField(aDataSet.FieldByName(prpRtti.GetAttribute<FieldDataSetBind>.FieldName)).EditMask := prpRtti.GetAttribute<FieldDataSetBind>.EditMask;
+                end;
+                ftTime :
+                begin
+                  AdjustTimeDataSet(prpRtti, aDataSet);
+                  TStringField(aDataSet.FieldByName(prpRtti.GetAttribute<FieldDataSetBind>.FieldName)).EditMask := prpRtti.GetAttribute<FieldDataSetBind>.EditMask;
+                end
+
+                else
+                  TStringField(aDataSet.FieldByName(prpRtti.GetAttribute<FieldDataSetBind>.FieldName)).EditMask := prpRtti.GetAttribute<FieldDataSetBind>.EditMask;
+              end;
+          end;
+        end;
+      end;
+
+      aAux1 := 0;
+      aColCount := 0;
+      for i := 0 to Pred(aDBGrid.ColumnCount) do
+        if aDBGrid.Columns[i].Visible then
+        begin
+          Inc(aColCount);
+          aAux1 := aAux1 + Round(aDBGrid.Columns[i].Width);
+        end;
+
+      aAux2 := Round(((aDBGrid.Width-22) - aAux1) / aColCount);
+
+      for i := 0 to Pred(aDBGrid.ColumnCount) do
+        if aDBGrid.Columns[i].Visible then
+          aDBGrid.Columns[i].Width := aDBGrid.Columns[i].Width + aAux2;
+
+
+      if aDBGrid.EnabledScroll then
+        aDBGrid.Columns[Pred(aDBGrid.ColumnCount)].Width := aDBGrid.Columns[Pred(aDBGrid.ColumnCount)].Width
+      else
+        aDBGrid.Columns[Pred(aDBGrid.ColumnCount)].Width := aDBGrid.Columns[Pred(aDBGrid.ColumnCount)].Width + 10;
+
+    except
+      //
+    end;
+  finally
+    ctxRtti.Free;
+  end;
 end;
 {$ELSE}
 function TBind4D.BindFormatListDataSet(aDataSet : TDataSet; aDBGrid : TDBGrid) : iBind4D;
@@ -724,6 +865,7 @@ var
   typRtti : TRttiType;
   prpRtti : TRttiField;
   aComponent : TComponent;
+  aResource : TResourceStream;
 begin
   Result := Self;
   ctxRtti := TRttiContext.Create;
@@ -732,6 +874,7 @@ begin
     for prpRtti in typRtti.GetFields do
     begin
       __BindCaptionToComponent(FForm.FindComponent(prpRtti.Name), prpRtti);
+      __BindResourceImageToComponent(prpRtti);
       if prpRtti.Tem<ComponentBindStyle> then
       begin
         aComponent := FForm.FindComponent(prpRtti.Name);
@@ -825,13 +968,14 @@ begin
             (aComponent as TLabel).StyledSettings := [TStyledSetting.Other];
             (aComponent as TLabel).TextSettings.FontColor := prpRtti.GetAttribute<ComponentBindStyle>.FontColor;
             (aComponent as TLabel).TextSettings.Font.Family := prpRtti.GetAttribute<ComponentBindStyle>.FontName;
+            (aComponent as TLabel).TextSettings.Font.Size := prpRtti.GetAttribute<ComponentBindStyle>.FontSize;
           {$ELSE}
             (aComponent as TLabel).StyleElements := [seClient, seBorder];
             (aComponent as TLabel).Color := prpRtti.GetAttribute<ComponentBindStyle>.Color;
             (aComponent as TLabel).Font.Color := prpRtti.GetAttribute<ComponentBindStyle>.FontColor;
             (aComponent as TLabel).Font.Name := prpRtti.GetAttribute<ComponentBindStyle>.FontName;
+            (aComponent as TLabel).Font.Size := prpRtti.GetAttribute<ComponentBindStyle>.FontSize;
           {$ENDIF}
-          (aComponent as TLabel).Font.Size := prpRtti.GetAttribute<ComponentBindStyle>.FontSize;
         end;
 
         {$IFDEF HAS_FMX}
@@ -861,6 +1005,15 @@ begin
             (aComponent as TCheckBox).TextSettings.FontColor := prpRtti.GetAttribute<ComponentBindStyle>.FontColor;
             (aComponent as TCheckBox).TextSettings.Font.Family := prpRtti.GetAttribute<ComponentBindStyle>.FontName;
             (aComponent as TCheckBox).TextSettings.Font.Size := prpRtti.GetAttribute<ComponentBindStyle>.FontSize;
+          end;
+
+          if aComponent is TStringGrid then
+          begin
+            (aComponent as TStringGrid).StyledSettings := [TStyledSetting.Other];
+            //(aComponent as TStringGrid).Color := prpRtti.GetAttribute<ComponentBindStyle>.Color;
+            (aComponent as TStringGrid).TextSettings.Font.Size := prpRtti.GetAttribute<ComponentBindStyle>.FontSize;
+            (aComponent as TStringGrid).TextSettings.FontColor := prpRtti.GetAttribute<ComponentBindStyle>.FontColor;
+            (aComponent as TStringGrid).TextSettings.Font.Family := prpRtti.GetAttribute<ComponentBindStyle>.FontName;
           end;
 
         {$ELSE}
@@ -911,6 +1064,10 @@ begin
             (aComponent as TSpeedButton).Font.Size := prpRtti.GetAttribute<ComponentBindStyle>.FontSize;
             (aComponent as TSpeedButton).Font.Color := prpRtti.GetAttribute<ComponentBindStyle>.FontColor;
             (aComponent as TSpeedButton).Font.Name := prpRtti.GetAttribute<ComponentBindStyle>.FontName;
+
+            
+
+
           {$ENDIF}
           end;
       end;

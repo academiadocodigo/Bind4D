@@ -1,7 +1,5 @@
 unit Bind4D.Utils;
-
 interface
-
 uses
   System.Classes,
   System.SysUtils,
@@ -10,11 +8,8 @@ uses
   {$ELSE}
     Vcl.ExtCtrls,
   {$ENDIF}
-
   System.RTTI;
-
 type
-
   TNotifyEventWrapper = class(TComponent)
   private
     FProc: TProc<TObject>;
@@ -23,7 +18,6 @@ type
   published
     procedure Event(Sender: TObject);
   end;
-
   TBind4DUtils = class
     private
     public
@@ -46,7 +40,6 @@ type
       class function SendGuuidPrepare ( aGuuid : String ) : String;
       class procedure LoadDefaultResourceImage( aImage : TImage; aDefaultResource : String);
   end;
-
 implementation
 uses
   System.StrUtils,
@@ -55,15 +48,12 @@ uses
   System.Types,
   Bind4D.Helpers,
   Bind4D.Attributes;
-
 { TBind4DUtils }
-
 class function TBind4DUtils.AnonProc2NotifyEvent(Owner: TComponent;
   Proc: TProc<TObject>): TNotifyEvent;
 begin
   Result := TNotifyEventWrapper.Create(Owner, Proc).Event;
 end;
-
 class function TBind4DUtils.ApenasNumeros(valor: String): String;
 var
   i: Integer;
@@ -74,13 +64,11 @@ begin
   valor := StringReplace(valor, ' ', '', [rfReplaceAll]);
   Result := valor;
 end;
-
 class function TBind4DUtils.ExtrairMoeda(aValue: String): String;
 begin
   Result := StringReplace(aValue, ',', '.', [rfReplaceAll]);
   Result := StringReplace(aValue, '.', '', [rfReplaceAll]);
 end;
-
 class function TBind4DUtils.FormatarCelular(valor: string): string;
 var
   i: Integer;
@@ -106,7 +94,6 @@ begin
   end;
   Result := '(' + Copy(valor, 1, 2) + ') ' + Copy(valor, 3, 5) + '-' + Copy(valor, 8, Length(valor));
 end;
-
 
 class function TBind4DUtils.FormatarCNPJ(valor: string): string;
 var
@@ -137,7 +124,6 @@ begin
   Result := Copy(valor, 1, 2) + '.' + Copy(valor, 3, 3) + '.' + Copy(valor, 6, 3) + '/' + Copy(valor, 9, 4) + '-' + Copy(valor, 13, 2);
 end;
 
-
 class function TBind4DUtils.FormatarCPF(valor: string): string;
 var
   i: Integer;
@@ -163,7 +149,6 @@ begin
   end;
   Result := Copy(valor, 1, 3) + '.' + Copy(valor, 4, 3) + '.' + Copy(valor, 7, 3) + '-' + Copy(valor, 10, 2);
 end;
-
 
 class function TBind4DUtils.FormatarMoeda(valor: string): string;
 var
@@ -230,7 +215,6 @@ begin
   end;
 end;
 
-
 class function TBind4DUtils.FormatDateDataSet(aValue: String): String;
 var
   i: Integer;
@@ -246,7 +230,6 @@ begin
       delete(aValue, i, 1);
 //    if not(aValue[i] in ['0' .. '9']) then
 //      delete(aValue, i, 1);
-
   dia := Copy(aValue, 7, 2);
   mes := Copy(aValue, 5, 2);
   ano := Copy(aValue, 1, 4);
@@ -255,7 +238,6 @@ begin
   segundo := Copy(aValue, 13, 2);
   Result := dia + mes + ano;
 end;
-
 
 class function TBind4DUtils.FormatDateTime(aValue: String): String;
 var
@@ -296,7 +278,6 @@ begin
   Result := dia + '/' + mes + '/' + ano + ' ' + hora + ':' + minuto + ':' + segundo;
 end;
 
-
 class function TBind4DUtils.FormatDateTimeDataSet(aValue: String): String;
 var
   i: Integer;
@@ -310,7 +291,6 @@ begin
    for i := 0 to Length(aValue) - 1 do
     if not CharInSet(aValue[i], ['0' .. '9']) then
       delete(aValue, i, 1);
-
   dia := Copy(aValue, 7, 2);
   mes := Copy(aValue, 5, 2);
   ano := Copy(aValue, 1, 4);
@@ -319,7 +299,6 @@ begin
   segundo := Copy(aValue, 13, 2);
   Result := dia + mes + ano + ' ' + hora + ':' + minuto + ':' + segundo;
 end;
-
 
 class function TBind4DUtils.FormatDateTimeToJson(aValue: TDateTime): String;
 var
@@ -344,7 +323,6 @@ begin
   Result := ano + '-' + mes + '-' + dia + ' ' + hora + ':' + minuto + ':' + segundo +'.000';
 end;
 
-
 class function TBind4DUtils.FormatStrJsonToDateTime(aValue: String): TDateTime;
 var
   i: Integer;
@@ -367,7 +345,6 @@ begin
   Result := StrToDateTime(dia + '/' + mes + '/' + ano + ' ' + hora + ':' + minuto + ':' + segundo);
 end;
 
-
 class function TBind4DUtils.FormatStrJsonToTime(aValue: String): TDateTime;
 var
   i: Integer;
@@ -384,7 +361,6 @@ begin
   Result := StrToDateTime('01/01/1989 ' + hora + ':' + minuto + ':' + segundo);
 end;
 
-
 class function TBind4DUtils.FormatTimeDataSet(aValue: String): String;
 var
   i: Integer;
@@ -400,7 +376,6 @@ begin
   segundo := Copy(aValue, 13, 2);
   Result := hora + minuto + segundo;
 end;
-
 class procedure TBind4DUtils.GetImageS3Storage(aImage : TImage; aName : String; pRtti : TRttiField; out aFileName : string);
 var
   InStream: TResourceStream;
@@ -426,14 +401,11 @@ begin
         {$ELSE}
           aImage.Picture.LoadFromStream(InStream);
         {$ENDIF}
-
       finally
         InStream.Free;
       end;
   end;
-
 end;
-
 
 class procedure TBind4DUtils.LoadDefaultResourceImage(aImage: TImage;
   aDefaultResource: String);
@@ -445,7 +417,6 @@ begin
   {$ELSE}
     aImage.HelpKeyword := '';
   {$ENDIF}
-
   InStream := TResourceStream.Create(HInstance, aDefaultResource, RT_RCDATA);
   try
     {$IFDEF HAS_FMX}
@@ -458,13 +429,11 @@ begin
   end;
 end;
 
-
 class function TBind4DUtils.SendGuuidPrepare(aGuuid: String): String;
 begin
   Result := StringReplace(aGuuid, '{', '', [rfReplaceAll]);
   Result := StringReplace(Result, '}', '', [rfReplaceAll]);
 end;
-
 
 class function TBind4DUtils.SendImageS3Storage(var aImage: TImage;
   pRtti: TRttiField): String;
@@ -479,7 +448,6 @@ begin
     {$ELSE}
       if Trim(aImage.HelpKeyword) <> '' then aImageName := aImage.HelpKeyword;
     {$ENDIF}
-
     if Length(aImageName) > 40 then
     begin
       aImageName := ReverseString(aImageName);
@@ -496,31 +464,23 @@ begin
             .FileStream(aImage)
           .Send
         .ToString;
-
   finally
     {$IFDEF HAS_FMX}
       aImage.Hint := '';
     {$ELSE}
       aImage.HelpKeyword := '';
     {$ENDIF}
-
   end;
-
 end;
-
 { TNotifyEventWrapper }
-
 constructor TNotifyEventWrapper.Create(Owner: TComponent; Proc: TProc<TObject>);
 begin
   inherited Create(Owner);
   FProc := Proc;
 end;
-
 procedure TNotifyEventWrapper.Event(Sender: TObject);
 begin
   FProc(Sender);
 end;
-
 end.
-
 

@@ -49,7 +49,9 @@ contains
   Bind4D.Helpers in 'src\Bind4D.Helpers.pas',
   Bind4D.Interfaces in 'src\Bind4D.Interfaces.pas',
   Bind4D.Types in 'src\Bind4D.Types.pas',
-  Bind4D.Attributes in 'src\Bind4D.Attributes.pas';
+  Bind4D.Attributes in 'src\Bind4D.Attributes.pas',
+  Bind4D.ImageList in 'src\Bind4D.ImageList.pas',
+  Bind4D.Image in 'src\Bind4D.Image.pas';
 
 end.
 

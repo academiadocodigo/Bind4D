@@ -73,12 +73,18 @@ type
   {$region 'Components Attributes'}
   ImageAttribute = class(TCustomAttribute)
     private
-    FDefaultResourceImage: String;
-    procedure SetDefaultResourceImage(const Value: String);
+      FDefaultResourceImage: String;
+      FWidth: Integer;
+      FHeigth: Integer;
+      procedure SetDefaultResourceImage(const Value: String);
+      procedure SetHeigth(const Value: Integer);
+      procedure SetWidth(const Value: Integer);
     public
-      constructor Create( aDefaultResourceImage : String);
+      constructor Create( aDefaultResourceImage : String; aWidth : Integer = 32; aHeigth : Integer = 32);
       property DefaultResourceImage : String read FDefaultResourceImage write SetDefaultResourceImage;
-  end;
+      property Width : Integer read FWidth write SetWidth;
+      property Heigth : Integer read FHeigth write SetHeigth;
+    end;
 
   ComponentBindStyle = class(TCustomAttribute)
     private
@@ -304,14 +310,26 @@ end;
 
 { ImageAttribute }
 
-constructor ImageAttribute.Create(aDefaultResourceImage: String);
+constructor ImageAttribute.Create( aDefaultResourceImage : String; aWidth : Integer = 32; aHeigth : Integer = 32);
 begin
   FDefaultResourceImage := aDefaultResourceImage;
+  FWidth := aWidth;
+  FHeigth := aHeigth;
 end;
 
 procedure ImageAttribute.SetDefaultResourceImage(const Value: String);
 begin
   FDefaultResourceImage := Value;
+end;
+
+procedure ImageAttribute.SetHeigth(const Value: Integer);
+begin
+  FHeigth := Value;
+end;
+
+procedure ImageAttribute.SetWidth(const Value: Integer);
+begin
+  FWidth := Value;
 end;
 
 { FieldJsonBind }
