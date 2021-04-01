@@ -244,7 +244,7 @@ Exemplo
 edtName: TEdit;
 ```
 
-### [ImageAttribute((aDefaultResourceImage : String; aWidth : Integer = 32; aHeigth : Integer = 32)]
+### [ImageAttribute((aDefaultResourceImage, aWidth, aHeigth)]
 
 O atributo ImageAttribute serve para adicionar automaticamente imagens a componentes TSpeedButton e TImage, basta adicionar uma imagem PNG no Resource da sua aplicação e informar o nome desse resource ao attributo
 dessa forma ao executar o ``` TBind4D.New.SetStyleComponents; ``` ele irá ler a imagem do recurso e attribuir ao seu componente na tela.
