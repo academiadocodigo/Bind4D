@@ -87,22 +87,26 @@ var
   aTotalWidthAttr: Integer;
   aCountTotalColumnsVisible: Integer;
   aDifColumns: Currency;
+  aField : TField;
 begin
   Result := Self;
   FCoEficient := 27;
   aTotalWidthAttr := 0;
   aCountTotalColumnsVisible := 0;
 
+
   for aAttr in RttiUtils.Get<FieldDataSetBind>(FAttributes.Form) do
   begin
-    FComponent.DataSource.DataSet.FieldByName(aAttr.FieldName).Visible := aAttr.Visible;
+    aField := FComponent.DataSource.DataSet.FindField(aAttr.FieldName);
+    if not Assigned(aField) then exit;
+    aField.Visible := aAttr.Visible;
     if aAttr.Visible then
       if FAttributes.Form.Width < aAttr.FLimitWidth then
-        FComponent.DataSource.DataSet.FieldByName(aAttr.FieldName).Visible := False
+        aField.Visible := False
       else
-        FComponent.DataSource.DataSet.FieldByName(aAttr.FieldName).Visible := True;
+        aField.Visible := True;
 
-    if FComponent.DataSource.DataSet.FieldByName(aAttr.FieldName).Visible then
+    if aField.Visible then
     begin
       aTotalWidthAttr := aTotalWidthAttr + aAttr.Width;
       Inc(aCountTotalColumnsVisible);
@@ -124,15 +128,11 @@ var
   aAttranslation : Translation;
 begin
   Result := Self;
-  aField := FComponent.DataSource.DataSet.FieldByName(aAttr.FieldName);
-  aField.Visible := aAttr.Visible;
 
- // if FComponent.Width < aAttr.FLimitWidth then
-   // aField.Visible := False;
-//
-//  for I := 0 to Pred(FComponent.Columns.Count) do
-//    if FComponent.Columns[I].Field.DisplayName = aAttr.FieldName then
-//      FComponent.Columns[I].Width := Round((aAttr.Width * FComponent.Width ) / 100);
+  aField := FComponent.DataSource.DataSet.FindField(aAttr.FieldName);
+  if not assigned(aField) then exit;
+  
+  aField.Visible := aAttr.Visible;
 
   aField.DisplayWidth := Round((aAttr.Width * FComponent.Width ) / 1000);
   aField.Alignment := aAttr.Alignment;
@@ -176,9 +176,6 @@ begin
           .Execute
     else
       aField.DisplayLabel := aAttr.DisplayName;
-
-
-
 end;
 
 procedure TBind4DComponentDBGrid.AdjustTimeDataSet(aAttr: FieldDataSetBind);
@@ -234,10 +231,7 @@ constructor TBind4DComponentDBGrid.Create(aValue : TDBGrid);
 begin
   FAttributes := TBind4DComponentAttributes.Create(Self);
   FComponent := aValue;
-
   FComponent.OnDrawColumnCell := DrawColCel;
-
-
 end;
 
 destructor TBind4DComponentDBGrid.Destroy;
