@@ -3,7 +3,9 @@ unit Bind4D.ChangeCommand;
 interface
 
 uses
-  System.Generics.Collections, System.SysUtils;
+  System.Generics.Collections,
+  System.SysUtils,
+  Vcl.StdCtrls;
 
 type
 

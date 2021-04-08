@@ -93,15 +93,41 @@
         <DCCReference Include="FireDAC.dcp"/>
         <DCCReference Include="FireDACCommonDriver.dcp"/>
         <DCCReference Include="FireDACCommon.dcp"/>
-        <DCCReference Include="src\Bind4D.pas"/>
-        <DCCReference Include="src\Bind4D.Utils.pas"/>
+        <DCCReference Include="src\Bind4D.Attributes.pas"/>
         <DCCReference Include="src\Bind4D.ChangeCommand.pas"/>
+        <DCCReference Include="src\Bind4D.Component.Attributes.pas"/>
+        <DCCReference Include="src\Bind4D.Component.CheckBox.pas"/>
+        <DCCReference Include="src\Bind4D.Component.ComboBox.pas"/>
+        <DCCReference Include="src\Bind4D.Component.ComboEdit.pas"/>
+        <DCCReference Include="src\Bind4D.Component.DateEdit.pas"/>
+        <DCCReference Include="src\Bind4D.Component.DateTimePicker.pas"/>
+        <DCCReference Include="src\Bind4D.Component.DBGrid.pas"/>
+        <DCCReference Include="src\Bind4D.Component.Edit.pas"/>
+        <DCCReference Include="src\Bind4D.Component.Factory.pas"/>
+        <DCCReference Include="src\Bind4D.Component.Image.pas"/>
+        <DCCReference Include="src\Bind4D.Component.Interfaces.pas"/>
+        <DCCReference Include="src\Bind4D.Component.Labels.pas"/>
+        <DCCReference Include="src\Bind4D.Component.MaskEdit.pas"/>
+        <DCCReference Include="src\Bind4D.Component.Panel.pas"/>
+        <DCCReference Include="src\Bind4D.Component.Rectangle.pas"/>
+        <DCCReference Include="src\Bind4D.Component.SpeedButton.pas"/>
+        <DCCReference Include="src\Bind4D.Component.StringGrid.pas"/>
         <DCCReference Include="src\Bind4D.Helpers.pas"/>
         <DCCReference Include="src\Bind4D.Interfaces.pas"/>
+        <DCCReference Include="src\Bind4D.pas"/>
         <DCCReference Include="src\Bind4D.Types.pas"/>
-        <DCCReference Include="src\Bind4D.Attributes.pas"/>
-        <DCCReference Include="src\Bind4D.ImageList.pas"/>
-        <DCCReference Include="src\Bind4D.Image.pas"/>
+        <DCCReference Include="src\Bind4D.Utils.pas"/>
+        <DCCReference Include="src\Bind4D.Utils.Rtti.pas"/>
+        <DCCReference Include="src\Bind4D.Types.Helpers.pas"/>
+        <DCCReference Include="src\Bind4D.Types.Get.pas"/>
+        <DCCReference Include="src\Bind4D.Types.Interfaces.pas"/>
+        <DCCReference Include="src\Bind4D.Types.Post.pas"/>
+        <DCCReference Include="src\Bind4D.Types.Put.pas"/>
+        <DCCReference Include="src\Bind4D.Types.Delete.pas"/>
+        <DCCReference Include="src\Bind4D.Component.ImageList.pas"/>
+        <DCCReference Include="src\Bind4D.Component.Utils.pas"/>
+        <DCCReference Include="src\Bind4D.Component.Helpers.pas"/>
+        <DCCReference Include="src\Bind4D.Component.Mock.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -143,7 +169,7 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\21.0\Bpl\Bind4Delphi.bpl" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\..\..\..\..\..\..\Public\Documents\Embarcadero\Studio\21.0\Bpl\Bind4Delphi.bpl" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>Bind4Delphi.bpl</RemoteName>
                         <Overwrite>true</Overwrite>

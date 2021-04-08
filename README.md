@@ -51,7 +51,7 @@ Bind4D.Types;
 
 Existem 2 atributos para o formulário que permitem que você deixe pré-configurados informações para recuperar em momentos distintos.
 
-### [FormRest(EndPoint, Key, Sort, Order)]
+#### [FormRest(EndPoint, Key, Sort, Order)]
 
 O atributo FormRest permite que você deixe configurado a qual endpoint rest as ações de crud deste formulario devem responder
 
@@ -80,7 +80,7 @@ passando o Form como parametro e as variaveis as quais você deseja armazenar o 
 TBind4D.New.Form(Self).BindFormRest(FEndPoint,FPK,FSort,FOrder);
 ```
 
-###  [FormDefault(Title)]
+####  [FormDefault(Title)]
 
 O atributo FormDefault permite que você deixe configurado o Titulo para o Formulário.
 
@@ -103,7 +103,7 @@ end;
 Os atributos dos componentes permitem que você adicione funcionalidades e determine configurações que podem ser adicionadas em lote a todos os componentes do formulário, além de prover configurações para as demais funções de bind.
 
 
-###  [FieldJsonBind(FieldName)]
+####  [FieldJsonBind(FieldName)]
 
 O atributo FieldJsonBind permite que você deixe configurado a qual Field do Json o componente irá corresponder na hora do bind do formulário para Json;
 
@@ -154,7 +154,7 @@ begin
   end;
 ```
 
-###  [ComponentBindStyle(COLOR, FONTSIZE, FONTCOLOR, FONTNAME, ESPECIALTYPE)]
+####  [ComponentBindStyle(COLOR, FONTSIZE, FONTCOLOR, FONTNAME, ESPECIALTYPE)]
 
 O atributo ComponentBindStyle permite que você determine as configurações visuais do componente para elas serem aplicadas de forma automatica, incluindo formatação de Edits e outros
 
@@ -192,7 +192,7 @@ TBind4D.New.Form(Self).SetStyleComponents;
 ```
 
 
-###  [FieldDataSetBind(Field, Type, Visible, DisplayWidh_Percent, DisplayName, MaskEdit, Alignment, LimitWidth)]
+####  [FieldDataSetBind(Field, Type, Visible, DisplayWidh_Percent, DisplayName, MaskEdit, Alignment, LimitWidth)]
 
 O atributo FieldDataSetBind permite você configurar o componente tanto para sua exibição no DBGrid quanto para o Bind automatico entre o DataSet e o Componente na Tela
 
@@ -229,7 +229,7 @@ Exemplo
 TBind4D.New.Form(Self).BindDataSetToForm(FDataSet);
 ```
 
-###  [fvNotNull(Message)]
+####  [fvNotNull(Message)]
 
 O atributo fvNotNull valida automaticamente se o valor no componente é nulo e apresenta a mensagem informada caso ele esteja vazio, esse processo ocorre durante o processo de bind do form para json.
 
@@ -244,23 +244,6 @@ Exemplo
 edtName: TEdit;
 ```
 
-### [ImageAttribute((aDefaultResourceImage, aWidth, aHeigth)]
-
-O atributo ImageAttribute serve para adicionar automaticamente imagens a componentes TSpeedButton e TImage, basta adicionar uma imagem PNG no Resource da sua aplicação e informar o nome desse resource ao attributo
-dessa forma ao executar o ``` TBind4D.New.SetStyleComponents; ``` ele irá ler a imagem do recurso e attribuir ao seu componente na tela.
-
-Os parametros destre atributo são:
-
-<b>aDefaultResourceImage</b> = Nome da Image no Resource da sua Aplicação<br> 
-<b>aWidth</b> = Tamanho da Largura da Imagem<br> 
-<b>aHeigth</b> = Tamanho da Altura da Imagem<br> 
-
-Exemplo
-
-```delphi
-[ImageAttribute('ico_save', 16, 16)]
-btnSave: TSpeedButton;
-```
 
 ## Tradução com Google API Translator
 

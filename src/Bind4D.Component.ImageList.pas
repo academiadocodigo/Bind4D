@@ -1,4 +1,4 @@
-﻿unit Bind4D.ImageList;
+﻿unit Bind4D.Component.ImageList;
 
 interface
 

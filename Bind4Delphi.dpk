@@ -1,5 +1,4 @@
 package Bind4Delphi;
-
 {$R *.res}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
 {$ALIGN 8}
@@ -43,15 +42,54 @@ requires
   FireDACCommon;
 
 contains
-  Bind4D in 'src\Bind4D.pas',
-  Bind4D.Utils in 'src\Bind4D.Utils.pas',
+  Bind4D.Attributes in 'src\Bind4D.Attributes.pas',
   Bind4D.ChangeCommand in 'src\Bind4D.ChangeCommand.pas',
+  Bind4D.Component.Attributes in 'src\Bind4D.Component.Attributes.pas',
+  Bind4D.Component.CheckBox in 'src\Bind4D.Component.CheckBox.pas',
+  Bind4D.Component.ComboBox in 'src\Bind4D.Component.ComboBox.pas',
+  Bind4D.Component.ComboEdit in 'src\Bind4D.Component.ComboEdit.pas',
+  Bind4D.Component.DateEdit in 'src\Bind4D.Component.DateEdit.pas',
+  Bind4D.Component.DateTimePicker in 'src\Bind4D.Component.DateTimePicker.pas',
+  Bind4D.Component.DBGrid in 'src\Bind4D.Component.DBGrid.pas',
+  Bind4D.Component.Edit in 'src\Bind4D.Component.Edit.pas',
+  Bind4D.Component.Factory in 'src\Bind4D.Component.Factory.pas',
+  Bind4D.Component.Image in 'src\Bind4D.Component.Image.pas',
+  Bind4D.Component.Interfaces in 'src\Bind4D.Component.Interfaces.pas',
+  Bind4D.Component.Labels in 'src\Bind4D.Component.Labels.pas',
+  Bind4D.Component.MaskEdit in 'src\Bind4D.Component.MaskEdit.pas',
+  Bind4D.Component.Panel in 'src\Bind4D.Component.Panel.pas',
+  Bind4D.Component.Rectangle in 'src\Bind4D.Component.Rectangle.pas',
+  Bind4D.Component.SpeedButton in 'src\Bind4D.Component.SpeedButton.pas',
+  Bind4D.Component.StringGrid in 'src\Bind4D.Component.StringGrid.pas',
   Bind4D.Helpers in 'src\Bind4D.Helpers.pas',
   Bind4D.Interfaces in 'src\Bind4D.Interfaces.pas',
+  Bind4D in 'src\Bind4D.pas',
   Bind4D.Types in 'src\Bind4D.Types.pas',
-  Bind4D.Attributes in 'src\Bind4D.Attributes.pas',
-  Bind4D.ImageList in 'src\Bind4D.ImageList.pas',
-  Bind4D.Image in 'src\Bind4D.Image.pas';
+  Bind4D.Utils in 'src\Bind4D.Utils.pas',
+  Bind4D.Utils.Rtti in 'src\Bind4D.Utils.Rtti.pas',
+  Bind4D.Types.Helpers in 'src\Bind4D.Types.Helpers.pas',
+  Bind4D.Types.Get in 'src\Bind4D.Types.Get.pas',
+  Bind4D.Types.Interfaces in 'src\Bind4D.Types.Interfaces.pas',
+  Bind4D.Types.Post in 'src\Bind4D.Types.Post.pas',
+  Bind4D.Types.Put in 'src\Bind4D.Types.Put.pas',
+  Bind4D.Types.Delete in 'src\Bind4D.Types.Delete.pas',
+  Bind4D.Component.ImageList in 'src\Bind4D.Component.ImageList.pas',
+  Bind4D.Component.Utils in 'src\Bind4D.Component.Utils.pas',
+  Bind4D.Component.Helpers in 'src\Bind4D.Component.Helpers.pas',
+  Bind4D.Component.Mock in 'src\Bind4D.Component.Mock.pas';
 
 end.
+
+
+
+
+
+
+
+
+
+
+
+
+
 

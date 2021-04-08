@@ -8,7 +8,7 @@ uses
   {$ELSE}
     Vcl.ExtCtrls,
   {$ENDIF}
-  System.RTTI;
+  System.RTTI, Bind4D.Attributes;
 type
   TNotifyEventWrapper = class(TComponent)
   private
@@ -35,8 +35,8 @@ type
       class function FormatarMoeda(valor: string): string;
       class function FormatarCelular(valor : string) : string;
       class function ApenasNumeros(valor : String) : String;
-      class function SendImageS3Storage( var aImage : TImage; pRtti : TRttiField) : String;
-      class procedure GetImageS3Storage (aImage : TImage; aName : String; pRtti : TRttiField; out aFileName : string);
+      class function SendImageS3Storage( var aImage : TImage; aAttr : S3Storage) : String;
+      class procedure GetImageS3Storage (aImage : TImage; aName : String);
       class function SendGuuidPrepare ( aGuuid : String ) : String;
       class procedure LoadDefaultResourceImage( aImage : TImage; aDefaultResource : String);
   end;
@@ -46,8 +46,7 @@ uses
   AWS4D,
   Bind4D,
   System.Types,
-  Bind4D.Helpers,
-  Bind4D.Attributes;
+  Bind4D.Helpers;
 { TBind4DUtils }
 class function TBind4DUtils.AnonProc2NotifyEvent(Owner: TComponent;
   Proc: TProc<TObject>): TNotifyEvent;
@@ -376,9 +375,8 @@ begin
   segundo := Copy(aValue, 13, 2);
   Result := hora + minuto + segundo;
 end;
-class procedure TBind4DUtils.GetImageS3Storage(aImage : TImage; aName : String; pRtti : TRttiField; out aFileName : string);
-var
-  InStream: TResourceStream;
+
+class procedure TBind4DUtils.GetImageS3Storage(aImage : TImage; aName : String);
 begin
   if Trim(aName) <> '' then
   begin
@@ -389,21 +387,6 @@ begin
           .FileName(aName)
         .Get
       .FromImage(aImage);
-      aFileName := aName;
-  end
-  else
-  begin
-    InStream := TResourceStream.Create(HInstance, pRtti.GetAttribute<ImageAttribute>.DefaultResourceImage, RT_RCDATA);
-      try
-        aFileName := '';
-        {$IFDEF HAS_FMX}
-          aImage.Bitmap.LoadFromStream(InStream);
-        {$ELSE}
-          aImage.Picture.LoadFromStream(InStream);
-        {$ENDIF}
-      finally
-        InStream.Free;
-      end;
   end;
 end;
 
@@ -435,14 +418,13 @@ begin
   Result := StringReplace(Result, '}', '', [rfReplaceAll]);
 end;
 
-class function TBind4DUtils.SendImageS3Storage(var aImage: TImage;
-  pRtti: TRttiField): String;
+class function TBind4DUtils.SendImageS3Storage( var aImage : TImage; aAttr : S3Storage) : String;
 var
   aImageName: string;
 begin
   Result := '';
   try
-    aImageName := TBind4DUtils.SendGuuidPrepare(TGuid.NewGuid.ToString) + '.' + pRtti.GetAttribute<S3Storage>.FileExtension;
+    aImageName := TBind4DUtils.SendGuuidPrepare(TGuid.NewGuid.ToString) + '.' + aAttr.FileExtension;
     {$IFDEF HAS_FMX}
       if Trim(aImage.Hint) <> '' then aImageName := aImage.Hint;
     {$ELSE}
@@ -460,7 +442,7 @@ begin
         .S3
           .SendFile
             .FileName(aImageName)
-            .ContentType(pRtti.GetAttribute<S3Storage>.ContentType)
+            .ContentType(aAttr.ContentType)
             .FileStream(aImage)
           .Send
         .ToString;

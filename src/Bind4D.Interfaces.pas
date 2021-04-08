@@ -35,8 +35,11 @@ type
     {$ENDIF}
     function BindFormRest (var aEndPoint : String; var aPK : String; var aSort : String; var aOrder : String) : iBind4D;
     function BindFormDefault (var aTitle : String) : iBind4D;
+    function ResponsiveAdjustment : iBind4D;
     function GetFieldsByType (aType : TTypeBindFormJson) : String;
     function SetStyleComponents : iBind4D;
+    function SetCaptionComponents : iBind4D;
+    function SetImageComponents : iBind4D;
     function Translator : iTranslator4D;
     function AWSService : iAWS4D;
   end;

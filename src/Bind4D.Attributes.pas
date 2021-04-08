@@ -71,6 +71,10 @@ type
   {$endregion}
 
   {$region 'Components Attributes'}
+
+  AdjustResponsive = class(TCustomAttribute)
+  end;
+
   ImageAttribute = class(TCustomAttribute)
     private
       FDefaultResourceImage: String;
