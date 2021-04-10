@@ -11,6 +11,7 @@ type
   fvNotNull = class(TCustomAttribute)
   private
     FMsg: String;
+    FKey : String;
     procedure SetMsg(const Value: String);
   public
     constructor Create(aMsg : String);
@@ -22,6 +23,7 @@ type
   FormDefault = class(TCustomAttribute)
     private
     FTitle: String;
+    FKey : String;
     procedure SetTitle(const Value: String);
     public
       constructor Create ( aTitle : String = '' );
@@ -34,6 +36,7 @@ type
     FEndPoint: String;
     FOrder: String;
     FSort: String;
+    FKey : String;
     procedure SetEndPoint(const Value: String);
     procedure SetPK(const Value: String);
     procedure SetOrderBy(const Value: String);
@@ -52,6 +55,7 @@ type
     private
     FFileExtension: String;
     FContentType: String;
+    FKey : String;
     procedure SetContentType(const Value: String);
     procedure SetFileExtension(const Value: String);
     public
@@ -63,6 +67,7 @@ type
   Translation = class(TCustomAttribute)
     private
       FQuery: String;
+      FKey : String;
     procedure SetQuery(const Value: String);
     public
       constructor Create(aQuery : String);
@@ -73,6 +78,10 @@ type
   {$region 'Components Attributes'}
 
   AdjustResponsive = class(TCustomAttribute)
+    private
+      FKey : String;
+    public
+      constructor Create;
   end;
 
   ImageAttribute = class(TCustomAttribute)
@@ -80,6 +89,7 @@ type
       FDefaultResourceImage: String;
       FWidth: Integer;
       FHeigth: Integer;
+      FKey : String;
       procedure SetDefaultResourceImage(const Value: String);
       procedure SetHeigth(const Value: Integer);
       procedure SetWidth(const Value: Integer);
@@ -97,6 +107,7 @@ type
     FFontColor: TColor;
     FFontName: String;
     FEspecialType: TEspecialType;
+    FKey : String;
     procedure SetColor(const Value: TColor);
     procedure SetFontColor(const Value: TColor);
     procedure SetFontSize(const Value: Integer);
@@ -114,6 +125,7 @@ type
   ComponentBindFormat = class(TCustomAttribute)
     private
     FEspecialType: TEspecialType;
+    FKey : String;
     procedure SetEspecialType(const Value: TEspecialType);
     public
       constructor Create(aEspecialType : TEspecialType = teNull);
@@ -125,6 +137,7 @@ type
   FieldJsonBind = class(TCustomAttribute)
   private
     FJsonName: string;
+    FKey : String;
     procedure SetJsonName(const Value: string);
   public
     constructor Create(aJsonName: string);
@@ -132,15 +145,31 @@ type
   end;
 
   FbIgnorePut = class(TCustomAttribute)
+    private
+      FKey : String;
+    public
+      constructor Create;
   end;
 
   FbIgnorePost = class(TCustomAttribute)
+    private
+      FKey : String;
+    public
+      constructor Create;
   end;
 
   FbIgnoreDelete = class(TCustomAttribute)
+    private
+      FKey : String;
+    public
+      constructor Create;
   end;
 
   FbIgnoreGet = class(TCustomAttribute)
+    private
+      FKey : String;
+    public
+      constructor Create;
   end;
   {$endregion}
 
@@ -155,6 +184,7 @@ type
     FAlignment: TAlignment;
     FEditMask: String;
     FFLimitWidth: Integer;
+    FKey : String;
     procedure SetFieldName(const Value: String);
     procedure SetDisplayName(const Value: String);
     procedure SetWidth(const Value: Integer);
@@ -179,11 +209,14 @@ type
 
 implementation
 
+uses
+  System.SysUtils;
 { fvNotNull }
 
 constructor fvNotNull.Create(aMsg: String);
 begin
   FMsg := aMsg;
+  FKey := TGuid.NewGuid.ToString;
 end;
 
 procedure fvNotNull.SetMsg(const Value: String);
@@ -196,6 +229,7 @@ end;
 constructor FormDefault.Create(aTitle: String);
 begin
   FTitle := aTitle;
+  FKey := TGuid.NewGuid.ToString;
 end;
 
 procedure FormDefault.SetTitle(const Value: String);
@@ -211,6 +245,7 @@ begin
   FPK := aPK;
   FOrder := aOrder;
   FSort := aSort;
+  FKey := TGuid.NewGuid.ToString;
 end;
 
 procedure FormRest.SetEndPoint(const Value: String);
@@ -238,6 +273,7 @@ end;
 constructor Translation.Create(aQuery : String);
 begin
   FQuery := aQuery;
+  FKey := TGuid.NewGuid.ToString;
 end;
 
 procedure Translation.SetQuery(const Value: String);
@@ -251,6 +287,7 @@ constructor S3Storage.Create(aFileExtension : String; aContentType : String);
 begin
   FFileExtension := aFileExtension;
   FContentType := aContentType;
+  FKey := TGuid.NewGuid.ToString;
 end;
 
 procedure S3Storage.SetContentType(const Value: String);
@@ -268,6 +305,7 @@ end;
 constructor ComponentBindFormat.Create(aEspecialType: TEspecialType);
 begin
   FEspecialType := aEspecialType;
+  FKey := TGuid.NewGuid.ToString;
 end;
 
 procedure ComponentBindFormat.SetEspecialType(const Value: TEspecialType);
@@ -285,6 +323,7 @@ begin
   FFontColor := aFontColor;
   FFontName := aFontName;
   FEspecialType := aEspecialType;
+  FKey := TGuid.NewGuid.ToString;
 end;
 
 procedure ComponentBindStyle.SetColor(const Value: TColor);
@@ -319,6 +358,7 @@ begin
   FDefaultResourceImage := aDefaultResourceImage;
   FWidth := aWidth;
   FHeigth := aHeigth;
+  FKey := TGuid.NewGuid.ToString;
 end;
 
 procedure ImageAttribute.SetDefaultResourceImage(const Value: String);
@@ -341,6 +381,7 @@ end;
 constructor FieldJsonBind.Create(aJsonName: string);
 begin
   FJsonName := aJsonName;
+  FKey := TGuid.NewGuid.ToString;
 end;
 
 procedure FieldJsonBind.SetJsonName(const Value: string);
@@ -362,6 +403,7 @@ begin
   FEditMask := aEditMask;
   FFdType := aFdType;
   FLimitWidth := aLimitWidth;
+  FKey := TGuid.NewGuid.ToString;
 end;
 
 procedure FieldDataSetBind.SetAlignment(const Value: TAlignment);
@@ -402,6 +444,35 @@ end;
 procedure FieldDataSetBind.SetWidth(const Value: Integer);
 begin
   FWidth := Value;
+end;
+
+{ AdjustResponsive }
+
+constructor FbIgnorePut.Create;
+begin
+  FKey := TGuid.NewGuid.ToString;
+end;
+
+constructor AdjustResponsive.Create;
+begin
+  FKey := TGuid.NewGuid.ToString;
+end;
+
+constructor FbIgnorePost.Create;
+begin
+  FKey := TGuid.NewGuid.ToString;
+end;
+
+{ FbIgnoreGet }
+
+constructor FbIgnoreGet.Create;
+begin
+  FKey := TGuid.NewGuid.ToString;
+end;
+
+constructor FbIgnoreDelete.Create;
+begin
+  FKey := TGuid.NewGuid.ToString;
 end;
 
 end.

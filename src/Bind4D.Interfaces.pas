@@ -40,6 +40,7 @@ type
     function SetStyleComponents : iBind4D;
     function SetCaptionComponents : iBind4D;
     function SetImageComponents : iBind4D;
+    function ClearCacheComponents : iBind4D;
     function Translator : iTranslator4D;
     function AWSService : iAWS4D;
   end;

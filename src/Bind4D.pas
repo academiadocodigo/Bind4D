@@ -72,6 +72,7 @@ type
       function SetStyleComponents : iBind4D;
       function SetCaptionComponents : iBind4D;
       function SetImageComponents : iBind4D;
+      function ClearCacheComponents : iBind4D;
       function Translator : iTranslator4D;
       function AWSService : iAWS4D;
   end;
@@ -266,6 +267,12 @@ begin
     aTitle := aAttr.Title;
 end;
 
+function TBind4D.ClearCacheComponents: iBind4D;
+begin
+  Result := Self;
+  RttiUtils.ClearCache;
+end;
+
 function TBind4D.ClearFieldForm: iBind4D;
 var
   aComp : TComponent;
@@ -298,6 +305,8 @@ begin
         Self.ResponsiveAdjustment;
       end
     );
+
+
 end;
 
 function TBind4D.FormToJson(aType : TTypeBindFormJson) : TJsonObject;
@@ -319,9 +328,11 @@ end;
 function TBind4D.GetFieldsByType(aType : TTypeBindFormJson) : String;
 var
   aAttr : FieldJsonBind;
+  aJsonName : string;
 begin
   for aAttr in RttiUtils.Get<FieldJsonBind>(FForm) do
-    Result := Result + aType.This.GetJsonName(aAttr.Component) + ',';
+    if aType.This.TryGetJsonName(aAttr.Component, aJsonName) then
+      Result := Result + aJsonName + ',';
   Result := Copy(Result, 1, Length(Result) -1);
 end;
 

@@ -1,7 +1,5 @@
 unit Bind4D.Utils.Rtti;
-
 interface
-
 uses
   {$IFDEF HAS_FMX}
     FMX.Forms,
@@ -11,46 +9,46 @@ uses
   System.Classes,
   System.Rtti,
   System.Generics.Collections;
-
 type
-
   TBind4DUtilsRtti = class
     private
       FComponentList : TDictionary<TCustomAttribute, TComponent>;
       FprpRttiList : TDictionary<TComponent, TRttiField>;
     public
-      constructor Create; 
+      constructor Create;
       destructor Destroy; override;
       function Get<T : TCustomAttribute>(aForm : TForm) : TArray<T>;
       function GetAttClass<T : TCustomAttribute>(aForm : TForm) : TArray<T>;
       function GetComponent(aAttribute : TCustomAttribute) : TComponent;
       function TryGet<T : TCustomAttribute>(aComponent : TComponent; out Attribute : T) : Boolean;
       function GetComponents(aForm : TForm) : TArray<TComponent>;
+      function ClearCache : TBind4DUtilsRtti;
     end;
-
 var
   RttiUtils : TBind4DUtilsRtti;
-  
-implementation
 
+implementation
 uses
   Bind4D.Helpers;
-
 { TBind4DUtilsRtti }
+function TBind4DUtilsRtti.ClearCache: TBind4DUtilsRtti;
+begin
+  Result := Self;
+  FComponentList.Clear;
+  FprpRttiList.Clear;
+end;
 
 constructor TBind4DUtilsRtti.Create;
 begin
   FComponentList := TDictionary<TCustomAttribute, TComponent>.Create;
   FprpRttiList := TDictionary<TComponent, TRttiField>.Create;
 end;
-
 destructor TBind4DUtilsRtti.Destroy;
 begin
   FprpRttiList.Free;
   FComponentList.Free;
   inherited;
 end;
-
 function TBind4DUtilsRtti.Get<T>(aForm : TForm) : TArray<T>;
 var
   ctxRtti : TRttiContext;
@@ -67,10 +65,8 @@ begin
     for prpRtti in typRtti.GetFields do
     begin
       aComponent := aForm.FindComponent(prpRtti.Name);
-
       if not FprpRttiList.TryGetValue(aComponent, vprpRtti) then
         FprpRttiList.Add(aComponent, prpRtti);
-
       if prpRtti.Tem<T> then
       begin
         Inc(dec);
@@ -84,7 +80,6 @@ begin
     ctxRtti.Free;
   end;
 end;
-
 function TBind4DUtilsRtti.GetAttClass<T>(aForm: TForm): TArray<T>;
 var
   vCtxRtti: TRttiContext;
@@ -105,13 +100,11 @@ begin
     vCtxRtti.Free;
   end;
 end;
-
 function TBind4DUtilsRtti.GetComponent(
   aAttribute: TCustomAttribute): TComponent;
 begin
   FComponentList.TryGetValue(aAttribute, Result);
 end;
-
 function TBind4DUtilsRtti.GetComponents(aForm: TForm): TArray<TComponent>;
 var
   ctxRtti : TRttiContext;
@@ -133,7 +126,6 @@ begin
     ctxRtti.Free;
   end;
 end;
-
 function TBind4DUtilsRtti.TryGet<T>(aComponent : TComponent; out Attribute : T) : Boolean;
 var
   prpRtti: TRttiField;
@@ -146,11 +138,8 @@ begin
       Result := not (Attribute = nil);
     end;
 end;
-
 initialization
   RttiUtils := TBind4DUtilsRtti.Create;
-
 finalization
   RttiUtils.Free;
-
 end.

@@ -14,6 +14,7 @@ type
       destructor Destroy; override;
       class function New : iBind4DTypesInterface;
       function GetJsonName (aComponent : TComponent) : String;
+      function TryGetJsonName(aComponent : TComponent; out aJsonName : String ) : Boolean;
       procedure TryAddJsonPair( aComponent : TComponent; var aJsonObject : TJsonObject);
   end;
 
@@ -59,6 +60,21 @@ begin
   if not RttiUtils.TryGet<FbIgnorePost>(aComponent, aAttr) then
     if RttiUtils.TryGet<FieldJsonBind>(aComponent, aAttrJson) then
       aJsonObject.AddPair(aAttrJson.JsonName, TBind4DComponentUtils.GetValueString(aComponent));
+end;
+
+function TBind4DTypesPost.TryGetJsonName(aComponent: TComponent;
+  out aJsonName: String): Boolean;
+var
+  aAttrIg : FbIgnorePost;
+  aAttrFJBind : FieldJsonBind;
+begin
+  Result := False;
+  if not RttiUtils.TryGet<FbIgnorePost>(aComponent, aAttrIg) then
+    if RttiUtils.TryGet<FieldJsonBind>(aComponent, aAttrFJBind) then
+    begin
+      Result := True;
+      aJsonName := aAttrFJBind.JsonName;
+    end;
 end;
 
 end.
