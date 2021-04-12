@@ -19,7 +19,8 @@ uses
   Bind4D.Types,
   Bind4D.Attributes,
   Translator4D.Interfaces,
-  AWS4D.Interfaces;
+  AWS4D.Interfaces,
+  HS4D.Interfaces;
 
 type
    iBind4D = interface
@@ -40,9 +41,9 @@ type
     function SetStyleComponents : iBind4D;
     function SetCaptionComponents : iBind4D;
     function SetImageComponents : iBind4D;
-    function ClearCacheComponents : iBind4D;
     function Translator : iTranslator4D;
     function AWSService : iAWS4D;
+    function HSD4Service : iHS4D;
   end;
 
 implementation

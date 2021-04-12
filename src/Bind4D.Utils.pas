@@ -39,6 +39,8 @@ type
       class procedure GetImageS3Storage (aImage : TImage; aName : String);
       class function SendGuuidPrepare ( aGuuid : String ) : String;
       class procedure LoadDefaultResourceImage( aImage : TImage; aDefaultResource : String);
+      class function SendImageHS4DStorage(var aImage : TImage; aAttr : HorseStorage) : string;
+      class procedure GetImageHS4DStorage (aImage : TImage; aName : String);
   end;
 implementation
 uses
@@ -93,7 +95,6 @@ begin
   end;
   Result := '(' + Copy(valor, 1, 2) + ') ' + Copy(valor, 3, 5) + '-' + Copy(valor, 8, Length(valor));
 end;
-
 class function TBind4DUtils.FormatarCNPJ(valor: string): string;
 var
   i: Integer;
@@ -122,7 +123,6 @@ begin
   end;
   Result := Copy(valor, 1, 2) + '.' + Copy(valor, 3, 3) + '.' + Copy(valor, 6, 3) + '/' + Copy(valor, 9, 4) + '-' + Copy(valor, 13, 2);
 end;
-
 class function TBind4DUtils.FormatarCPF(valor: string): string;
 var
   i: Integer;
@@ -148,7 +148,6 @@ begin
   end;
   Result := Copy(valor, 1, 3) + '.' + Copy(valor, 4, 3) + '.' + Copy(valor, 7, 3) + '-' + Copy(valor, 10, 2);
 end;
-
 class function TBind4DUtils.FormatarMoeda(valor: string): string;
 var
   decimais,
@@ -213,7 +212,6 @@ begin
     Result := LeftStr(valor, Length(valor) - 2) + ',' + decimais;
   end;
 end;
-
 class function TBind4DUtils.FormatDateDataSet(aValue: String): String;
 var
   i: Integer;
@@ -237,7 +235,6 @@ begin
   segundo := Copy(aValue, 13, 2);
   Result := dia + mes + ano;
 end;
-
 class function TBind4DUtils.FormatDateTime(aValue: String): String;
 var
   i: Integer;
@@ -276,7 +273,6 @@ begin
   segundo := Copy(aValue, 13, 2);
   Result := dia + '/' + mes + '/' + ano + ' ' + hora + ':' + minuto + ':' + segundo;
 end;
-
 class function TBind4DUtils.FormatDateTimeDataSet(aValue: String): String;
 var
   i: Integer;
@@ -298,7 +294,6 @@ begin
   segundo := Copy(aValue, 13, 2);
   Result := dia + mes + ano + ' ' + hora + ':' + minuto + ':' + segundo;
 end;
-
 class function TBind4DUtils.FormatDateTimeToJson(aValue: TDateTime): String;
 var
   i: Integer;
@@ -321,7 +316,6 @@ begin
   segundo := Copy(Result, 13, 2);
   Result := ano + '-' + mes + '-' + dia + ' ' + hora + ':' + minuto + ':' + segundo +'.000';
 end;
-
 class function TBind4DUtils.FormatStrJsonToDateTime(aValue: String): TDateTime;
 var
   i: Integer;
@@ -343,7 +337,6 @@ begin
   segundo := Copy(aValue, 13, 2);
   Result := StrToDateTime(dia + '/' + mes + '/' + ano + ' ' + hora + ':' + minuto + ':' + segundo);
 end;
-
 class function TBind4DUtils.FormatStrJsonToTime(aValue: String): TDateTime;
 var
   i: Integer;
@@ -359,7 +352,6 @@ begin
   segundo := Copy(aValue, 5, 2);
   Result := StrToDateTime('01/01/1989 ' + hora + ':' + minuto + ':' + segundo);
 end;
-
 class function TBind4DUtils.FormatTimeDataSet(aValue: String): String;
 var
   i: Integer;
@@ -375,6 +367,17 @@ begin
   segundo := Copy(aValue, 13, 2);
   Result := hora + minuto + segundo;
 end;
+class procedure TBind4DUtils.GetImageHS4DStorage(aImage: TImage; aName: String);
+begin
+  if Trim(aName) <> '' then
+  begin
+    TBind4D.New
+     .HSD4Service
+      .GetFile
+        .FileName(aName)
+      .Get(aImage);
+  end;
+end;
 
 class procedure TBind4DUtils.GetImageS3Storage(aImage : TImage; aName : String);
 begin
@@ -389,7 +392,6 @@ begin
       .FromImage(aImage);
   end;
 end;
-
 class procedure TBind4DUtils.LoadDefaultResourceImage(aImage: TImage;
   aDefaultResource: String);
 var
@@ -411,11 +413,47 @@ begin
     InStream.Free;
   end;
 end;
-
 class function TBind4DUtils.SendGuuidPrepare(aGuuid: String): String;
 begin
   Result := StringReplace(aGuuid, '{', '', [rfReplaceAll]);
   Result := StringReplace(Result, '}', '', [rfReplaceAll]);
+end;
+class function TBind4DUtils.SendImageHS4DStorage(var aImage: TImage; aAttr: HorseStorage): string;
+var
+  aImageName: string;
+begin
+  Result := '';
+  try
+    aImageName := TBind4DUtils.SendGuuidPrepare(TGuid.NewGuid.ToString) + '.' + aAttr.FileExtension;
+    {$IFDEF HAS_FMX}
+      if Trim(aImage.Hint) <> '' then aImageName := aImage.Hint;
+    {$ELSE}
+      if Trim(aImage.HelpKeyword) <> '' then aImageName := aImage.HelpKeyword;
+    {$ENDIF}
+    if Length(aImageName) > 40 then
+    begin
+      aImageName := ReverseString(aImageName);
+      aImageName := Copy(aImageName, 0, Pos('/', aImageName)-1);
+      aImageName := ReverseString(aImageName);
+    end;
+    Result :=
+      TBind4D.New
+       .HSD4Service
+        .SendFile
+          .FileName(aImageName)
+          .Path(aAttr.Path)
+          .ContentType(aAttr.ContentType)
+          .EndPoint(aAttr.EndPoint)
+          .FileStream(aImage)
+        .Send
+      .ToString;
+  finally
+    {$IFDEF HAS_FMX}
+      aImage.Hint := '';
+    {$ELSE}
+      aImage.HelpKeyword := '';
+    {$ENDIF}
+  end;
 end;
 
 class function TBind4DUtils.SendImageS3Storage( var aImage : TImage; aAttr : S3Storage) : String;
@@ -465,4 +503,3 @@ begin
   FProc(Sender);
 end;
 end.
-
