@@ -18,7 +18,6 @@ type
       FComponent : TImage;
       FAttributes : iBind4DComponentAttributes;
       procedure __LoadFromResource(aResourceName : String);
-
     public
       constructor Create(aValue : TImage);
       destructor Destroy; override;
@@ -82,7 +81,6 @@ begin
           end;
       end
     )
-
    {$ENDIF}
 end;
 function TBind4DComponentImage.ApplyText: iBind4DComponent;
@@ -94,7 +92,6 @@ var
   Attribute : S3Storage;
   HorseAttribute : HorseStorage;
   AttImage : ImageAttribute;
-
   lStream : TStringStream;
   lImagem : TMemoryStream;
 begin
@@ -170,19 +167,10 @@ function TBind4DComponentImage.GetValueString: String;
 var
   Attribute : S3Storage;
   HorseAttribute : HorseStorage;
-
   lStream: TMemoryStream;
   lImagem : TStringStream;
 begin
   try
-    if RttiUtils.TryGet<S3Storage>(FComponent, Attribute) then
-    begin
-       Result := TBind4DUtils
-        .SendImageS3Storage(
-          FComponent,
-          Attribute
-        );
-    end else
     if RttiUtils.TryGet<HorseStorage>(FComponent, HorseAttribute) then
     begin
        Result := TBind4DUtils
@@ -190,13 +178,22 @@ begin
           FComponent,
           HorseAttribute
         );
+        exit;
+    end;
+    if RttiUtils.TryGet<S3Storage>(FComponent, Attribute) then
+    begin
+       Result := TBind4DUtils
+        .SendImageS3Storage(
+          FComponent,
+          Attribute
+        );
+       exit;
     end;
   except
     //
   end;
   //TODO: Implementar Retorno Base64Image;
 end;
-
 
 class function TBind4DComponentImage.New(aValue : TImage): iBind4DComponent;
 begin

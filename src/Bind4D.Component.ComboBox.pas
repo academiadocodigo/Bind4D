@@ -151,7 +151,6 @@ begin
   else
   begin
     Rest.Get(FAttributes.EndPoint);
-
     for Index := 0 to Pred(FComponent.Items.Count) do
     begin
       if Assigned(FComponent.Items.Objects[Index]) then
@@ -160,9 +159,7 @@ begin
         FComponent.Items.Objects[Index]:=nil;
       end;
     end;
-
     FComponent.Items.Clear;
-
     if Rest.DataSet.Active then
     begin
       Rest.DataSet.First;
@@ -177,12 +174,7 @@ begin
         Rest.DataSet.Next;
       end;
     end;
-
   end;
-
-
-
-
 end;
 
 function TBind4DComponentComboBox.ApplyStyles: iBind4DComponent;
@@ -230,8 +222,12 @@ begin
 end;
 function TBind4DComponentComboBox.GetValueString: String;
 begin
-  FComponent.ItemIndex := FComponent.Items.IndexOf(FComponent.Text);
-  Result := TStringObject(FComponent.Items.Objects[FComponent.ItemIndex]).StringValue;
+  Result := '';
+  if FComponent.ItemIndex <> -1 then
+  begin
+    FComponent.ItemIndex := FComponent.Items.IndexOf(FComponent.Text);
+    Result := TStringObject(FComponent.Items.Objects[FComponent.ItemIndex]).StringValue;
+  end;
 end;
 function TBind4DComponentComboBox.IndexOfObjectText(const S: String): Integer;
 var
