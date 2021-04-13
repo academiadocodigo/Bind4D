@@ -6,10 +6,11 @@ uses
     FMX.Objects,
   {$ELSE}
     Vcl.ExtCtrls,
+    Vcl.Dialogs,
   {$ENDIF}
   System.Types,
-  Bind4D.Component.Interfaces, Bind4D.Attributes;
-
+  Bind4D.Component.Interfaces,
+  Bind4D.Attributes;
 type
   TBind4DComponentImage = class(TInterfacedObject, iBind4DComponent)
     private
@@ -27,11 +28,11 @@ type
       function ApplyText : iBind4DComponent;
       function ApplyImage : iBind4DComponent;
       function ApplyValue : iBind4DComponent;
+      function ApplyRestData : iBind4DComponent;
       function GetValueString : String;
       function Clear : iBind4DComponent;
   end;
 implementation
-
 uses
   Bind4D.Component.Attributes,
   Bind4D.ChangeCommand,
@@ -40,33 +41,55 @@ uses
   StrUtils,
   System.Variants;
 
+
 { TBind4DImage }
 function TBind4DComponentImage.FormatFieldGrid(
   aAttr: FieldDataSetBind): iBind4DComponent;
 begin
   Result := Self;
 end;
-
 function TBind4DComponentImage.AdjusteResponsivity: iBind4DComponent;
 begin
   Result := Self;
 end;
-
 function TBind4DComponentImage.ApplyImage: iBind4DComponent;
 begin
    __LoadFromResource(FAttributes.ResourceImage);
+end;
+function TBind4DComponentImage.ApplyRestData: iBind4DComponent;
+begin
+  Result := Self;
 end;
 
 function TBind4DComponentImage.ApplyStyles: iBind4DComponent;
 begin
   Result := Self;
+   {$IFDEF HAS_FMX}
+   {$ELSE}
+    FComponent.OnDblClick :=
+    TBind4DUtils.AnonProc2NotifyEvent(
+      FComponent,
+      procedure (Sender : TObject)
+      begin
+        with TOpenDialog.Create(TImage(Sender)) do
+          try
+            //Caption := 'Escolher Imagem';
+            Options := [ofPathMustExist, ofFileMustExist];
+            if Execute then
+              TImage(Sender).Picture.LoadFromFile(FileName);
+          finally
+            Free;
+          end;
+      end
+    )
+
+   {$ENDIF}
 end;
 
 function TBind4DComponentImage.ApplyText: iBind4DComponent;
 begin
   Result := Self;
 end;
-
 function TBind4DComponentImage.ApplyValue: iBind4DComponent;
 var
   Attribute : S3Storage;
@@ -80,7 +103,6 @@ begin
         __LoadFromResource(AttImage.DefaultResourceImage);
       exit;
     end;
-
     if RttiUtils.TryGet<S3Storage>(FComponent, Attribute) and
     (ContainsText(FAttributes.ValueVariant, 'http')) and
     (ContainsText(FAttributes.ValueVariant, 's3'))
@@ -102,12 +124,10 @@ begin
       __LoadFromResource(AttImage.DefaultResourceImage);
   end;
 end;
-
 function TBind4DComponentImage.Attributes: iBind4DComponentAttributes;
 begin
   Result := FAttributes;
 end;
-
 function TBind4DComponentImage.Clear: iBind4DComponent;
 var
   AttImage : ImageAttribute;
@@ -118,12 +138,9 @@ begin
   {$ELSE}
     FComponent.Picture.Assign(nil);
   {$ENDIF}
-
   if RttiUtils.TryGet<ImageAttribute>(FComponent, AttImage)  then
       __LoadFromResource(AttImage.DefaultResourceImage);
-
 end;
-
 constructor TBind4DComponentImage.Create(aValue : TImage);
 begin
   FAttributes := TBind4DComponentAttributes.Create(Self);
@@ -152,12 +169,10 @@ begin
   //TODO: Implementar Retorno Base64Image;
 end;
 
-
 class function TBind4DComponentImage.New(aValue : TImage): iBind4DComponent;
 begin
   Result := Self.Create(aValue);
 end;
-
 procedure TBind4DComponentImage.__LoadFromResource(aResourceName: String);
 var
   aResource : TResourceStream;
@@ -175,5 +190,4 @@ begin
     aResource.DisposeOf;
   end;
 end;
-
 end.

@@ -47,7 +47,7 @@
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <DCC_CBuilderOutput>All</DCC_CBuilderOutput>
         <SanitizedProjectName>Bind4Delphi</SanitizedProjectName>
-        <DCC_UnitSearchPath>modules\.dcp;modules\.dcu;modules;modules\aws4d\src;modules\dataset-serialize\src;modules\localcache4d\samples\LocalCache4D;modules\localcache4d\src;modules\restrequest4delphi\src;modules\translator4d\modules;modules\translator4d\modules\localcache4d\Win32\Debug;modules\translator4d\samples\GoogleTranslator;modules\translator4d\src;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>modules\.dcp;modules\.dcu;modules;modules\aws4d\src;modules\dataset-serialize\src;modules\localcache4d\samples\LocalCache4D;modules\localcache4d\src;modules\restrequest4delphi\src;modules\translator4d\samples\GoogleTranslator;modules\translator4d\src;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
@@ -128,6 +128,11 @@
         <DCCReference Include="src\Bind4D.Component.Utils.pas"/>
         <DCCReference Include="src\Bind4D.Component.Helpers.pas"/>
         <DCCReference Include="src\Bind4D.Component.Mock.pas"/>
+        <DCCReference Include="src\Bind4D.Rest.pas"/>
+        <DCCReference Include="src\Forms\Bind4D.Forms.QuickRegistration.pas">
+            <Form>PageQuickRegistration</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -169,7 +174,7 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\..\..\..\..\..\..\Public\Documents\Embarcadero\Studio\21.0\Bpl\Bind4Delphi.bpl" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\21.0\Bpl\Bind4Delphi.bpl" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>Bind4Delphi.bpl</RemoteName>
                         <Overwrite>true</Overwrite>

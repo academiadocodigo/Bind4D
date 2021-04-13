@@ -8,7 +8,9 @@ uses
   {$ELSE}
     Vcl.ExtCtrls,
   {$ENDIF}
-  System.RTTI, Bind4D.Attributes;
+  System.RTTI,
+  Bind4D.Attributes;
+
 type
   TNotifyEventWrapper = class(TComponent)
   private
@@ -18,6 +20,7 @@ type
   published
     procedure Event(Sender: TObject);
   end;
+
   TBind4DUtils = class
     private
     public
@@ -41,12 +44,15 @@ type
       class procedure LoadDefaultResourceImage( aImage : TImage; aDefaultResource : String);
   end;
 implementation
+
 uses
   System.StrUtils,
   AWS4D,
   Bind4D,
   System.Types,
   Bind4D.Helpers;
+
+
 { TBind4DUtils }
 class function TBind4DUtils.AnonProc2NotifyEvent(Owner: TComponent;
   Proc: TProc<TObject>): TNotifyEvent;

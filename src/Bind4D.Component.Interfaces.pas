@@ -36,6 +36,7 @@ type
     function ApplyText : iBind4DComponent;
     function ApplyImage : iBind4DComponent;
     function ApplyValue : iBind4DComponent;
+    function ApplyRestData : iBind4DComponent;
     function Clear : iBind4DComponent;
     function FormatFieldGrid (aAttr : FieldDataSetBind) : iBind4DComponent;
     function GetValueString : String;
@@ -84,6 +85,18 @@ type
     function Field : TField; overload;
     function RttiField : TRttiField; overload;
     function RttiField ( aValue : TRttiField) : iBind4DComponentAttributes; overload;
+    function EndPoint ( aValue : String ) : iBind4DComponentAttributes; overload;
+    function EndPoint : String; overload;
+    function FieldKey ( aValue : String ) : iBind4DComponentAttributes; overload;
+    function FieldKey : String; overload;
+    function FieldValue ( aValue : String ) : iBind4DComponentAttributes; overload;
+    function FieldValue : String; overload;
+    function FieldBind ( aValue : String ) : iBind4DComponentAttributes; overload;
+    function FieldBind : String; overload;
+    function ComponentNameBind ( aValue : String ) : iBind4DComponentAttributes; overload;
+    function ComponentNameBind : String; overload;
+    function Title ( aValue : String ) : iBind4DComponentAttributes; overload;
+    function Title : String; overload;
     function &End : iBind4DComponent;
   end;
 

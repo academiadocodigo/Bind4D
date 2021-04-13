@@ -45,13 +45,15 @@ uses
   Bind4D.Interfaces,
   Bind4D.Utils,
   AWS4D.Interfaces,
-  AWS4D;
+  AWS4D,
+  Bind4D.Forms.QuickRegistration;
 
 type
   TBind4D = class(TInterfacedObject, iBind4D)
     private
       FForm : TForm;
       FAWSService : iAWS4D;
+      FBind4DRest : iBind4DRest;
     public
       constructor Create;
       destructor Destroy; override;
@@ -72,9 +74,12 @@ type
       function SetStyleComponents : iBind4D;
       function SetCaptionComponents : iBind4D;
       function SetImageComponents : iBind4D;
+      function SetRestDataComponents : iBind4D;
       function ClearCacheComponents : iBind4D;
       function Translator : iTranslator4D;
       function AWSService : iAWS4D;
+      function Rest : iBind4DRest;
+      function QuickRegistration : TPageQuickRegistration;
   end;
 
 var
@@ -92,7 +97,7 @@ uses
   Bind4D.Component.Image,
   Bind4D.Component.Factory,
   Bind4D.Utils.Rtti,
-  Bind4D.Types.Helpers, Bind4D.Component.Helpers;
+  Bind4D.Types.Helpers, Bind4D.Component.Helpers, Bind4D.Rest;
 
 { TBind4D }
 
@@ -297,15 +302,36 @@ begin
   Result := Self;
   FForm := aValue;
 
-  FForm.OnResize :=
-    TBind4DUtils.AnonProc2NotifyEvent(
-      FForm,
-      procedure (Sender : TObject)
-      begin
-        Self.ResponsiveAdjustment;
-      end
-    );
+  if not Assigned(FForm.OnResize) then
+    FForm.OnResize :=
+      TBind4DUtils.AnonProc2NotifyEvent(
+        FForm,
+        procedure (Sender : TObject)
+        begin
+          Self.ResponsiveAdjustment;
+        end
+      );
 
+  FForm.OnDestroy :=
+    TBind4DUtils.AnonProc2NotifyEvent(
+    FForm,
+    procedure (Sender : TObject)
+    var
+      I : Integer;
+      Index : Integer;
+    begin
+      for I := 0 to Pred(TForm(Sender).ComponentCount) do
+        if TForm(Sender).Components[I] is TComboBox then
+          for Index := 0 to Pred(TComboBox(TForm(Sender).Components[I]).Items.Count) do
+          begin
+            if Assigned(TComboBox(TForm(Sender).Components[I]).Items.Objects[Index]) then
+            begin
+              TComboBox(TForm(Sender).Components[I]).Items.Objects[Index].Free;
+              TComboBox(TForm(Sender).Components[I]).Items.Objects[Index]:=nil;
+            end;
+          end;
+        end
+    )
 
 end;
 
@@ -344,6 +370,11 @@ begin
   Result := vBind4D;
 end;
 
+function TBind4D.QuickRegistration: TPageQuickRegistration;
+begin
+  Result := PageQuickRegistration;
+end;
+
 function TBind4D.SetImageComponents : iBind4D;
 var
   Attribute : ImageAttribute;
@@ -360,6 +391,43 @@ begin
             .ResourceImage(Attribute.DefaultResourceImage)
           .&End
         .ApplyImage;
+  end;
+end;
+
+function TBind4D.SetRestDataComponents: iBind4D;
+var
+  Attribute : RestData;
+  Attr : RestQuickRegistration;
+begin
+  Result := Self;
+  for Attribute in RttiUtils.Get<RestData>(FForm) do
+  begin
+    TBind4DComponentFactory
+      .New
+        .Component(Attribute.Component)
+          .Attributes
+            .Form(FForm)
+            .EndPoint(Attribute.EndPoint)
+            .FieldKey(Attribute.FieldKey)
+            .FieldValue(Attribute.FieldValue)
+            .FieldBind(Attribute.FieldBind)
+            .ComponentNameBind(Attribute.ComponentName)
+          .&End
+        .ApplyRestData;
+  end;
+
+  for Attr in RttiUtils.Get<RestQuickRegistration>(FForm) do
+  begin
+    TBind4DComponentFactory
+      .New
+        .Component(Attr.Component)
+          .Attributes
+            .Form(FForm)
+            .EndPoint(Attr.EndPoint)
+            .FieldKey(Attr.Field)
+            .Title(Attr.Title)
+          .&End
+        .ApplyRestData;
   end;
 end;
 
@@ -427,6 +495,14 @@ begin
         .&End
         .AdjusteResponsivity;
   end;
+end;
+
+function TBind4D.Rest: iBind4DRest;
+begin
+  if not Assigned(FBind4DRest) then
+    FBind4DRest := TBind4DRest.New(Self);
+
+  Result := FBind4DRest;
 end;
 
 function TBind4D.AWSService: iAWS4D;

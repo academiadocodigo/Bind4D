@@ -13,17 +13,22 @@ type
 
   iCommandMaster = interface
     function Add ( aKey : TObject; aValue : TProc<TObject> ) : iCommandMaster;
+    function AddAssociation ( aKey : TObject; aValue : TObject ) : iCommandMaster;
+    function TryGetAssociation ( aKey : TObject; out aValue : TObject ) : Boolean;
     function Execute( aKey : TObject ) : iCommandMaster;
   end;
 
   TCommandMaster = class(TInterfacedObject, iCommandMaster)
     private
       FList : TDictionary<TObject, TList<TProc<TObject>>>;
+      FListAssociationComponent : TObjectDictionary<TObject, TObject>;
     public
       constructor Create;
       destructor Destroy; override;
       class function New : iCommandMaster;
       function Add ( aKey : TObject; aValue : TProc<TObject> ) : iCommandMaster;
+      function AddAssociation ( aKey : TObject; aValue : TObject ) : iCommandMaster;
+      function TryGetAssociation ( aKey : TObject; out aValue : TObject ) : Boolean;
       function Execute( aKey : TObject ) : iCommandMaster;
   end;
 
@@ -52,17 +57,28 @@ begin
   end;
 end;
 
+function TCommandMaster.AddAssociation(aKey, aValue: TObject): iCommandMaster;
+begin
+  Result := Self;
+  FListAssociationComponent.AddOrSetValue(aKey, aValue);
+end;
+
 constructor TCommandMaster.Create;
 begin
   FList := TDictionary<TObject, TList<TProc<TObject>>>.Create;
+  FListAssociationComponent := TObjectDictionary<TObject, TObject>.Create;
 end;
 
 destructor TCommandMaster.Destroy;
 begin
   for var List in FList do
-    List.Value.Free;
+    List.Value.DisposeOf;
 
-  FList.Free;
+  //for var ListObject in FListAssociationComponent do
+    //ListObject.Value.DisposeOf;
+
+  FList.DisposeOf;
+  FListAssociationComponent.DisposeOf;
 
   inherited;
 end;
@@ -86,6 +102,12 @@ begin
 
   Result := CommandMaster;
 
+end;
+
+function TCommandMaster.TryGetAssociation(aKey: TObject;
+  out aValue: TObject): Boolean;
+begin
+  Result := FListAssociationComponent.TryGetValue(aKey, aValue);
 end;
 
 end.

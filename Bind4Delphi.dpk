@@ -76,16 +76,11 @@ contains
   Bind4D.Component.ImageList in 'src\Bind4D.Component.ImageList.pas',
   Bind4D.Component.Utils in 'src\Bind4D.Component.Utils.pas',
   Bind4D.Component.Helpers in 'src\Bind4D.Component.Helpers.pas',
-  Bind4D.Component.Mock in 'src\Bind4D.Component.Mock.pas';
+  Bind4D.Component.Mock in 'src\Bind4D.Component.Mock.pas',
+  Bind4D.Rest in 'src\Bind4D.Rest.pas',
+  Bind4D.Forms.QuickRegistration in 'src\Forms\Bind4D.Forms.QuickRegistration.pas' {PageQuickRegistration};
 
 end.
-
-
-
-
-
-
-
 
 
 
