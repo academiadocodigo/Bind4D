@@ -10,7 +10,10 @@ uses
     Vcl.StdCtrls,
     Vcl.Buttons,
   {$ENDIF}
-  Bind4D.Component.Interfaces, Bind4D.Attributes;
+  Bind4D.Component.Interfaces,
+  Bind4D.Attributes,
+  Bind4D.Forms.QuickRegistration;
+
 
 type
   TBind4DComponentSpeedButton = class(TInterfacedObject, iBind4DComponent)
@@ -28,6 +31,7 @@ type
       function ApplyText : iBind4DComponent;
       function ApplyImage : iBind4DComponent;
       function ApplyValue : iBind4DComponent;
+      function ApplyRestData : iBind4DComponent;
       function GetValueString : String;
       function Clear : iBind4DComponent;
   end;
@@ -36,21 +40,23 @@ implementation
 
 uses
   Bind4D.Component.Attributes,
-  Bind4D.Component.ImageList;
+  Bind4D.Component.ImageList,
+  Bind4D.Utils,
+  Bind4D,
+  localcache4D, Bind4D.Utils.Rtti;
+
+
 
 { TBind4DComponentSpeedButton }
-
 function TBind4DComponentSpeedButton.FormatFieldGrid(
   aAttr: FieldDataSetBind): iBind4DComponent;
 begin
   Result := Self;
 end;
-
 function TBind4DComponentSpeedButton.AdjusteResponsivity: iBind4DComponent;
 begin
   Result := Self;
 end;
-
 function TBind4DComponentSpeedButton.ApplyImage: iBind4DComponent;
 begin
   Result := Self;
@@ -65,6 +71,27 @@ begin
         FComponent.Glyph
       );
   {$ENDIF}
+end;
+function TBind4DComponentSpeedButton.ApplyRestData: iBind4DComponent;
+begin
+  Result := Self;
+
+  FComponent.OnClick :=
+    TBind4DUtils.AnonProc2NotifyEvent(
+      FComponent,
+      procedure (Sender : TObject)
+      var
+        aAttr : RestQuickRegistration;
+      begin
+        if RttiUtils.TryGet<RestQuickRegistration>(TSpeedButton(Sender), aAttr) then
+        begin
+          PageQuickRegistration
+            .EndPoint(aAttr.EndPoint)
+            .Field(aAttr.Field)
+            .Title(aAttr.Title)
+          .Execute;
+        end;
+      end);
 end;
 
 function TBind4DComponentSpeedButton.ApplyStyles: iBind4DComponent;
@@ -81,7 +108,6 @@ begin
     FComponent.Font.Name := FAttributes.FontName;
   {$ENDIF}
 end;
-
 function TBind4DComponentSpeedButton.ApplyText: iBind4DComponent;
 begin
   Result := Self;
@@ -91,34 +117,27 @@ begin
     FComponent.Caption := FAttributes.Text;
   {$ENDIF}
 end;
-
 function TBind4DComponentSpeedButton.ApplyValue: iBind4DComponent;
 begin
   Result := Self;
 end;
-
 function TBind4DComponentSpeedButton.Attributes: iBind4DComponentAttributes;
 begin
   Result := FAttributes;
 end;
-
 function TBind4DComponentSpeedButton.Clear: iBind4DComponent;
 begin
   Result := Self;
 end;
-
 constructor TBind4DComponentSpeedButton.Create(aValue : TSpeedButton);
 begin
   FAttributes := TBind4DComponentAttributes.Create(Self);
   FComponent := aValue;
 end;
-
 destructor TBind4DComponentSpeedButton.Destroy;
 begin
-
   inherited;
 end;
-
 function TBind4DComponentSpeedButton.GetValueString: String;
 begin
   {$IFDEF HAS_FMX}
@@ -127,10 +146,8 @@ begin
     Result := FComponent.Caption;
   {$ENDIF}
 end;
-
 class function TBind4DComponentSpeedButton.New(aValue : TSpeedButton) : iBind4DComponent;
 begin
   Result := Self.Create(aValue);
 end;
-
 end.

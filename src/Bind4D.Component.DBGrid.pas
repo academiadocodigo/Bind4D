@@ -1,7 +1,5 @@
 unit Bind4D.Component.DBGrid;
-
 interface
-
 uses
   {$IFDEF HAS_FMX}
     FMX.StdCtrls,
@@ -11,7 +9,6 @@ uses
     Vcl.DBGrids,
   {$ENDIF}
   Bind4D.Component.Interfaces, Bind4D.Attributes, Vcl.Grids, System.Types;
-
 type
   TBind4DComponentDBGrid = class(TInterfacedObject, iBind4DComponent)
     private
@@ -32,12 +29,11 @@ type
       function ApplyText : iBind4DComponent;
       function ApplyImage : iBind4DComponent;
       function ApplyValue : iBind4DComponent;
+      function ApplyRestData : iBind4DComponent;
       function GetValueString : String;
       function Clear : iBind4DComponent;
   end;
-
 implementation
-
 uses
   Bind4D.Component.Attributes,
   Data.DB, Bind4D.Utils.Rtti,
@@ -48,9 +44,7 @@ uses
   Bind4D.Utils,
   Bind4D.Component.Helpers,
   Bind4D.Helpers, System.SysUtils, Vcl.Graphics;
-
 { TBind4DComponentDBGrid }
-
 procedure TBind4DComponentDBGrid.AdjustDateDataSet(aAttr: FieldDataSetBind);
 begin
 FComponent.DataSource.DataSet.DisableControls;
@@ -64,7 +58,6 @@ FComponent.DataSource.DataSet.DisableControls;
   FComponent.DataSource.DataSet.First;
   FComponent.DataSource.DataSet.EnableControls;
 end;
-
 procedure TBind4DComponentDBGrid.AdjustDateTimeDataSet(aAttr: FieldDataSetBind);
 begin
   FComponent.DataSource.DataSet.DisableControls;
@@ -78,7 +71,6 @@ begin
   FComponent.DataSource.DataSet.First;
   FComponent.DataSource.DataSet.EnableControls;
 end;
-
 function TBind4DComponentDBGrid.AdjusteResponsivity: iBind4DComponent;
 var
   i: Integer;
@@ -94,9 +86,13 @@ begin
   aTotalWidthAttr := 0;
   aCountTotalColumnsVisible := 0;
 
+   for I := 0 to Pred(FComponent.Columns.Count) do
+    FComponent.Columns[i].Width := 100;
 
   for aAttr in RttiUtils.Get<FieldDataSetBind>(FAttributes.Form) do
   begin
+    if not Assigned(FComponent.DataSource.DataSet) then exit;
+    if not FComponent.DataSource.DataSet.Active then exit;
     aField := FComponent.DataSource.DataSet.FindField(aAttr.FieldName);
     if not Assigned(aField) then exit;
     aField.Visible := aAttr.Visible;
@@ -105,7 +101,6 @@ begin
         aField.Visible := False
       else
         aField.Visible := True;
-
     if aField.Visible then
     begin
       aTotalWidthAttr := aTotalWidthAttr + aAttr.Width;
@@ -113,14 +108,14 @@ begin
     end;
   end;
 
-  aDifColumns := (100 - aTotalWidthAttr) /  aCountTotalColumnsVisible;
+  if aCountTotalColumnsVisible = 0 then exit;
 
+  aDifColumns := (100 - aTotalWidthAttr) /  aCountTotalColumnsVisible;
   for aAttr in RttiUtils.Get<FieldDataSetBind>(FAttributes.Form) do
     for I := 0 to Pred(FComponent.Columns.Count) do
         if UpperCase(aAttr.FieldName) = UpperCase(FComponent.Columns[i].Field.FieldName) then
           FComponent.Columns[i].Width := Trunc(((aAttr.Width+aDifColumns)*(FComponent.Width-FCoEficient))/100);
 end;
-
 function TBind4DComponentDBGrid.FormatFieldGrid(
   aAttr: FieldDataSetBind): iBind4DComponent;
 var
@@ -128,15 +123,13 @@ var
   aAttranslation : Translation;
 begin
   Result := Self;
-
   aField := FComponent.DataSource.DataSet.FindField(aAttr.FieldName);
   if not assigned(aField) then exit;
-  
-  aField.Visible := aAttr.Visible;
 
+  if aAttr.FieldIndex <> -1 then aField.Index := aAttr.FieldIndex;
+  aField.Visible := aAttr.Visible;
   aField.DisplayWidth := Round((aAttr.Width * FComponent.Width ) / 1000);
   aField.Alignment := aAttr.Alignment;
-
   if aAttr.EditMask <> '' then
     case aAttr.FDType of
       ftString :
@@ -159,11 +152,9 @@ begin
         AdjustTimeDataSet(aAttr);
         TStringField(aField).EditMask := aAttr.EditMask;
       end
-
       else
         TStringField(aField).EditMask := aAttr.EditMask;
     end;
-
 
    if RttiUtils.TryGet<Translation>(aAttr.Component, aAttranslation) then
     aField.DisplayLabel :=
@@ -177,7 +168,6 @@ begin
     else
       aField.DisplayLabel := aAttr.DisplayName;
 end;
-
 procedure TBind4DComponentDBGrid.AdjustTimeDataSet(aAttr: FieldDataSetBind);
 begin
   FComponent.DataSource.DataSet.DisableControls;
@@ -191,8 +181,11 @@ begin
   FComponent.DataSource.DataSet.First;
   FComponent.DataSource.DataSet.EnableControls;
 end;
-
 function TBind4DComponentDBGrid.ApplyImage: iBind4DComponent;
+begin
+  Result := Self;
+end;
+function TBind4DComponentDBGrid.ApplyRestData: iBind4DComponent;
 begin
   Result := Self;
 end;
@@ -206,40 +199,32 @@ begin
   FComponent.Font.Color := FAttributes.FontColor;
   FComponent.Font.Name := FAttributes.FontName;
 end;
-
 function TBind4DComponentDBGrid.ApplyText: iBind4DComponent;
 begin
   Result := Self;
 end;
-
 function TBind4DComponentDBGrid.ApplyValue: iBind4DComponent;
 begin
   Result := Self;
 end;
-
 function TBind4DComponentDBGrid.Attributes: iBind4DComponentAttributes;
 begin
   Result := FAttributes;
 end;
-
 function TBind4DComponentDBGrid.Clear: iBind4DComponent;
 begin
   Result := Self;
 end;
-
 constructor TBind4DComponentDBGrid.Create(aValue : TDBGrid);
 begin
   FAttributes := TBind4DComponentAttributes.Create(Self);
   FComponent := aValue;
   FComponent.OnDrawColumnCell := DrawColCel;
 end;
-
 destructor TBind4DComponentDBGrid.Destroy;
 begin
-
   inherited;
 end;
-
 procedure TBind4DComponentDBGrid.DrawColCel(Sender: TObject; const Rect: TRect;
   DataCol: Integer; Column: TColumn; State: TGridDrawState);
 begin
@@ -256,15 +241,12 @@ begin
     Column.Field.DisplayText);
   end;
 end;
-
 function TBind4DComponentDBGrid.GetValueString: String;
 begin
   Result := '';
 end;
-
 class function TBind4DComponentDBGrid.New(aValue : TDBGrid) : iBind4DComponent;
 begin
   Result := Self.Create(aValue);
 end;
-
 end.

@@ -1,9 +1,6 @@
 unit Bind4D.Interfaces;
-
 interface
-
 uses
-
   System.JSON,
   Data.DB,
   {$IFDEF HAS_FMX}
@@ -20,9 +17,12 @@ uses
   Bind4D.Attributes,
   Translator4D.Interfaces,
   AWS4D.Interfaces,
-  HS4D.Interfaces;
+  HS4D.Interfaces,
+  Bind4D.Forms.QuickRegistration;
 
 type
+  iBind4DRest = interface;
+
    iBind4D = interface
     ['{2846B843-7533-4987-B7B4-72F7B5654D1A}']
     function Form( aValue : TForm) : iBind4D;
@@ -44,8 +44,22 @@ type
     function Translator : iTranslator4D;
     function AWSService : iAWS4D;
     function HSD4Service : iHS4D;
+    function SetRestDataComponents : iBind4D;
+    function ClearCacheComponents : iBind4D;
+    function QuickRegistration : TPageQuickRegistration;
+    function Rest : iBind4DRest;
   end;
 
+  iBind4DRest = interface
+    ['{DF7F5AF6-E03D-44A2-9358-CD4729741A30}']
+    function AddHeader ( aKey : String; aValue : String ) : iBind4DRest;
+    function AddParam ( aKey : String; aValue : String ) : iBind4DRest;
+    function Accept ( aValue : String ) : iBind4DRest;
+    function BaseURL ( aValue : String ) : iBind4DRest;
+    function Get (aEndPoint : String = '') : iBind4DRest;
+    function Post (aEndPoint : String; aBody : TJsonObject)  : iBind4DRest;
+    function DataSet : TDataSet;
+    function &End : iBind4D;
+  end;
 implementation
-
 end.

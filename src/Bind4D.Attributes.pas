@@ -185,6 +185,49 @@ type
       property FLimitWidth : Integer read FFLimitWidth write SetFLimitWidth;
   end;
   {$endregion}
+  
+  {$region 'REST Attributes'}
+  RestData = class(TCustomAttribute)
+    private
+    FFieldValue: String;
+    FFieldKey: String;
+    FEndPoint: String;
+    FComponentName: string;
+    FOtherChange: Boolean;
+    FFieldBind: String;
+    procedure SetEndPoint(const Value: String);
+    procedure SetFieldKey(const Value: String);
+    procedure SetFieldValue(const Value: String);
+    procedure SetComponentName(const Value: string);
+    procedure SetOtherChange(const Value: Boolean);
+    procedure SetFieldBind(const Value: String);
+    public
+      constructor Create(aEndPoint, aFieldKey, aFieldValue : String); overload;
+      constructor Create(aEndPoint, aFieldKey, aFieldValue : String; aComponentName : string; aFieldBind : String); overload;
+      property EndPoint : String read FEndPoint write SetEndPoint;
+      property FieldKey : String read FFieldKey write SetFieldKey;
+      property FieldValue : String read FFieldValue write SetFieldValue;
+      property FieldBind : String read FFieldBind write SetFieldBind;
+      property ComponentName : string read FComponentName write SetComponentName;
+      property OtherChange : Boolean read FOtherChange write SetOtherChange;
+  end;
+
+  
+  RestQuickRegistration = class(TCustomAttribute)
+    private
+    FField: String;
+    FTitle: String;
+    FEndPoint: String;
+    procedure SetEndPoint(const Value: String);
+    procedure SetField(const Value: String);
+    procedure SetTitle(const Value: String);
+    public
+      constructor Create(aEndPoint, aField, aTitle : String);
+      property EndPoint : String read FEndPoint write SetEndPoint;
+      property Field : String read FField write SetField;
+      property Title : String read FTitle write SetTitle;
+  end;
+  {$endregion}
 
 implementation
 { fvNotNull }
@@ -396,5 +439,82 @@ procedure HorseStorage.SetPath(const Value: string);
 begin
   FPath := Value;
 end;
+
+
+
+{ RestData }
+
+constructor RestData.Create(aEndPoint, aFieldKey, aFieldValue : String);
+begin
+  FEndPoint := aEndPoint;
+  FFieldKey := aFieldKey;
+  FFieldValue := aFieldValue;
+  FOtherChange := False;
+end;
+
+constructor RestData.Create(aEndPoint, aFieldKey, aFieldValue, aComponentName, aFieldBind : string);
+begin
+  FEndPoint := aEndPoint;
+  FFieldKey := aFieldKey;
+  FFieldValue := aFieldValue;
+  FComponentName := aComponentName;
+  FFieldBind := aFieldBind;
+  FOtherChange := True;
+end;
+
+procedure RestData.SetComponentName(const Value: string);
+begin
+  FComponentName := Value;
+end;
+
+procedure RestData.SetEndPoint(const Value: String);
+begin
+  FEndPoint := Value;
+end;
+
+procedure RestData.SetFieldBind(const Value: String);
+begin
+  FFieldBind := Value;
+end;
+
+procedure RestData.SetFieldKey(const Value: String);
+begin
+  FFieldKey := Value;
+end;
+
+procedure RestData.SetFieldValue(const Value: String);
+begin
+  FFieldValue := Value;
+end;
+
+procedure RestData.SetOtherChange(const Value: Boolean);
+begin
+  FOtherChange := Value;
+end;
+
+{ RestQuickRegistration }
+
+constructor RestQuickRegistration.Create(aEndPoint, aField, aTitle: String);
+begin
+  FEndPoint := aEndPoint;
+  FField := aField;
+  FTitle := aTitle;
+end;
+
+procedure RestQuickRegistration.SetEndPoint(const Value: String);
+begin
+  FEndPoint := Value;
+end;
+
+procedure RestQuickRegistration.SetField(const Value: String);
+begin
+  FField := Value;
+end;
+
+procedure RestQuickRegistration.SetTitle(const Value: String);
+begin
+  FTitle := Value;
+end;
+
 
 end.

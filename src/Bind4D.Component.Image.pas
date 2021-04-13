@@ -56,7 +56,27 @@ begin
 end;
 function TBind4DComponentImage.ApplyStyles: iBind4DComponent;
 begin
-  Result := Self;
+   Result := Self;
+   {$IFDEF HAS_FMX}
+   {$ELSE}
+    FComponent.OnDblClick :=
+    TBind4DUtils.AnonProc2NotifyEvent(
+      FComponent,
+      procedure (Sender : TObject)
+      begin
+        with TOpenDialog.Create(TImage(Sender)) do
+          try
+            //Caption := 'Escolher Imagem';
+            Options := [ofPathMustExist, ofFileMustExist];
+            if Execute then
+              TImage(Sender).Picture.LoadFromFile(FileName);
+          finally
+            Free;
+          end;
+      end
+    )
+
+   {$ENDIF}
 end;
 function TBind4DComponentImage.ApplyText: iBind4DComponent;
 begin

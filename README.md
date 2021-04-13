@@ -1,6 +1,6 @@
 <p align="center">
-  <a href="https://github.com/bittencourtthulio/Bind4D/blob/main/assets/Sem%20t%C3%ADtulo-2.fw.png">
-    <img alt="bind4d" src="https://github.com/bittencourtthulio/Bind4D/blob/main/assets/Sem%20t%C3%ADtulo-2.fw.png">
+  <a href="https://github.com/bittencourtthulio/Bind4D/blob/main/assets/logo-bind4d.jpg">
+    <img alt="bind4d" src="https://github.com/bittencourtthulio/Bind4D/blob/main/assets/logo-bind4d.jpg">
   </a>  
 </p><br>
 

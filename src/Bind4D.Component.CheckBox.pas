@@ -1,7 +1,5 @@
 unit Bind4D.Component.CheckBox;
-
 interface
-
 uses
   {$IFDEF HAS_FMX}
     FMX.StdCtrls,
@@ -10,7 +8,6 @@ uses
     Vcl.StdCtrls,
   {$ENDIF}
   Bind4D.Component.Interfaces, Bind4D.Attributes;
-
 type
   TBind4DComponentCheckBox = class(TInterfacedObject, iBind4DComponent)
     private
@@ -27,29 +24,28 @@ type
       function ApplyText : iBind4DComponent;
       function ApplyImage : iBind4DComponent;
       function ApplyValue : iBind4DComponent;
+      function ApplyRestData : iBind4DComponent;
       function GetValueString : String;
       function Clear : iBind4DComponent;
   end;
-
 implementation
-
 uses
   Bind4D.Component.Attributes, System.SysUtils;
-
 { TBind4DComponentCheckBox }
-
 function TBind4DComponentCheckBox.FormatFieldGrid(
   aAttr: FieldDataSetBind): iBind4DComponent;
 begin
   Result := Self;
 end;
-
 function TBind4DComponentCheckBox.AdjusteResponsivity: iBind4DComponent;
 begin
   Result := Self;
 end;
-
 function TBind4DComponentCheckBox.ApplyImage: iBind4DComponent;
+begin
+  Result := Self;
+end;
+function TBind4DComponentCheckBox.ApplyRestData: iBind4DComponent;
 begin
   Result := Self;
 end;
@@ -65,7 +61,6 @@ begin
   {$ELSE}
   {$ENDIF}
 end;
-
 function TBind4DComponentCheckBox.ApplyText: iBind4DComponent;
 begin
   Result := Self;
@@ -75,7 +70,6 @@ begin
     FComponent.Caption := FAttributes.Text;
   {$ENDIF}
 end;
-
 function TBind4DComponentCheckBox.ApplyValue: iBind4DComponent;
 begin
   Result := Self;
@@ -85,12 +79,10 @@ begin
     FComponent.Checked := FAttributes.ValueVariant;
   {$ENDIF}
 end;
-
 function TBind4DComponentCheckBox.Attributes: iBind4DComponentAttributes;
 begin
   Result := FAttributes;
 end;
-
 function TBind4DComponentCheckBox.Clear: iBind4DComponent;
 begin
   Result := Self;
@@ -100,19 +92,15 @@ begin
     FComponent.Checked := False;
   {$ENDIF}
 end;
-
 constructor TBind4DComponentCheckBox.Create(aValue : TCheckBox);
 begin
   FAttributes := TBind4DComponentAttributes.Create(Self);
   FComponent := aValue;
 end;
-
 destructor TBind4DComponentCheckBox.Destroy;
 begin
-
   inherited;
 end;
-
 function TBind4DComponentCheckBox.GetValueString: String;
 begin
   {$IFDEF HAS_FMX}
@@ -121,10 +109,8 @@ begin
     Result := BoolToStr(FComponent.Checked);
   {$ENDIF}
 end;
-
 class function TBind4DComponentCheckBox.New(aValue : TCheckBox) : iBind4DComponent;
 begin
   Result := Self.Create(aValue);
 end;
-
 end.

@@ -32,6 +32,7 @@ type
       function ApplyText : iBind4DComponent;
       function ApplyImage : iBind4DComponent;
       function ApplyValue : iBind4DComponent;
+      function ApplyRestData : iBind4DComponent;
       function GetValueString : String;
       function Clear : iBind4DComponent;
   end;
@@ -55,6 +56,11 @@ begin
 end;
 
 function TBind4DComponentRectangle.ApplyImage: iBind4DComponent;
+begin
+  Result := Self;
+end;
+
+function TBind4DComponentRectangle.ApplyRestData: iBind4DComponent;
 begin
   Result := Self;
 end;
