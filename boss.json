@@ -6,6 +6,7 @@
 	"mainsrc": "./",
 	"projects": [],
 	"dependencies": {
+		"https://github.com/pmadalozzo/HStorage4D": "^0.0.0",
 		"https://github.com/bittencourtthulio/aws4d": "^1.0.7",
 		"https://github.com/bittencourtthulio/localcache4d": "^1.0.4",
 		"https://github.com/bittencourtthulio/translator4d": "^1.0.4",
