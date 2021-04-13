@@ -165,6 +165,7 @@ type
     FAlignment: TAlignment;
     FEditMask: String;
     FFLimitWidth: Integer;
+    FFieldIndex: Integer;
     procedure SetFieldName(const Value: String);
     procedure SetDisplayName(const Value: String);
     procedure SetWidth(const Value: Integer);
@@ -173,8 +174,9 @@ type
     procedure SetEditMask(const Value: String);
     procedure SetFieldType(const Value: TFieldType);
     procedure SetFLimitWidth(const Value: Integer);
+    procedure SetFieldIndex(const Value: Integer);
     public
-      constructor Create(aFieldName : String; aFdType : TFieldType; aVisible : Boolean = True; aWidth : Integer = 0; aDisplayName : String = ''; aEditMask : String = ''; aAlignment : TAlignment = taLeftJustify; aLimitWidth : Integer = 0);
+      constructor Create(aFieldName : String; aFdType : TFieldType; aVisible : Boolean = True; aWidth : Integer = 0; aDisplayName : String = ''; aEditMask : String = ''; aAlignment : TAlignment = taLeftJustify; aLimitWidth : Integer = 0; aFieldIndex : Integer = -1);
       property FieldName : String read FFieldName write SetFieldName;
       property Width : Integer read FWidth write SetWidth;
       property DisplayName : String read FDisplayName write SetDisplayName;
@@ -183,7 +185,8 @@ type
       property EditMask : String read FEditMask write SetEditMask;
       property FDType : TFieldType read FFDType write SetFieldType;
       property FLimitWidth : Integer read FFLimitWidth write SetFLimitWidth;
-  end;
+      property FieldIndex : Integer read FFieldIndex write SetFieldIndex;
+    end;
   {$endregion}
   
   {$region 'REST Attributes'}
@@ -363,9 +366,7 @@ begin
   FJsonName := Value;
 end;
 { FieldDataSetBind }
-constructor FieldDataSetBind.Create(aFieldName: String; aFdType: TFieldType;
-  aVisible: Boolean; aWidth: Integer; aDisplayName, aEditMask: String;
-  aAlignment: TAlignment; aLimitWidth: Integer);
+constructor FieldDataSetBind.Create(aFieldName : String; aFdType : TFieldType; aVisible : Boolean = True; aWidth : Integer = 0; aDisplayName : String = ''; aEditMask : String = ''; aAlignment : TAlignment = taLeftJustify; aLimitWidth : Integer = 0; aFieldIndex : Integer = -1);
 begin
   FFieldName := aFieldName;
   FWidth := aWidth;
@@ -375,6 +376,7 @@ begin
   FEditMask := aEditMask;
   FFdType := aFdType;
   FLimitWidth := aLimitWidth;
+  FFieldIndex := aFieldIndex;
 end;
 procedure FieldDataSetBind.SetAlignment(const Value: TAlignment);
 begin
@@ -388,6 +390,11 @@ procedure FieldDataSetBind.SetEditMask(const Value: String);
 begin
   FEditMask := Value;
 end;
+procedure FieldDataSetBind.SetFieldIndex(const Value: Integer);
+begin
+  FFieldIndex := Value;
+end;
+
 procedure FieldDataSetBind.SetFieldName(const Value: String);
 begin
   FFieldName := Value;

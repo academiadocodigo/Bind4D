@@ -278,6 +278,12 @@ begin
     aTitle := aAttr.Title;
 end;
 
+function TBind4D.ClearCacheComponents: iBind4D;
+begin
+  Result := Self;
+  RttiUtils.ClearCache;
+end;
+
 function TBind4D.ClearFieldForm: iBind4D;
 var
   aComp : TComponent;

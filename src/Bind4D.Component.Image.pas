@@ -8,6 +8,7 @@ uses
     Vcl.ExtCtrls,
     EncdDecd,
     NetEncoding,
+    Vcl.Dialogs,
   {$ENDIF}
   System.Types,
   Bind4D.Component.Interfaces, Bind4D.Attributes;
@@ -28,6 +29,7 @@ type
       function ApplyStyles : iBind4DComponent;
       function ApplyText : iBind4DComponent;
       function ApplyImage : iBind4DComponent;
+      function ApplyRestData : iBind4DComponent;
       function ApplyValue : iBind4DComponent;
       function GetValueString : String;
       function Clear : iBind4DComponent;
@@ -54,6 +56,11 @@ function TBind4DComponentImage.ApplyImage: iBind4DComponent;
 begin
    __LoadFromResource(FAttributes.ResourceImage);
 end;
+function TBind4DComponentImage.ApplyRestData: iBind4DComponent;
+begin
+  Result := Self;
+end;
+
 function TBind4DComponentImage.ApplyStyles: iBind4DComponent;
 begin
    Result := Self;
