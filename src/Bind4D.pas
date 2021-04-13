@@ -46,6 +46,7 @@ uses
   Bind4D.Utils,
   AWS4D.Interfaces,
   AWS4D,
+  HS4D.Interfaces,
   Bind4D.Forms.QuickRegistration;
 
 type
@@ -53,6 +54,7 @@ type
     private
       FForm : TForm;
       FAWSService : iAWS4D;
+      FHSService : iHS4D;
       FBind4DRest : iBind4DRest;
     public
       constructor Create;
@@ -74,10 +76,11 @@ type
       function SetStyleComponents : iBind4D;
       function SetCaptionComponents : iBind4D;
       function SetImageComponents : iBind4D;
-      function SetRestDataComponents : iBind4D;
-      function ClearCacheComponents : iBind4D;
       function Translator : iTranslator4D;
       function AWSService : iAWS4D;
+      function HSD4Service : iHS4D;
+      function SetRestDataComponents : iBind4D;
+      function ClearCacheComponents : iBind4D;
       function Rest : iBind4DRest;
       function QuickRegistration : TPageQuickRegistration;
   end;
@@ -97,7 +100,10 @@ uses
   Bind4D.Component.Image,
   Bind4D.Component.Factory,
   Bind4D.Utils.Rtti,
-  Bind4D.Types.Helpers, Bind4D.Component.Helpers, Bind4D.Rest;
+  Bind4D.Types.Helpers, 
+  Bind4D.Component.Helpers, 
+  HS4D,
+  Bind4D.Rest;
 
 { TBind4D }
 
@@ -272,12 +278,6 @@ begin
     aTitle := aAttr.Title;
 end;
 
-function TBind4D.ClearCacheComponents: iBind4D;
-begin
-  Result := Self;
-  RttiUtils.ClearCache;
-end;
-
 function TBind4D.ClearFieldForm: iBind4D;
 var
   aComp : TComponent;
@@ -332,7 +332,6 @@ begin
           end;
         end
     )
-
 end;
 
 function TBind4D.FormToJson(aType : TTypeBindFormJson) : TJsonObject;
@@ -354,12 +353,18 @@ end;
 function TBind4D.GetFieldsByType(aType : TTypeBindFormJson) : String;
 var
   aAttr : FieldJsonBind;
-  aJsonName : string;
 begin
   for aAttr in RttiUtils.Get<FieldJsonBind>(FForm) do
-    if aType.This.TryGetJsonName(aAttr.Component, aJsonName) then
-      Result := Result + aJsonName + ',';
+    Result := Result + aType.This.GetJsonName(aAttr.Component) + ',';
   Result := Copy(Result, 1, Length(Result) -1);
+end;
+
+function TBind4D.HSD4Service: iHS4D;
+begin
+  if not Assigned(FHSService) then
+    FHSService := THS4D.New;
+
+  Result := FHSService;
 end;
 
 class function TBind4D.New: iBind4D;

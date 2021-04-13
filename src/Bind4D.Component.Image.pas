@@ -6,17 +6,18 @@ uses
     FMX.Objects,
   {$ELSE}
     Vcl.ExtCtrls,
-    Vcl.Dialogs,
+    EncdDecd,
+    NetEncoding,
   {$ENDIF}
   System.Types,
-  Bind4D.Component.Interfaces,
-  Bind4D.Attributes;
+  Bind4D.Component.Interfaces, Bind4D.Attributes;
 type
   TBind4DComponentImage = class(TInterfacedObject, iBind4DComponent)
     private
       FComponent : TImage;
       FAttributes : iBind4DComponentAttributes;
       procedure __LoadFromResource(aResourceName : String);
+
     public
       constructor Create(aValue : TImage);
       destructor Destroy; override;
@@ -28,7 +29,6 @@ type
       function ApplyText : iBind4DComponent;
       function ApplyImage : iBind4DComponent;
       function ApplyValue : iBind4DComponent;
-      function ApplyRestData : iBind4DComponent;
       function GetValueString : String;
       function Clear : iBind4DComponent;
   end;
@@ -39,9 +39,7 @@ uses
   Bind4D.Utils.Rtti,
   Bind4D.Utils,
   StrUtils,
-  System.Variants;
-
-
+  System.Variants, System.SysUtils, Data.DB;
 { TBind4DImage }
 function TBind4DComponentImage.FormatFieldGrid(
   aAttr: FieldDataSetBind): iBind4DComponent;
@@ -56,14 +54,9 @@ function TBind4DComponentImage.ApplyImage: iBind4DComponent;
 begin
    __LoadFromResource(FAttributes.ResourceImage);
 end;
-function TBind4DComponentImage.ApplyRestData: iBind4DComponent;
-begin
-  Result := Self;
-end;
-
 function TBind4DComponentImage.ApplyStyles: iBind4DComponent;
 begin
-  Result := Self;
+   Result := Self;
    {$IFDEF HAS_FMX}
    {$ELSE}
     FComponent.OnDblClick :=
@@ -85,7 +78,6 @@ begin
 
    {$ENDIF}
 end;
-
 function TBind4DComponentImage.ApplyText: iBind4DComponent;
 begin
   Result := Self;
@@ -93,7 +85,11 @@ end;
 function TBind4DComponentImage.ApplyValue: iBind4DComponent;
 var
   Attribute : S3Storage;
+  HorseAttribute : HorseStorage;
   AttImage : ImageAttribute;
+
+  lStream : TStringStream;
+  lImagem : TMemoryStream;
 begin
   Result := Self;
   try
@@ -118,7 +114,20 @@ begin
       {$ELSE}
         FComponent.HelpKeyword := FAttributes.ValueVariant;
       {$ENDIF}
-    end;
+    end else
+    if RttiUtils.TryGet<HorseStorage>(FComponent, HorseAttribute) then
+     begin
+      TBind4DUtils
+        .GetImageHS4DStorage(
+          FComponent,
+          FAttributes.ValueVariant
+        );
+      {$IFDEF HAS_FMX}
+        FComponent.Hint := FAttributes.ValueVariant;
+      {$ELSE}
+        FComponent.HelpKeyword := FAttributes.ValueVariant;
+      {$ENDIF}
+     end;
   except
     if RttiUtils.TryGet<ImageAttribute>(FComponent, AttImage)  then
       __LoadFromResource(AttImage.DefaultResourceImage);
@@ -153,6 +162,10 @@ end;
 function TBind4DComponentImage.GetValueString: String;
 var
   Attribute : S3Storage;
+  HorseAttribute : HorseStorage;
+
+  lStream: TMemoryStream;
+  lImagem : TStringStream;
 begin
   try
     if RttiUtils.TryGet<S3Storage>(FComponent, Attribute) then
@@ -162,12 +175,21 @@ begin
           FComponent,
           Attribute
         );
+    end else
+    if RttiUtils.TryGet<HorseStorage>(FComponent, HorseAttribute) then
+    begin
+       Result := TBind4DUtils
+        .SendImageHS4DStorage(
+          FComponent,
+          HorseAttribute
+        );
     end;
   except
     //
   end;
   //TODO: Implementar Retorno Base64Image;
 end;
+
 
 class function TBind4DComponentImage.New(aValue : TImage): iBind4DComponent;
 begin

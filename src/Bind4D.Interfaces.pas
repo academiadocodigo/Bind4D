@@ -17,6 +17,7 @@ uses
   Bind4D.Attributes,
   Translator4D.Interfaces,
   AWS4D.Interfaces,
+  HS4D.Interfaces,
   Bind4D.Forms.QuickRegistration;
 
 type
@@ -40,11 +41,12 @@ type
     function SetStyleComponents : iBind4D;
     function SetCaptionComponents : iBind4D;
     function SetImageComponents : iBind4D;
+    function Translator : iTranslator4D;
+    function AWSService : iAWS4D;
+    function HSD4Service : iHS4D;
     function SetRestDataComponents : iBind4D;
     function ClearCacheComponents : iBind4D;
     function QuickRegistration : TPageQuickRegistration;
-    function Translator : iTranslator4D;
-    function AWSService : iAWS4D;
     function Rest : iBind4DRest;
   end;
 
