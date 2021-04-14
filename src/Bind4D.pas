@@ -52,6 +52,7 @@ type
       FAWSService : iAWS4D;
       FHSService : iHS4D;
       FBind4DRest : iBind4DRest;
+      FStylesDefault : iBind4DComponentStyles;
     public
       constructor Create;
       destructor Destroy; override;
@@ -79,7 +80,16 @@ type
       function ClearCacheComponents : iBind4D;
       function Rest : iBind4DRest;
       function QuickRegistration : TPageQuickRegistration;
+      function StylesDefault : iBind4DComponentStyles;
   end;
+
+
+  TMockComponent = class(TComponent)
+    private
+    public
+  end;
+
+
 var
   vBind4D : iBind4D;
 implementation
@@ -96,7 +106,7 @@ uses
   Bind4D.Types.Helpers, 
   Bind4D.Component.Helpers, 
   HS4D,
-  Bind4D.Rest;
+  Bind4D.Rest, Bind4D.Component.Styles, Bind4D.Component.Interfaces;
 { TBind4D }
 function TBind4D.BindFormRest(var aEndPoint : String; var aPK : String; var aSort : String; var aOrder : String) : iBind4D;
 var
@@ -114,10 +124,12 @@ end;
 function TBind4D.BindDataSetToForm(aDataSet : TDataSet) : iBind4D;
 var
   Attribute : FieldDataSetBind;
+  aTeste: string;
 begin
   Result := Self;
   for Attribute in RttiUtils.Get<FieldDataSetBind>(FForm) do
   begin
+    aTeste  := Attribute.FieldName;
     TBind4DComponentFactory
       .New
         .Component(Attribute.Component)
@@ -238,6 +250,9 @@ begin
     TBind4DComponentFactory
       .New
         .Component(aDBGrid)
+        .Attributes
+          .Form(FForm)
+        .&End
         .FormatFieldGrid(aAttr);
 end;
 {$ENDIF}
@@ -398,8 +413,20 @@ end;
 function TBind4D.SetCaptionComponents : iBind4D;
 var
   Attribute : Translation;
+  I: Integer;
+  Component : TComponent;
+  iBind : iBind4DComponent;
 begin
   Result := Self;
+  for Attribute in RttiUtils.GetAttClass<Translation>(FForm) do
+  begin
+    for I := 0 to Pred(FForm.ComponentCount) do
+    begin
+      iBind := TBind4DComponentFactory.New.Component(FForm.Components[I]);
+      iBind.Attributes.Text(iBind.GetValueString).&End.ApplyText;
+    end;
+  end;
+
   for Attribute in RttiUtils.Get<Translation>(FForm) do
   begin
     TBind4DComponentFactory
@@ -414,8 +441,43 @@ end;
 function TBind4D.SetStyleComponents: iBind4D;
 var
   Attribute : ComponentBindStyle;
+  AttributeDefault : ComponentStylesDefault;
+  I: Integer;
 begin
   Result := Self;
+  for AttributeDefault in RttiUtils.GetAttClass<ComponentStylesDefault>(FForm) do
+  begin
+    for I := 0 to Pred(FForm.ComponentCount) do
+    begin
+      if
+        (AttributeDefault.Component.ClassName = FForm.Components[I].ClassName) or
+        (AttributeDefault.Component.ClassName = 'TMockComponent')
+      then
+      begin
+        Attribute := FStylesDefault.Get(AttributeDefault.DefaultStyle);
+        TBind4DComponentFactory
+          .New
+            .Component(FForm.Components[I])
+              .Attributes
+                .Color(Attribute.Color)
+                .FontColor(Attribute.FontColor)
+                .FontName(Attribute.FontName)
+                .FontSize(Attribute.FontSize)
+                .EspecialType(Attribute.EspecialType)
+                .ParentBackground(False)
+                {$IFDEF HAS_FMX}
+                .StyleSettings([TStyledSetting.Other])
+                {$ELSE}
+                .StyleSettings([seClient, seBorder])
+                {$ENDIF}
+              .&End
+            .ApplyStyles;
+      end;
+    end;
+  end;
+
+
+
   for Attribute in RttiUtils.Get<ComponentBindStyle>(FForm) do
   begin
     TBind4DComponentFactory
@@ -437,6 +499,14 @@ begin
         .ApplyStyles;
   end;
 end;
+function TBind4D.StylesDefault: iBind4DComponentStyles;
+begin
+  if not Assigned(FStylesDefault) then
+    FStylesDefault := TBind4DComponentStyles.New(Self);
+
+  Result := FStylesDefault;
+end;
+
 function TBind4D.Translator: iTranslator4D;
 begin
   Result := TTranslator4D.New;

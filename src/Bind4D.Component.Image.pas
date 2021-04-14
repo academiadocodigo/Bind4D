@@ -63,6 +63,7 @@ end;
 function TBind4DComponentImage.ApplyStyles: iBind4DComponent;
 begin
    Result := Self;
+   FComponent.Proportional := True;
    {$IFDEF HAS_FMX}
    {$ELSE}
     FComponent.OnDblClick :=

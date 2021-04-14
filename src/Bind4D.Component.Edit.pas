@@ -15,7 +15,9 @@ type
       FComponent : TEdit;
       FAttributes : iBind4DComponentAttributes;
       function onChangeAttribute : TBind4DComponentEdit;
+      function onExitAttribute : TBind4DComponentEdit;
       function especialValidate : TBind4DComponentEdit;
+    procedure TryValidations;
     public
       constructor Create(var aValue : TEdit);
       destructor Destroy; override;
@@ -36,7 +38,7 @@ uses
   Bind4D.Component.Attributes,
   Bind4D.Utils,
   Bind4D.ChangeCommand,
-  Bind4D.Types, Data.DB, System.SysUtils, Bind4D.Utils.Rtti;
+  Bind4D.Types, Data.DB, System.SysUtils, Bind4D.Utils.Rtti, Vcl.Graphics;
 { TBind4DComponentEdit }
 function TBind4DComponentEdit.FormatFieldGrid(
   aAttr: FieldDataSetBind): iBind4DComponent;
@@ -70,13 +72,23 @@ begin
     FComponent.Font.Name := FAttributes.FontName;
   {$ENDIF}
   FComponent.Font.Size := FAttributes.FontSize;
+
+  TCommandMaster.New.Add(
+    FComponent,
+    procedure (Sender : TObject)
+    begin
+      if Trim((Sender as TEdit).Text) <> '' then
+        if Trim((Sender as TEdit).HelpKeyword) <> '' then
+          (Sender as TEdit).Color := StringToColor((Sender as TEdit).HelpKeyword);
+    end);
+
   onChangeAttribute;
+  //onExitAttribute;
   especialValidate;
 end;
 function TBind4DComponentEdit.ApplyText: iBind4DComponent;
 begin
   Result := Self;
-  FComponent.Text := FAttributes.Text;
 end;
 function TBind4DComponentEdit.ApplyValue: iBind4DComponent;
 begin
@@ -120,7 +132,20 @@ begin
   Result := Self;
   FComponent.Text := '';
 end;
-constructor TBind4DComponentEdit.Create(var aValue : TEdit);
+
+procedure TBind4DComponentEdit.TryValidations;
+var
+  aAttrNotNull: fvNotNull;
+begin
+  if RttiUtils.TryGet<fvNotNull>(FComponent, aAttrNotNull) then
+    if Trim(FComponent.Text) = '' then
+    begin
+      FComponent.SetFocus;
+      FComponent.HelpKeyword := ColorToString(FComponent.Color);
+      FComponent.Color := aAttrNotNull.ErrorColor;
+      raise Exception.Create(aAttrNotNull.Msg);
+    end;
+end;constructor TBind4DComponentEdit.Create(var aValue : TEdit);
 begin
   FAttributes := TBind4DComponentAttributes.Create(Self);
   FComponent := aValue;
@@ -130,80 +155,101 @@ begin
   inherited;
 end;
 function TBind4DComponentEdit.especialValidate: TBind4DComponentEdit;
+var
+  AttrBindFormat : ComponentBindFormat;
 begin
   Result := Self;
-  case FAttributes.EspecialType of
-    teCoin :
-    begin
-      TCommandMaster.New.Add(
-          FComponent,
-          procedure (Sender : TObject)
-          begin
-            (Sender as TEdit).Text := TBind4DUtils.FormatarMoeda((Sender as TEdit).Text);
-            (Sender as TEdit).SelStart := Length((Sender as TEdit).Text);
-          end
-      )
-    end;
-    teCell :
-    begin
+  if RttiUtils.TryGet<ComponentBindFormat>(FComponent, AttrBindFormat) then
+  begin
+    case AttrBindFormat.EspecialType of
+      teCoin :
+      begin
         TCommandMaster.New.Add(
             FComponent,
             procedure (Sender : TObject)
             begin
-              (Sender as TEdit).Text := TBind4DUtils.FormatarCelular((Sender as TEdit).Text);
+              (Sender as TEdit).Text := TBind4DUtils.FormatarMoeda((Sender as TEdit).Text);
               (Sender as TEdit).SelStart := Length((Sender as TEdit).Text);
             end
         )
+      end;
+      teCell :
+      begin
+          TCommandMaster.New.Add(
+              FComponent,
+              procedure (Sender : TObject)
+              begin
+                (Sender as TEdit).Text := TBind4DUtils.FormatarCelular((Sender as TEdit).Text);
+                (Sender as TEdit).SelStart := Length((Sender as TEdit).Text);
+              end
+          )
+      end;
+      teCPF :
+      begin
+        TCommandMaster.New.Add(
+              FComponent,
+              procedure (Sender : TObject)
+              begin
+                (Sender as TEdit).Text := TBind4DUtils.FormatarCPF((Sender as TEdit).Text);
+                (Sender as TEdit).SelStart := Length((Sender as TEdit).Text);
+              end
+          )
+      end;
+      teCNPJ :
+      begin
+        TCommandMaster
+          .New
+            .Add(
+              FComponent,
+              procedure (Sender : TObject)
+              begin
+                (Sender as TEdit).Text := TBind4DUtils.FormatarCNPJ((Sender as TEdit).Text);
+                (Sender as TEdit).SelStart := Length((Sender as TEdit).Text);
+              end)
+      end;
+      teCEP :
+      begin
+        TCommandMaster
+          .New
+            .Add(
+              FComponent,
+              procedure (Sender : TObject)
+              begin
+                (Sender as TEdit).Text := TBind4DUtils.FormatarCEP((Sender as TEdit).Text);
+                (Sender as TEdit).SelStart := Length((Sender as TEdit).Text);
+              end)
+      end;
+      tePhone :
+      begin
+        TCommandMaster
+          .New
+            .Add(
+              FComponent,
+              procedure (Sender : TObject)
+              begin
+                (Sender as TEdit).Text := TBind4DUtils.FormatarPhone((Sender as TEdit).Text);
+                (Sender as TEdit).SelStart := Length((Sender as TEdit).Text);
+              end)
+      end;
+      teNull : ;
     end;
-    teCPF :
-    begin
-      TCommandMaster.New.Add(
-            FComponent,
-            procedure (Sender : TObject)
-            begin
-              (Sender as TEdit).Text := TBind4DUtils.FormatarCPF((Sender as TEdit).Text);
-              (Sender as TEdit).SelStart := Length((Sender as TEdit).Text);
-            end
-        )
-    end;
-    teCNPJ :
-    begin
-      TCommandMaster
-        .New
-          .Add(
-            FComponent,
-            procedure (Sender : TObject)
-            begin
-              (Sender as TEdit).Text := TBind4DUtils.FormatarCNPJ((Sender as TEdit).Text);
-              (Sender as TEdit).SelStart := Length((Sender as TEdit).Text);
-            end)
-    end;
-    teNull : ;
   end;
+
 end;
 function TBind4DComponentEdit.GetValueString: String;
 var
-  aAttr : ComponentBindStyle;
+  aAttr : ComponentBindFormat;
 begin
-  //TODO: Tratar a Validação NotNull
-  {*if pRtti.Tem<fvNotNull> then
-    begin
-      if Trim((aComponent as TEdit).Text) = '' then
-        if pRtti.Tem<FieldDataSetBind> then
-        begin
-          (aComponent as TEdit).SetFocus;
-          raise Exception.Create(pRtti.GetAttribute<fvNotNull>.Msg);
-        end;
-    end;*}
+  TryValidations;
+
   Result := FComponent.Text;
-  if RttiUtils.TryGet<ComponentBindStyle>(FComponent, aAttr) then
+  if RttiUtils.TryGet<ComponentBindFormat>(FComponent, aAttr) then
   begin
     case aAttr.EspecialType of
       teNull : Result := FComponent.Text;
       teCoin : Result := TBind4DUtils.ExtrairMoeda(FComponent.Text);
-      teCell : Result := TBind4DUtils.ApenasNumeros(FComponent.Text);
-      teCPF  : Result := TBind4DUtils.ApenasNumeros(FComponent.Text);
-      teCNPJ  : Result := TBind4DUtils.ApenasNumeros(FComponent.Text);
+      else
+        Result := TBind4DUtils.ApenasNumeros(FComponent.Text);
     end;
   end;
 end;
@@ -223,4 +269,17 @@ begin
         TCommandMaster.New.Execute((Sender as TEdit));
       end);
 end;
+function TBind4DComponentEdit.onExitAttribute: TBind4DComponentEdit;
+begin
+  Result := Self;
+  FComponent.OnExit :=
+  TBind4DUtils
+    .AnonProc2NotifyEvent(
+      FComponent,
+      procedure (Sender : TObject)
+      begin
+        TCommandMaster.New.Execute((Sender as TEdit));
+      end);
+end;
+
 end.

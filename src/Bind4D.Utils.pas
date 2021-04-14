@@ -24,6 +24,8 @@ type
       class function AnonProc2NotifyEvent(Owner: TComponent; Proc: TProc<TObject>): TNotifyEvent;
       class function FormatarCPF(valor : string) : string;
       class function FormatarCNPJ(valor : string) : string;
+      class function FormatarCEP(valor : string) : string;
+      class function FormatarPhone(valor : string) : string;
       class function ExtrairMoeda(aValue : String) : String;
       class function FormatDateTime(aValue : String) : String;
       class function FormatDateTimeToJson (aValue : TDateTime) : String;
@@ -95,6 +97,29 @@ begin
   end;
   Result := '(' + Copy(valor, 1, 2) + ') ' + Copy(valor, 3, 5) + '-' + Copy(valor, 8, Length(valor));
 end;
+class function TBind4DUtils.FormatarCEP(valor: string): string;
+var
+  i: Integer;
+begin
+  for i := 0 to Length(valor) - 1 do
+    if not CharInSet(valor[i], ['0' .. '9']) then
+      delete(valor, i, 1);
+  valor := StringReplace(valor, ' ', '', [rfReplaceAll, rfIgnoreCase]);
+  if Length(valor) = 9 then
+    valor := copy(valor, 2, Length(valor));
+  case Length(valor) of
+  0 : valor := '00000000';
+  1 : valor := '0000000' + valor;
+  2 : valor := '000000' + valor;
+  3 : valor := '00000' + valor;
+  4 : valor := '0000' + valor;
+  5 : valor := '000' + valor;
+  6 : valor := '00' + valor;
+  7 : valor := '0' + valor;
+  end;
+  Result := Copy(valor, 1, 5) + '-' + Copy(valor, 6, 3);
+end;
+
 class function TBind4DUtils.FormatarCNPJ(valor: string): string;
 var
   i: Integer;
@@ -212,6 +237,33 @@ begin
     Result := LeftStr(valor, Length(valor) - 2) + ',' + decimais;
   end;
 end;
+class function TBind4DUtils.FormatarPhone(valor: string): string;
+var
+  i: Integer;
+begin
+  for i := 0 to Length(valor) - 1 do
+    if not CharInSet(valor[i], ['0' .. '9']) then
+      delete(valor, i, 1);
+  valor := StringReplace(valor, ' ', '', [rfReplaceAll, rfIgnoreCase]);
+  if Length(valor) = 11 then
+    valor := copy(valor, 2, Length(valor));
+  case Length(valor) of
+  0 : valor := '0000000000';
+  1 : valor := '000000000' + valor;
+  2 : valor := '00000000' + valor;
+  3 : valor := '0000000' + valor;
+  4 : valor := '000000' + valor;
+  5 : valor := '00000' + valor;
+  6 : valor := '0000' + valor;
+  7 : valor := '000' + valor;
+  8 : valor := '00' + valor;
+  9 : valor := '0' + valor;
+  end;
+  Result := '(' + Copy(valor, 1, 2) + ') ' + Copy(valor, 3, 4) + '-' + Copy(valor, 7, 4);
+
+
+end;
+
 class function TBind4DUtils.FormatDateDataSet(aValue: String): String;
 var
   i: Integer;

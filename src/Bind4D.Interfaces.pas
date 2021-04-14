@@ -22,6 +22,7 @@ uses
 
 type
   iBind4DRest = interface;
+  iBind4DComponentStyles = interface;
 
    iBind4D = interface
     ['{2846B843-7533-4987-B7B4-72F7B5654D1A}']
@@ -48,6 +49,7 @@ type
     function ClearCacheComponents : iBind4D;
     function QuickRegistration : TPageQuickRegistration;
     function Rest : iBind4DRest;
+    function StylesDefault : iBind4DComponentStyles;
   end;
 
   iBind4DRest = interface
@@ -59,6 +61,14 @@ type
     function Get (aEndPoint : String = '') : iBind4DRest;
     function Post (aEndPoint : String; aBody : TJsonObject)  : iBind4DRest;
     function DataSet : TDataSet;
+    function &End : iBind4D;
+  end;
+
+
+  iBind4DComponentStyles = interface
+    ['{936368AD-090D-4F8B-9A77-B206D69CC9E1}']
+    function Add ( aKey : String; aStyle : ComponentBindStyle) : iBind4DComponentStyles;
+    function Get ( aKey : String ) : ComponentBindStyle;
     function &End : iBind4D;
   end;
 implementation

@@ -26,7 +26,6 @@ type
     end;
 var
   RttiUtils : TBind4DUtilsRtti;
-
 implementation
 uses
   Bind4D.Helpers;
@@ -37,7 +36,6 @@ begin
   FComponentList.Clear;
   FprpRttiList.Clear;
 end;
-
 constructor TBind4DUtilsRtti.Create;
 begin
   FComponentList := TDictionary<TCustomAttribute, TComponent>.Create;
@@ -84,17 +82,21 @@ function TBind4DUtilsRtti.GetAttClass<T>(aForm: TForm): TArray<T>;
 var
   vCtxRtti: TRttiContext;
   vTypRtti: TRttiType;
+  Attrib : TCustomAttribute;
   dec : Integer;
 begin
   dec := 0;
   vCtxRtti := TRttiContext.Create;
   try
     vTypRtti := vCtxRtti.GetType(aForm.ClassInfo);
-    if vTypRtti.Tem<T> then
+    for Attrib in vTypRtti.GetAttributes do
     begin
-      Inc(dec);
-      SetLength(Result, dec);
-      Result[dec-1] := vTypRtti.GetAttribute<T>;
+      if Attrib.ClassName = T.ClassName then
+      begin
+        Inc(dec);
+        SetLength(Result, dec);
+        Result[dec-1] := T(Attrib);
+      end;
     end;
   finally
     vCtxRtti.Free;

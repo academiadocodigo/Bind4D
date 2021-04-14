@@ -39,7 +39,10 @@ requires
   CloudService,
   FireDAC,
   FireDACCommonDriver,
-  FireDACCommon;
+  FireDACCommon,
+  IndySystem,
+  IndyCore,
+  IndyProtocols;
 
 contains
   Bind4D.Attributes in 'src\Bind4D.Attributes.pas',
@@ -78,7 +81,8 @@ contains
   Bind4D.Component.Helpers in 'src\Bind4D.Component.Helpers.pas',
   Bind4D.Component.Mock in 'src\Bind4D.Component.Mock.pas',
   Bind4D.Rest in 'src\Bind4D.Rest.pas',
-  Bind4D.Forms.QuickRegistration in 'src\Forms\Bind4D.Forms.QuickRegistration.pas' {PageQuickRegistration};
+  Bind4D.Forms.QuickRegistration in 'src\Forms\Bind4D.Forms.QuickRegistration.pas',
+  Bind4D.Component.Styles in 'src\Bind4D.Component.Styles.pas';
 
 end.
 
