@@ -8,6 +8,7 @@ uses
     Vcl.ExtCtrls,
     EncdDecd,
     NetEncoding,
+    Vcl.Dialogs,
   {$ENDIF}
   System.Types,
   Bind4D.Component.Interfaces, Bind4D.Attributes;
@@ -17,7 +18,6 @@ type
       FComponent : TImage;
       FAttributes : iBind4DComponentAttributes;
       procedure __LoadFromResource(aResourceName : String);
-
     public
       constructor Create(aValue : TImage);
       destructor Destroy; override;
@@ -28,8 +28,10 @@ type
       function ApplyStyles : iBind4DComponent;
       function ApplyText : iBind4DComponent;
       function ApplyImage : iBind4DComponent;
+      function ApplyRestData : iBind4DComponent;
       function ApplyValue : iBind4DComponent;
       function GetValueString : String;
+      function GetCaption : String;
       function Clear : iBind4DComponent;
   end;
 implementation
@@ -54,9 +56,15 @@ function TBind4DComponentImage.ApplyImage: iBind4DComponent;
 begin
    __LoadFromResource(FAttributes.ResourceImage);
 end;
+function TBind4DComponentImage.ApplyRestData: iBind4DComponent;
+begin
+  Result := Self;
+end;
+
 function TBind4DComponentImage.ApplyStyles: iBind4DComponent;
 begin
    Result := Self;
+   FComponent.Proportional := True;
    {$IFDEF HAS_FMX}
    {$ELSE}
     FComponent.OnDblClick :=
@@ -75,7 +83,6 @@ begin
           end;
       end
     )
-
    {$ENDIF}
 end;
 function TBind4DComponentImage.ApplyText: iBind4DComponent;
@@ -87,7 +94,6 @@ var
   Attribute : S3Storage;
   HorseAttribute : HorseStorage;
   AttImage : ImageAttribute;
-
   lStream : TStringStream;
   lImagem : TMemoryStream;
 begin
@@ -159,23 +165,19 @@ destructor TBind4DComponentImage.Destroy;
 begin
   inherited;
 end;
+function TBind4DComponentImage.GetCaption: String;
+begin
+  Result := '';
+end;
+
 function TBind4DComponentImage.GetValueString: String;
 var
   Attribute : S3Storage;
   HorseAttribute : HorseStorage;
-
   lStream: TMemoryStream;
   lImagem : TStringStream;
 begin
   try
-    if RttiUtils.TryGet<S3Storage>(FComponent, Attribute) then
-    begin
-       Result := TBind4DUtils
-        .SendImageS3Storage(
-          FComponent,
-          Attribute
-        );
-    end else
     if RttiUtils.TryGet<HorseStorage>(FComponent, HorseAttribute) then
     begin
        Result := TBind4DUtils
@@ -183,13 +185,22 @@ begin
           FComponent,
           HorseAttribute
         );
+        exit;
+    end;
+    if RttiUtils.TryGet<S3Storage>(FComponent, Attribute) then
+    begin
+       Result := TBind4DUtils
+        .SendImageS3Storage(
+          FComponent,
+          Attribute
+        );
+       exit;
     end;
   except
     //
   end;
   //TODO: Implementar Retorno Base64Image;
 end;
-
 
 class function TBind4DComponentImage.New(aValue : TImage): iBind4DComponent;
 begin

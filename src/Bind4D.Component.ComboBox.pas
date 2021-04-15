@@ -36,11 +36,10 @@ type
       function ApplyValue : iBind4DComponent;
       function ApplyRestData : iBind4DComponent;
       function GetValueString : String;
+      function GetCaption : String;
       function Clear : iBind4DComponent;
   end;
-
 implementation
-
 uses
   Bind4D.Component.Attributes,
   Bind4D,
@@ -53,7 +52,6 @@ uses
   Bind4D.Utils.Rtti,
   Bind4D.ChangeCommand,
   LocalCache4D;
-
 { TBind4DComboBox }
 function TBind4DComponentComboBox.FormatFieldGrid(
   aAttr: FieldDataSetBind): iBind4DComponent;
@@ -76,12 +74,10 @@ var
 begin
   Result := Self;
   Rest := TBind4D.New.Rest;
-
   if FAttributes.ComponentNameBind <> '' then
   begin
     FComponentBind := FAttributes.Form.FindComponent(FAttributes.ComponentNameBind);
     TCommandMaster.New.AddAssociation(TComboBox(FComponentBind), FComponent);
-
     TComboBox(FComponentBind).OnChange :=
       TBind4DUtils
         .AnonProc2NotifyEvent(
@@ -90,7 +86,6 @@ begin
           begin
             TCommandMaster.New.Execute((Sender as TComboBox));
           end);
-
 
     TCommandMaster.New.Add(TComboBox(FComponentBind),
     procedure (Sender : TObject)
@@ -106,7 +101,6 @@ begin
                 .Items.Objects[
                     TComboBox(Sender).ItemIndex
                 ]).StringValue;
-
         if TCommandMaster.New.TryGetAssociation(TComboBox(Sender), aComboComponent) then
           if RttiUtils.TryGet<RestData>(TComboBox(aComboComponent), aRestData) then
           begin
@@ -114,7 +108,6 @@ begin
               .AddParam('searchfields', aRestData.FieldBind)
               .AddParam('searchvalue', aBindValue)
             .Get(aRestData.EndPoint);
-
             for Index := 0 to Pred(TComboBox(aComboComponent).Items.Count) do
             begin
               if Assigned(TComboBox(aComboComponent).Items.Objects[Index]) then
@@ -124,7 +117,6 @@ begin
               end;
             end;
             TComboBox(aComboComponent).Items.Clear;
-
             if Rest.DataSet.Active then
             begin
               Rest.DataSet.First;
@@ -146,12 +138,10 @@ begin
         end;
       end;
     end);
-
   end
   else
   begin
     Rest.Get(FAttributes.EndPoint);
-
     for Index := 0 to Pred(FComponent.Items.Count) do
     begin
       if Assigned(FComponent.Items.Objects[Index]) then
@@ -160,9 +150,7 @@ begin
         FComponent.Items.Objects[Index]:=nil;
       end;
     end;
-
     FComponent.Items.Clear;
-
     if Rest.DataSet.Active then
     begin
       Rest.DataSet.First;
@@ -177,14 +165,8 @@ begin
         Rest.DataSet.Next;
       end;
     end;
-
   end;
-
-
-
-
 end;
-
 function TBind4DComponentComboBox.ApplyStyles: iBind4DComponent;
 begin
   Result := Self;
@@ -207,7 +189,10 @@ begin
   FComponent.ItemIndex := -1;
   FComponent.Text := '';
   if not VarIsNull(FAttributes.ValueVariant) then
+  begin
     FComponent.ItemIndex := IndexOfObjectText(FAttributes.ValueVariant);
+    TCommandMaster.New.Execute(FComponent);
+  end;
 end;
 function TBind4DComponentComboBox.Attributes: iBind4DComponentAttributes;
 begin
@@ -225,13 +210,21 @@ begin
 end;
 destructor TBind4DComponentComboBox.Destroy;
 begin
-
   inherited;
 end;
+function TBind4DComponentComboBox.GetCaption: String;
+begin
+  Result := '';
+end;
+
 function TBind4DComponentComboBox.GetValueString: String;
 begin
-  FComponent.ItemIndex := FComponent.Items.IndexOf(FComponent.Text);
-  Result := TStringObject(FComponent.Items.Objects[FComponent.ItemIndex]).StringValue;
+  Result := '';
+  if FComponent.ItemIndex <> -1 then
+  begin
+    FComponent.ItemIndex := FComponent.Items.IndexOf(FComponent.Text);
+    Result := TStringObject(FComponent.Items.Objects[FComponent.ItemIndex]).StringValue;
+  end;
 end;
 function TBind4DComponentComboBox.IndexOfObjectText(const S: String): Integer;
 var
@@ -245,22 +238,18 @@ begin
       exit;
     end;
 end;
-
 class function TBind4DComponentComboBox.New(aValue : TComboBox) : iBind4DComponent;
 begin
   Result := Self.Create(aValue);
 end;
 { TStringObject }
-
 constructor TStringObject.Create(aString: String);
 begin
   StringValue := aString;
 end;
 
-
 procedure TStringObject.SetStringValue(const Value: String);
 begin
   FStringValue := Value;
 end;
-
 end.

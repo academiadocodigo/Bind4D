@@ -11,13 +11,15 @@ type
   fvNotNull = class(TCustomAttribute)
   private
     FMsg: String;
+    FErrorColor: TAlphaColor;
     procedure SetMsg(const Value: String);
+    procedure SetErrorColor(const Value: TAlphaColor);
   public
-    constructor Create(aMsg : String);
+    constructor Create(aMsg : String; aErrorColor : TAlphaColor);
     property Msg : String read FMsg write SetMsg;
+    property ErrorColor : TAlphaColor read FErrorColor write SetErrorColor;
   end;
   {$endregion}
-
   {$region 'Form Attributes'}
   FormDefault = class(TCustomAttribute)
     private
@@ -45,8 +47,7 @@ type
       property Sort : String read FSort write SetSort;
   end;
   {$endregion}
-
-   {$region 'Services Attributes'}
+  {$region 'Services Attributes'}
   S3Storage = class(TCustomAttribute)
     private
     FFileExtension: String;
@@ -58,7 +59,6 @@ type
       property ContentType : String read FContentType write SetContentType;
       property FileExtension : String read FFileExtension write SetFileExtension;
   end;
-
   HorseStorage = class(TCustomAttribute)
     private
     FFileExtension: String;
@@ -76,17 +76,16 @@ type
       property EndPoint : string read FEndPoint write SetEndPoint;
       property Path : string read FPath write SetPath;
   end;
-
   Translation = class(TCustomAttribute)
     private
       FQuery: String;
     procedure SetQuery(const Value: String);
     public
-      constructor Create(aQuery : String);
+      constructor Create(aQuery : String); overload;
+      constructor Create; overload;
       property Query : String read FQuery write SetQuery;
   end;
   {$endregion}
-
 
   {$region 'Components Attributes'}
   AdjustResponsive = class(TCustomAttribute)
@@ -105,6 +104,19 @@ type
       property Width : Integer read FWidth write SetWidth;
       property Heigth : Integer read FHeigth write SetHeigth;
     end;
+
+  ComponentStylesDefault = class(TCustomAttribute)
+    private
+    FComponent: TPersistentClass;
+    FDefaultStyle: String;
+    procedure SetComponent(const Value: TPersistentClass);
+    procedure SetDefaultStyle(const Value: String);
+    public
+      constructor Create( aComponent : TPersistentClass; aDefaultStyle : String);
+      property Component : TPersistentClass read FComponent write SetComponent;
+      property DefaultStyle : String read FDefaultStyle write SetDefaultStyle;
+  end;
+
   ComponentBindStyle = class(TCustomAttribute)
     private
     FFontSize: Integer;
@@ -134,7 +146,6 @@ type
       property EspecialType : TEspecialType read FEspecialType write SetEspecialType;
   end;
   {$endregion}
-
   {$region 'Json Attributes'}
   FieldJsonBind = class(TCustomAttribute)
   private
@@ -153,7 +164,6 @@ type
   FbIgnoreGet = class(TCustomAttribute)
   end;
   {$endregion}
-
    {$region 'DataSet Attributes'}
   FieldDataSetBind = class(TCustomAttribute)
     private
@@ -165,6 +175,7 @@ type
     FAlignment: TAlignment;
     FEditMask: String;
     FFLimitWidth: Integer;
+    FFieldIndex: Integer;
     procedure SetFieldName(const Value: String);
     procedure SetDisplayName(const Value: String);
     procedure SetWidth(const Value: Integer);
@@ -173,8 +184,9 @@ type
     procedure SetEditMask(const Value: String);
     procedure SetFieldType(const Value: TFieldType);
     procedure SetFLimitWidth(const Value: Integer);
+    procedure SetFieldIndex(const Value: Integer);
     public
-      constructor Create(aFieldName : String; aFdType : TFieldType; aVisible : Boolean = True; aWidth : Integer = 0; aDisplayName : String = ''; aEditMask : String = ''; aAlignment : TAlignment = taLeftJustify; aLimitWidth : Integer = 0);
+      constructor Create(aFieldName : String; aFdType : TFieldType; aVisible : Boolean = True; aWidth : Integer = 0; aDisplayName : String = ''; aEditMask : String = ''; aAlignment : TAlignment = taLeftJustify; aLimitWidth : Integer = 0; aFieldIndex : Integer = -1);
       property FieldName : String read FFieldName write SetFieldName;
       property Width : Integer read FWidth write SetWidth;
       property DisplayName : String read FDisplayName write SetDisplayName;
@@ -183,7 +195,8 @@ type
       property EditMask : String read FEditMask write SetEditMask;
       property FDType : TFieldType read FFDType write SetFieldType;
       property FLimitWidth : Integer read FFLimitWidth write SetFLimitWidth;
-  end;
+      property FieldIndex : Integer read FFieldIndex write SetFieldIndex;
+    end;
   {$endregion}
   
   {$region 'REST Attributes'}
@@ -211,7 +224,6 @@ type
       property ComponentName : string read FComponentName write SetComponentName;
       property OtherChange : Boolean read FOtherChange write SetOtherChange;
   end;
-
   
   RestQuickRegistration = class(TCustomAttribute)
     private
@@ -228,13 +240,18 @@ type
       property Title : String read FTitle write SetTitle;
   end;
   {$endregion}
-
 implementation
 { fvNotNull }
-constructor fvNotNull.Create(aMsg: String);
+constructor fvNotNull.Create(aMsg : String; aErrorColor : TAlphaColor);
 begin
   FMsg := aMsg;
+  FErrorColor := aErrorColor;
 end;
+procedure fvNotNull.SetErrorColor(const Value: TAlphaColor);
+begin
+  FErrorColor := Value;
+end;
+
 procedure fvNotNull.SetMsg(const Value: String);
 begin
   FMsg := Value;
@@ -277,6 +294,11 @@ constructor Translation.Create(aQuery : String);
 begin
   FQuery := aQuery;
 end;
+constructor Translation.Create;
+begin
+  //
+end;
+
 procedure Translation.SetQuery(const Value: String);
 begin
   FQuery := Value;
@@ -363,9 +385,7 @@ begin
   FJsonName := Value;
 end;
 { FieldDataSetBind }
-constructor FieldDataSetBind.Create(aFieldName: String; aFdType: TFieldType;
-  aVisible: Boolean; aWidth: Integer; aDisplayName, aEditMask: String;
-  aAlignment: TAlignment; aLimitWidth: Integer);
+constructor FieldDataSetBind.Create(aFieldName : String; aFdType : TFieldType; aVisible : Boolean = True; aWidth : Integer = 0; aDisplayName : String = ''; aEditMask : String = ''; aAlignment : TAlignment = taLeftJustify; aLimitWidth : Integer = 0; aFieldIndex : Integer = -1);
 begin
   FFieldName := aFieldName;
   FWidth := aWidth;
@@ -375,6 +395,7 @@ begin
   FEditMask := aEditMask;
   FFdType := aFdType;
   FLimitWidth := aLimitWidth;
+  FFieldIndex := aFieldIndex;
 end;
 procedure FieldDataSetBind.SetAlignment(const Value: TAlignment);
 begin
@@ -388,6 +409,11 @@ procedure FieldDataSetBind.SetEditMask(const Value: String);
 begin
   FEditMask := Value;
 end;
+procedure FieldDataSetBind.SetFieldIndex(const Value: Integer);
+begin
+  FFieldIndex := Value;
+end;
+
 procedure FieldDataSetBind.SetFieldName(const Value: String);
 begin
   FFieldName := Value;
@@ -408,9 +434,7 @@ procedure FieldDataSetBind.SetWidth(const Value: Integer);
 begin
   FWidth := Value;
 end;
-
 { HorseStorage }
-
 constructor HorseStorage.Create(aFileExtension : String; aContentType : String; aEndPoint : string; aPath : string);
 begin
   FFileExtension := aFileExtension;
@@ -419,31 +443,24 @@ begin
   FPath:= aPath;
 end;
 
-
 procedure HorseStorage.SetContentType(const Value: String);
 begin
   FContentType:= Value;
 end;
-
 procedure HorseStorage.SetEndPoint(const Value: string);
 begin
   FEndPoint := Value;
 end;
-
 procedure HorseStorage.SetFileExtension(const Value: String);
 begin
   FFileExtension:= Value;
 end;
-
 procedure HorseStorage.SetPath(const Value: string);
 begin
   FPath := Value;
 end;
 
-
-
 { RestData }
-
 constructor RestData.Create(aEndPoint, aFieldKey, aFieldValue : String);
 begin
   FEndPoint := aEndPoint;
@@ -451,7 +468,6 @@ begin
   FFieldValue := aFieldValue;
   FOtherChange := False;
 end;
-
 constructor RestData.Create(aEndPoint, aFieldKey, aFieldValue, aComponentName, aFieldBind : string);
 begin
   FEndPoint := aEndPoint;
@@ -461,60 +477,67 @@ begin
   FFieldBind := aFieldBind;
   FOtherChange := True;
 end;
-
 procedure RestData.SetComponentName(const Value: string);
 begin
   FComponentName := Value;
 end;
-
 procedure RestData.SetEndPoint(const Value: String);
 begin
   FEndPoint := Value;
 end;
-
 procedure RestData.SetFieldBind(const Value: String);
 begin
   FFieldBind := Value;
 end;
-
 procedure RestData.SetFieldKey(const Value: String);
 begin
   FFieldKey := Value;
 end;
-
 procedure RestData.SetFieldValue(const Value: String);
 begin
   FFieldValue := Value;
 end;
-
 procedure RestData.SetOtherChange(const Value: Boolean);
 begin
   FOtherChange := Value;
 end;
-
 { RestQuickRegistration }
-
 constructor RestQuickRegistration.Create(aEndPoint, aField, aTitle: String);
 begin
   FEndPoint := aEndPoint;
   FField := aField;
   FTitle := aTitle;
 end;
-
 procedure RestQuickRegistration.SetEndPoint(const Value: String);
 begin
   FEndPoint := Value;
 end;
-
 procedure RestQuickRegistration.SetField(const Value: String);
 begin
   FField := Value;
 end;
-
 procedure RestQuickRegistration.SetTitle(const Value: String);
 begin
   FTitle := Value;
 end;
 
+{ ComponentStylesDefault }
+
+constructor ComponentStylesDefault.Create(aComponent: TPersistentClass;
+  aDefaultStyle: String);
+begin
+  FComponent := aComponent;
+  FDefaultStyle := aDefaultStyle;
+end;
+
+procedure ComponentStylesDefault.SetComponent(const Value: TPersistentClass);
+begin
+  FComponent := Value;
+end;
+
+procedure ComponentStylesDefault.SetDefaultStyle(const Value: String);
+begin
+  FDefaultStyle := Value;
+end;
 
 end.

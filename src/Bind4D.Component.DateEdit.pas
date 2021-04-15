@@ -34,6 +34,7 @@ type
       function ApplyValue : iBind4DComponent;
       function ApplyRestData : iBind4DComponent;
       function GetValueString : String;
+      function GetCaption : String;
       function Clear : iBind4DComponent;
   end;
 
@@ -124,6 +125,11 @@ destructor TBind4DComponentDateEdit.Destroy;
 begin
 
   inherited;
+end;
+
+function TBind4DComponentDateEdit.GetCaption: String;
+begin
+  Result := '';
 end;
 
 function TBind4DComponentDateEdit.GetValueString: String;

@@ -384,14 +384,15 @@ function TBind4DComponentAttributes.Text(
   aValue: String): iBind4DComponentAttributes;
 begin
   Result := Self;
-  FText :=
-  TTranslator4D
-    .New
-      .Google
-        .Params
-          .Query(aValue)
-        .&End
-      .Execute;
+  if aValue <> '' then
+    FText :=
+    TTranslator4D
+      .New
+        .Google
+          .Params
+            .Query(aValue)
+          .&End
+        .Execute;
 end;
 function TBind4DComponentAttributes.StyleSettings(
   aValue: TStyleElements): iBind4DComponentAttributes;

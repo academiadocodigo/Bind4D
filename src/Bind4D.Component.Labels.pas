@@ -29,6 +29,7 @@ type
       function ApplyValue : iBind4DComponent;
       function ApplyRestData : iBind4DComponent;
       function GetValueString : String;
+      function GetCaption : String;
       function Clear : iBind4DComponent;
   end;
 
@@ -112,6 +113,15 @@ destructor TBind4DComponentLabel.Destroy;
 begin
 
   inherited;
+end;
+
+function TBind4DComponentLabel.GetCaption: String;
+begin
+  {$IFDEF HAS_FMX}
+    Result := FComponent.Text;
+  {$ELSE}
+    Result := FComponent.Caption;
+  {$ENDIF}
 end;
 
 function TBind4DComponentLabel.GetValueString: String;

@@ -19,10 +19,9 @@ uses
   AWS4D.Interfaces,
   HS4D.Interfaces,
   Bind4D.Forms.QuickRegistration;
-
 type
   iBind4DRest = interface;
-
+  iBind4DComponentStyles = interface;
    iBind4D = interface
     ['{2846B843-7533-4987-B7B4-72F7B5654D1A}']
     function Form( aValue : TForm) : iBind4D;
@@ -48,8 +47,8 @@ type
     function ClearCacheComponents : iBind4D;
     function QuickRegistration : TPageQuickRegistration;
     function Rest : iBind4DRest;
+    function StylesDefault : iBind4DComponentStyles;
   end;
-
   iBind4DRest = interface
     ['{DF7F5AF6-E03D-44A2-9358-CD4729741A30}']
     function AddHeader ( aKey : String; aValue : String ) : iBind4DRest;
@@ -59,6 +58,13 @@ type
     function Get (aEndPoint : String = '') : iBind4DRest;
     function Post (aEndPoint : String; aBody : TJsonObject)  : iBind4DRest;
     function DataSet : TDataSet;
+    function &End : iBind4D;
+  end;
+
+  iBind4DComponentStyles = interface
+    ['{936368AD-090D-4F8B-9A77-B206D69CC9E1}']
+    function Add ( aKey : String; aStyle : ComponentBindStyle) : iBind4DComponentStyles;
+    function Get ( aKey : String ) : ComponentBindStyle;
     function &End : iBind4D;
   end;
 implementation
