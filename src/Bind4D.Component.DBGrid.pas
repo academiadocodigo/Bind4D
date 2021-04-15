@@ -100,6 +100,8 @@ begin
   aTotalWidthAttr := 0;
   aCountTotalColumnsVisible := 0;
 
+  if not Assigned(FComponent.Columns) then exit;
+
    for I := 0 to Pred(FComponent.Columns.Count) do
     FComponent.Columns[i].Width := 100;
 
