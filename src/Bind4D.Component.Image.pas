@@ -31,6 +31,7 @@ type
       function ApplyRestData : iBind4DComponent;
       function ApplyValue : iBind4DComponent;
       function GetValueString : String;
+      function GetCaption : String;
       function Clear : iBind4DComponent;
   end;
 implementation
@@ -164,6 +165,11 @@ destructor TBind4DComponentImage.Destroy;
 begin
   inherited;
 end;
+function TBind4DComponentImage.GetCaption: String;
+begin
+  Result := '';
+end;
+
 function TBind4DComponentImage.GetValueString: String;
 var
   Attribute : S3Storage;

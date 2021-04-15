@@ -38,6 +38,7 @@ type
       function ApplyValue : iBind4DComponent;
       function ApplyRestData : iBind4DComponent;
       function GetValueString : String;
+      function GetCaption : String;
       function Clear : iBind4DComponent;
   end;
 
@@ -263,6 +264,11 @@ begin
     Column.Field.DisplayText);
   end;
 end;
+function TBind4DComponentDBGrid.GetCaption: String;
+begin
+  Result := '';
+end;
+
 function TBind4DComponentDBGrid.GetValueString: String;
 begin
   Result := '';

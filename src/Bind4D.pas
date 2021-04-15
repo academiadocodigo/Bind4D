@@ -423,7 +423,7 @@ begin
     for I := 0 to Pred(FForm.ComponentCount) do
     begin
       iBind := TBind4DComponentFactory.New.Component(FForm.Components[I]);
-      iBind.Attributes.Text(iBind.GetValueString).&End.ApplyText;
+      iBind.Attributes.Text(iBind.GetCaption).&End.ApplyText;
     end;
   end;
 

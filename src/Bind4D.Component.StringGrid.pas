@@ -31,6 +31,7 @@ type
       function ApplyValue : iBind4DComponent;
       function ApplyRestData : iBind4DComponent;
       function GetValueString : String;
+      function GetCaption : String;
       function Clear : iBind4DComponent;
   end;
 
@@ -104,6 +105,11 @@ destructor TBind4DComponentStringGrid.Destroy;
 begin
 
   inherited;
+end;
+
+function TBind4DComponentStringGrid.GetCaption: String;
+begin
+  Result := '';
 end;
 
 function TBind4DComponentStringGrid.GetValueString: String;

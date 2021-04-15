@@ -31,6 +31,7 @@ type
       function ApplyValue : iBind4DComponent;
       function ApplyRestData : iBind4DComponent;
       function GetValueString : String;
+      function GetCaption : String;
       function Clear : iBind4DComponent;
   end;
 implementation
@@ -38,8 +39,12 @@ uses
   Bind4D.Component.Attributes,
   Bind4D.Utils,
   Bind4D.ChangeCommand,
-  Bind4D.Types, Data.DB, System.SysUtils, Bind4D.Utils.Rtti, Vcl.Graphics,
+  Bind4D.Types, Data.DB,
+  System.SysUtils,
+  Bind4D.Utils.Rtti,
+  Vcl.Graphics,
   System.Variants;
+
 { TBind4DComponentEdit }
 function TBind4DComponentEdit.FormatFieldGrid(
   aAttr: FieldDataSetBind): iBind4DComponent;
@@ -142,12 +147,16 @@ begin
   if RttiUtils.TryGet<fvNotNull>(FComponent, aAttrNotNull) then
     if Trim(FComponent.Text) = '' then
     begin
-      FComponent.SetFocus;
-      FComponent.HelpKeyword := ColorToString(FComponent.Color);
-      FComponent.Color := aAttrNotNull.ErrorColor;
-      raise Exception.Create(aAttrNotNull.Msg);
+      if FComponent.Enabled then
+      begin
+        FComponent.SetFocus;
+        FComponent.HelpKeyword := ColorToString(FComponent.Color);
+        FComponent.Color := aAttrNotNull.ErrorColor;
+        raise Exception.Create(aAttrNotNull.Msg);
+      end;
     end;
-end;constructor TBind4DComponentEdit.Create(var aValue : TEdit);
+end;
+constructor TBind4DComponentEdit.Create(var aValue : TEdit);
 begin
   FAttributes := TBind4DComponentAttributes.Create(Self);
   FComponent := aValue;
@@ -238,13 +247,17 @@ begin
   end;
 
 end;
+function TBind4DComponentEdit.GetCaption: String;
+begin
+  Result := '';
+end;
+
 function TBind4DComponentEdit.GetValueString: String;
 var
   aAttr : ComponentBindFormat;
 begin
-  TryValidations;
-
   Result := FComponent.Text;
+  TryValidations;
   if RttiUtils.TryGet<ComponentBindFormat>(FComponent, aAttr) then
   begin
     case aAttr.EspecialType of

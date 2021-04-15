@@ -28,6 +28,7 @@ type
       function ApplyValue : iBind4DComponent;
       function ApplyRestData : iBind4DComponent;
       function GetValueString : String;
+      function GetCaption : String;
       function Clear : iBind4DComponent;
   end;
 
@@ -93,6 +94,11 @@ destructor TBind4DComponentMock.Destroy;
 begin
 
   inherited;
+end;
+
+function TBind4DComponentMock.GetCaption: String;
+begin
+  Result := '';
 end;
 
 function TBind4DComponentMock.GetValueString: String;

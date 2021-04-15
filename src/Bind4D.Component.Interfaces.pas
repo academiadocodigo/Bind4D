@@ -40,6 +40,7 @@ type
     function Clear : iBind4DComponent;
     function FormatFieldGrid (aAttr : FieldDataSetBind) : iBind4DComponent;
     function GetValueString : String;
+    function GetCaption : String;
   end;
 
   iBind4DComponentAttributes = interface

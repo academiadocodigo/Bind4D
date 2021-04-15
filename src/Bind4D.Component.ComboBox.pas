@@ -36,6 +36,7 @@ type
       function ApplyValue : iBind4DComponent;
       function ApplyRestData : iBind4DComponent;
       function GetValueString : String;
+      function GetCaption : String;
       function Clear : iBind4DComponent;
   end;
 implementation
@@ -211,6 +212,11 @@ destructor TBind4DComponentComboBox.Destroy;
 begin
   inherited;
 end;
+function TBind4DComponentComboBox.GetCaption: String;
+begin
+  Result := '';
+end;
+
 function TBind4DComponentComboBox.GetValueString: String;
 begin
   Result := '';

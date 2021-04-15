@@ -28,6 +28,7 @@ type
       function ApplyValue : iBind4DComponent;
       function ApplyRestData : iBind4DComponent;
       function GetValueString : String;
+      function GetCaption : String;
       function Clear : iBind4DComponent;
   end;
 
@@ -104,6 +105,11 @@ destructor TBind4DComponentPanel.Destroy;
 begin
 
   inherited;
+end;
+
+function TBind4DComponentPanel.GetCaption: String;
+begin
+  Result := FComponent.Caption;
 end;
 
 function TBind4DComponentPanel.GetValueString: String;
