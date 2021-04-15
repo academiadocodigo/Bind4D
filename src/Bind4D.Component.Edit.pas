@@ -38,7 +38,8 @@ uses
   Bind4D.Component.Attributes,
   Bind4D.Utils,
   Bind4D.ChangeCommand,
-  Bind4D.Types, Data.DB, System.SysUtils, Bind4D.Utils.Rtti, Vcl.Graphics;
+  Bind4D.Types, Data.DB, System.SysUtils, Bind4D.Utils.Rtti, Vcl.Graphics,
+  System.Variants;
 { TBind4DComponentEdit }
 function TBind4DComponentEdit.FormatFieldGrid(
   aAttr: FieldDataSetBind): iBind4DComponent;
@@ -93,6 +94,7 @@ end;
 function TBind4DComponentEdit.ApplyValue: iBind4DComponent;
 begin
   Result := Self;
+  if VarIsNull(FAttributes.ValueVariant) then exit;
   case FAttributes.FieldType of
       ftMemo,
       ftFmtMemo,
