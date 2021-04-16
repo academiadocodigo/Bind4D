@@ -121,7 +121,8 @@ begin
         FComponent.HelpKeyword := FAttributes.ValueVariant;
       {$ENDIF}
     end else
-    if RttiUtils.TryGet<HorseStorage>(FComponent, HorseAttribute) then
+    if (RttiUtils.TryGet<HorseStorage>(FComponent, HorseAttribute)) and
+       (ContainsText(FAttributes.ValueVariant, 'http')) then
      begin
       TBind4DUtils
         .GetImageHS4DStorage(
