@@ -16,7 +16,7 @@
 			"hash": "c4ead963093502712c6af02f86b819d0",
 			"artifacts": {},
 			"failed": false,
-			"changed": true
+			"changed": false
 		},
 		"https://github.com/bittencourtthulio/aws4d": {
 			"name": "aws4d",
@@ -64,7 +64,7 @@
 			"hash": "c4ead963093502712c6af02f86b819d0",
 			"artifacts": {},
 			"failed": false,
-			"changed": false
+			"changed": true
 		}
 	}
 }

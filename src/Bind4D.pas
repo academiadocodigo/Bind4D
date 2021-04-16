@@ -75,7 +75,7 @@ type
       function SetImageComponents : iBind4D;
       function Translator : iTranslator4D;
       function AWSService : iAWS4D;
-      function HSD4Service : iHS4D;
+      function HS4DService : iHS4D;
       function SetRestDataComponents : iBind4D;
       function ClearCacheComponents : iBind4D;
       function Rest : iBind4DRest;
@@ -341,7 +341,7 @@ begin
     Result := Result + aType.This.GetJsonName(aAttr.Component) + ',';
   Result := Copy(Result, 1, Length(Result) -1);
 end;
-function TBind4D.HSD4Service: iHS4D;
+function TBind4D.HS4DService: iHS4D;
 begin
   if not Assigned(FHSService) then
     FHSService := THS4D.New;

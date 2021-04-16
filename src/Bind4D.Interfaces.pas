@@ -42,7 +42,7 @@ type
     function SetImageComponents : iBind4D;
     function Translator : iTranslator4D;
     function AWSService : iAWS4D;
-    function HSD4Service : iHS4D;
+    function HS4DService : iHS4D;
     function SetRestDataComponents : iBind4D;
     function ClearCacheComponents : iBind4D;
     function QuickRegistration : TPageQuickRegistration;

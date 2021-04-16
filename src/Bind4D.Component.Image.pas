@@ -120,7 +120,9 @@ begin
       {$ELSE}
         FComponent.HelpKeyword := FAttributes.ValueVariant;
       {$ENDIF}
-    end else
+      exit;
+    end;
+
     if (RttiUtils.TryGet<HorseStorage>(FComponent, HorseAttribute)) and
        (ContainsText(FAttributes.ValueVariant, 'http')) then
      begin
@@ -134,6 +136,7 @@ begin
       {$ELSE}
         FComponent.HelpKeyword := FAttributes.ValueVariant;
       {$ENDIF}
+      exit;
      end;
   except
     if RttiUtils.TryGet<ImageAttribute>(FComponent, AttImage)  then

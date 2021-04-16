@@ -424,7 +424,7 @@ begin
   if Trim(aName) <> '' then
   begin
     TBind4D.New
-     .HSD4Service
+     .HS4DService
       .GetFile
         .FileName(aName)
       .Get(aImage);
@@ -490,7 +490,7 @@ begin
     end;
     Result :=
       TBind4D.New
-       .HSD4Service
+       .HS4DService
         .SendFile
           .FileName(aImageName)
           .Path(aAttr.Path)
