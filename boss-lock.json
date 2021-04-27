@@ -16,7 +16,7 @@
 			"hash": "c4ead963093502712c6af02f86b819d0",
 			"artifacts": {},
 			"failed": false,
-			"changed": false
+			"changed": true
 		},
 		"https://github.com/bittencourtthulio/aws4d": {
 			"name": "aws4d",
@@ -29,7 +29,7 @@
 		"https://github.com/bittencourtthulio/hstorage4d": {
 			"name": "hstorage4d",
 			"version": "1.0.2",
-			"hash": "3cf606bddab3b3f310daf0952e28dddd",
+			"hash": "ef44673133dfd123e8b9b803a455d499",
 			"artifacts": {},
 			"failed": false,
 			"changed": false
@@ -64,7 +64,7 @@
 			"hash": "c4ead963093502712c6af02f86b819d0",
 			"artifacts": {},
 			"failed": false,
-			"changed": true
+			"changed": false
 		}
 	}
 }

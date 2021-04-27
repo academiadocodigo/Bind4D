@@ -18,7 +18,7 @@ uses
   Translator4D.Interfaces,
   AWS4D.Interfaces,
   HS4D.Interfaces,
-  Bind4D.Forms.QuickRegistration;
+  Bind4D.Forms.QuickRegistration, ZC4B.Interfaces;
 type
   iBind4DRest = interface;
   iBind4DComponentStyles = interface;
@@ -42,7 +42,9 @@ type
     function SetImageComponents : iBind4D;
     function Translator : iTranslator4D;
     function AWSService : iAWS4D;
-    function HS4DService : iHS4D;
+    function HSD4Service : iHS4D;
+    function ZipCode4B : iZC4B;
+    function SetZipCodevalue : iBind4D;
     function SetRestDataComponents : iBind4D;
     function ClearCacheComponents : iBind4D;
     function QuickRegistration : TPageQuickRegistration;
@@ -55,7 +57,7 @@ type
     function AddParam ( aKey : String; aValue : String ) : iBind4DRest;
     function Accept ( aValue : String ) : iBind4DRest;
     function BaseURL ( aValue : String ) : iBind4DRest;
-    function Get (aEndPoint : String = '') : iBind4DRest;
+    function Get (aEndPoint : String = '') : iBind4DRest; overload;
     function Post (aEndPoint : String; aBody : TJsonObject)  : iBind4DRest;
     function DataSet : TDataSet;
     function &End : iBind4D;

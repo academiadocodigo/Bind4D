@@ -44,13 +44,14 @@ uses
   AWS4D.Interfaces,
   AWS4D,
   HS4D.Interfaces,
-  Bind4D.Forms.QuickRegistration;
+  Bind4D.Forms.QuickRegistration, ZC4B.Interfaces;
 type
   TBind4D = class(TInterfacedObject, iBind4D)
     private
       FForm : TForm;
       FAWSService : iAWS4D;
       FHSService : iHS4D;
+      FZipCode4B : iZC4B;
       FBind4DRest : iBind4DRest;
       FStylesDefault : iBind4DComponentStyles;
     public
@@ -75,7 +76,9 @@ type
       function SetImageComponents : iBind4D;
       function Translator : iTranslator4D;
       function AWSService : iAWS4D;
-      function HS4DService : iHS4D;
+      function HSD4Service : iHS4D;
+      function ZipCode4B : iZC4B;
+      function SetZipCodeValue : iBind4D;
       function SetRestDataComponents : iBind4D;
       function ClearCacheComponents : iBind4D;
       function Rest : iBind4DRest;
@@ -106,7 +109,7 @@ uses
   Bind4D.Types.Helpers, 
   Bind4D.Component.Helpers, 
   HS4D,
-  Bind4D.Rest, Bind4D.Component.Styles, Bind4D.Component.Interfaces;
+  Bind4D.Rest, Bind4D.Component.Styles, Bind4D.Component.Interfaces, ZC4B;
 { TBind4D }
 function TBind4D.BindFormRest(var aEndPoint : String; var aPK : String; var aSort : String; var aOrder : String) : iBind4D;
 var
@@ -341,18 +344,23 @@ begin
     Result := Result + aType.This.GetJsonName(aAttr.Component) + ',';
   Result := Copy(Result, 1, Length(Result) -1);
 end;
-function TBind4D.HS4DService: iHS4D;
+
+function TBind4D.HSD4Service: iHS4D;
 begin
   if not Assigned(FHSService) then
     FHSService := THS4D.New;
+
   Result := FHSService;
 end;
+
 class function TBind4D.New: iBind4D;
 begin
   if not Assigned(vBind4D) then
     vBind4D := Self.Create;
+
   Result := vBind4D;
 end;
+
 function TBind4D.QuickRegistration: TPageQuickRegistration;
 begin
   Result := PageQuickRegistration;
@@ -499,6 +507,129 @@ begin
         .ApplyStyles;
   end;
 end;
+
+function TBind4D.SetZipCodeValue: iBind4D;
+var
+  Attribute : ComponentZipCode;
+  I: Integer;
+  Component : TComponent;
+  iBind : iBind4DComponent;
+
+  lJson : TJsonObject;
+  a : string;
+begin
+  Result := Self;
+  for Attribute in RttiUtils.Get<ComponentZipCode>(FForm) do
+  begin
+    if (TBind4DComponentFactory.New.Component(Attribute.Component).GetValueString = '') and
+       (Attribute.ComponentZipCodeType = zcCEP) then
+     exit;
+
+    case Attribute.ComponentZipCodeType of
+      zcCEP:
+       begin
+         lJson:= TBind4DUtils
+                    .GetZipCode4B(
+                      TBind4DComponentFactory
+                       .New
+                        .Component(Attribute.Component)
+                         .GetValueString);
+       end;
+      zcLogradouro:
+       begin
+         if Assigned(lJson) then
+          begin
+             TBind4DComponentFactory
+              .New
+               .Component(Attribute.Component)
+                .Attributes
+                 .ValueVariant(lJson.GetValue<string>('logradouro'))
+                .&End
+               .ApplyText;
+          end;
+       end;
+      zcComplemento:
+       begin
+         if Assigned(lJson) then
+          begin
+             TBind4DComponentFactory
+              .New
+               .Component(Attribute.Component)
+                .Attributes
+                 .ValueVariant(lJson.GetValue<string>('complemento'))
+                .&End
+               .ApplyText;
+          end;
+       end;
+      zcBairro:
+       begin
+         if Assigned(lJson) then
+          begin
+             TBind4DComponentFactory
+              .New
+               .Component(Attribute.Component)
+                .Attributes
+                 .ValueVariant(lJson.GetValue<string>('bairro'))
+                .&End
+               .ApplyText;
+          end;
+       end;
+      zcCidade:
+       begin
+         if Assigned(lJson) then
+          begin
+             TBind4DComponentFactory
+              .New
+               .Component(Attribute.Component)
+                .Attributes
+                 .ValueVariant(lJson.GetValue<string>('localidade'))
+                .&End
+               .ApplyText;
+          end;
+       end;
+      zcEstado:
+       begin
+         if Assigned(lJson) then
+          begin
+             TBind4DComponentFactory
+              .New
+               .Component(Attribute.Component)
+                .Attributes
+                 .ValueVariant(lJson.GetValue<string>('uf'))
+                .&End
+               .ApplyText;
+          end;
+       end;
+      zcIBGE:
+       begin
+         if Assigned(lJson) then
+          begin
+             TBind4DComponentFactory
+              .New
+               .Component(Attribute.Component)
+                .Attributes
+                 .ValueVariant(lJson.GetValue<string>('ibge'))
+                .&End
+               .ApplyText;
+          end;
+       end;
+      zcDDD:
+       begin
+         if Assigned(lJson) then
+          begin
+             TBind4DComponentFactory
+              .New
+               .Component(Attribute.Component)
+                .Attributes
+                 .ValueVariant(lJson.GetValue<string>('ddd'))
+                .&End
+               .ApplyText;
+          end;
+       end;
+    end;
+  end;
+end;
+
 function TBind4D.StylesDefault: iBind4DComponentStyles;
 begin
   if not Assigned(FStylesDefault) then
@@ -511,6 +642,15 @@ function TBind4D.Translator: iTranslator4D;
 begin
   Result := TTranslator4D.New;
 end;
+
+function TBind4D.ZipCode4B: iZC4B;
+begin
+  if not Assigned(FZipCode4B) then
+    FZipCode4B:= TZC4B.New;
+
+  Result:= FZipCode4B;
+end;
+
 function TBind4D.ResponsiveAdjustment: iBind4D;
 var
   Attribute : AdjustResponsive;

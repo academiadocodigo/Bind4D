@@ -1,5 +1,7 @@
 unit Bind4D.Component.Edit;
+
 interface
+
 uses
   {$IFDEF HAS_FMX}
     FMX.StdCtrls,
@@ -8,7 +10,8 @@ uses
     Vcl.ExtCtrls,
     Vcl.StdCtrls,
   {$ENDIF}
-  Bind4D.Component.Interfaces, Bind4D.Attributes;
+  Bind4D.Component.Interfaces,
+  Bind4D.Attributes, System.JSON;
 type
   TBind4DComponentEdit = class(TInterfacedObject, iBind4DComponent)
     private
@@ -17,7 +20,7 @@ type
       function onChangeAttribute : TBind4DComponentEdit;
       function onExitAttribute : TBind4DComponentEdit;
       function especialValidate : TBind4DComponentEdit;
-    procedure TryValidations;
+      procedure TryValidations;
     public
       constructor Create(var aValue : TEdit);
       destructor Destroy; override;
@@ -39,11 +42,14 @@ uses
   Bind4D.Component.Attributes,
   Bind4D.Utils,
   Bind4D.ChangeCommand,
-  Bind4D.Types, Data.DB,
+  Bind4D.Types,
+  Data.DB,
   System.SysUtils,
   Bind4D.Utils.Rtti,
   Vcl.Graphics,
-  System.Variants;
+  System.Variants,
+  ZC4B.Interfaces,
+  ZC4B;
 
 { TBind4DComponentEdit }
 function TBind4DComponentEdit.FormatFieldGrid(
@@ -95,6 +101,7 @@ end;
 function TBind4DComponentEdit.ApplyText: iBind4DComponent;
 begin
   Result := Self;
+  FComponent.Text := FAttributes.ValueVariant;
 end;
 function TBind4DComponentEdit.ApplyValue: iBind4DComponent;
 begin
@@ -156,6 +163,7 @@ begin
       end;
     end;
 end;
+
 constructor TBind4DComponentEdit.Create(var aValue : TEdit);
 begin
   FAttributes := TBind4DComponentAttributes.Create(Self);
@@ -268,6 +276,7 @@ begin
     end;
   end;
 end;
+
 class function TBind4DComponentEdit.New(var aValue : TEdit) : iBind4DComponent;
 begin
   Result := Self.Create(aValue);
@@ -284,6 +293,7 @@ begin
         TCommandMaster.New.Execute((Sender as TEdit));
       end);
 end;
+
 function TBind4DComponentEdit.onExitAttribute: TBind4DComponentEdit;
 begin
   Result := Self;

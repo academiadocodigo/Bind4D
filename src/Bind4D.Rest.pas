@@ -37,7 +37,7 @@ type
       function AddHeader ( aKey : String; aValue : String ) : iBind4DRest;
       function AddParam ( aKey : String; aValue : String ) : iBind4DRest;
       function Accept ( aValue : String ) : iBind4DRest;
-      function Get (aEndPoint : String = '') : iBind4DRest;
+      function Get (aEndPoint : String = '') : iBind4DRest; overload;
       function Post (aEndPoint : String; aBody : TJsonObject)  : iBind4DRest;
       function DataSet : TDataSet;
   end;
@@ -54,7 +54,7 @@ begin
     Result := FParent;
 end;
 
-function TBind4DRest.Get(aEndPoint: String): iBind4DRest;
+function TBind4DRest.Get(aEndPoint : String = '') : iBind4DRest;
 var
   aURL: string;
 begin
@@ -80,6 +80,7 @@ begin
 
   FParam.Clear;
 end;
+
 
 function TBind4DRest.Accept(aValue: String): iBind4DRest;
 begin
