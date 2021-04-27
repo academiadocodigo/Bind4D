@@ -17,8 +17,9 @@ uses
   Bind4D.Attributes,
   Translator4D.Interfaces,
   AWS4D.Interfaces,
-  HS4D.Interfaces,
-  Bind4D.Forms.QuickRegistration, ZC4B.Interfaces;
+  HS4Bind.Interfaces,
+  Bind4D.Forms.QuickRegistration,
+  ZC4B.Interfaces;
 type
   iBind4DRest = interface;
   iBind4DComponentStyles = interface;
@@ -42,7 +43,7 @@ type
     function SetImageComponents : iBind4D;
     function Translator : iTranslator4D;
     function AWSService : iAWS4D;
-    function HSD4Service : iHS4D;
+    function HSD4Service : iHS4Bind;
     function ZipCode4B : iZC4B;
     function SetZipCodevalue : iBind4D;
     function SetRestDataComponents : iBind4D;

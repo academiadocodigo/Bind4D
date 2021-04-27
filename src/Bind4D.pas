@@ -43,14 +43,14 @@ uses
   Bind4D.Utils,
   AWS4D.Interfaces,
   AWS4D,
-  HS4D.Interfaces,
+  HS4Bind.Interfaces,
   Bind4D.Forms.QuickRegistration, ZC4B.Interfaces;
 type
   TBind4D = class(TInterfacedObject, iBind4D)
     private
       FForm : TForm;
       FAWSService : iAWS4D;
-      FHSService : iHS4D;
+      FHSService : iHS4Bind;
       FZipCode4B : iZC4B;
       FBind4DRest : iBind4DRest;
       FStylesDefault : iBind4DComponentStyles;
@@ -76,7 +76,7 @@ type
       function SetImageComponents : iBind4D;
       function Translator : iTranslator4D;
       function AWSService : iAWS4D;
-      function HSD4Service : iHS4D;
+      function HSD4Service : iHS4Bind;
       function ZipCode4B : iZC4B;
       function SetZipCodeValue : iBind4D;
       function SetRestDataComponents : iBind4D;
@@ -86,12 +86,10 @@ type
       function StylesDefault : iBind4DComponentStyles;
   end;
 
-
   TMockComponent = class(TComponent)
     private
     public
   end;
-
 
 var
   vBind4D : iBind4D;
@@ -108,7 +106,7 @@ uses
   Bind4D.Utils.Rtti,
   Bind4D.Types.Helpers, 
   Bind4D.Component.Helpers, 
-  HS4D,
+  HS4Bind,
   Bind4D.Rest, Bind4D.Component.Styles, Bind4D.Component.Interfaces, ZC4B;
 { TBind4D }
 function TBind4D.BindFormRest(var aEndPoint : String; var aPK : String; var aSort : String; var aOrder : String) : iBind4D;
@@ -156,9 +154,7 @@ var
   aAttr : FieldDataSetBind;
 begin
   Result := Self;
-
   //for aAttr in RttiUtils. do
-
  {* ctxRtti := TRttiContext.Create;
   try
     try
@@ -170,7 +166,6 @@ begin
           aDataSet.FieldByName(prpRtti.GetAttribute<FieldDataSetBind>.FieldName).Visible := prpRtti.GetAttribute<FieldDataSetBind>.Visible;
           if aDBGrid.Width < prpRtti.GetAttribute<FieldDataSetBind>.FLimitWidth then
             aDataSet.FieldByName(prpRtti.GetAttribute<FieldDataSetBind>.FieldName).Visible := False;
-
           if aDataSet.FieldByName(prpRtti.GetAttribute<FieldDataSetBind>.FieldName).Visible then
           begin
             if prpRtti.Tem<Translation> then
@@ -187,7 +182,6 @@ begin
                     .Execute
             else
               aDataSet.FieldByName(prpRtti.GetAttribute<FieldDataSetBind>.FieldName).DisplayLabel := prpRtti.GetAttribute<FieldDataSetBind>.DisplayName;
-
             aDataSet.FieldByName(prpRtti.GetAttribute<FieldDataSetBind>.FieldName).DisplayWidth := Round((prpRtti.GetAttribute<FieldDataSetBind>.Width * aDBGrid.Width ) / 1000);
             aDataSet.FieldByName(prpRtti.GetAttribute<FieldDataSetBind>.FieldName).Alignment := prpRtti.GetAttribute<FieldDataSetBind>.Alignment;
             if prpRtti.GetAttribute<FieldDataSetBind>.EditMask <> '' then
@@ -218,7 +212,6 @@ begin
           end;
         end;
       end;
-
     except
       //
     end;
@@ -237,7 +230,6 @@ begin
       for i := 0 to Pred(aDBGrid.ColumnCount) do
         if aDBGrid.Columns[i].Visible then
           aDBGrid.Columns[i].Width := aDBGrid.Columns[i].Width + aAux2;
-
       if aDBGrid.EnabledScroll then
         aDBGrid.Columns[Pred(aDBGrid.ColumnCount)].Width := aDBGrid.Columns[Pred(aDBGrid.ColumnCount)].Width
       else
@@ -272,7 +264,6 @@ begin
   Result := Self;
   RttiUtils.ClearCache;
 end;
-
 function TBind4D.ClearFieldForm: iBind4D;
 var
   aComp : TComponent;
@@ -344,23 +335,18 @@ begin
     Result := Result + aType.This.GetJsonName(aAttr.Component) + ',';
   Result := Copy(Result, 1, Length(Result) -1);
 end;
-
-function TBind4D.HSD4Service: iHS4D;
+function TBind4D.HSD4Service: iHS4Bind;
 begin
   if not Assigned(FHSService) then
-    FHSService := THS4D.New;
-
+    FHSService := THS4Bind.New;
   Result := FHSService;
 end;
-
 class function TBind4D.New: iBind4D;
 begin
   if not Assigned(vBind4D) then
     vBind4D := Self.Create;
-
   Result := vBind4D;
 end;
-
 function TBind4D.QuickRegistration: TPageQuickRegistration;
 begin
   Result := PageQuickRegistration;
@@ -434,7 +420,6 @@ begin
       iBind.Attributes.Text(iBind.GetCaption).&End.ApplyText;
     end;
   end;
-
   for Attribute in RttiUtils.Get<Translation>(FForm) do
   begin
     TBind4DComponentFactory
@@ -484,8 +469,6 @@ begin
     end;
   end;
 
-
-
   for Attribute in RttiUtils.Get<ComponentBindStyle>(FForm) do
   begin
     TBind4DComponentFactory
@@ -507,14 +490,12 @@ begin
         .ApplyStyles;
   end;
 end;
-
 function TBind4D.SetZipCodeValue: iBind4D;
 var
   Attribute : ComponentZipCode;
   I: Integer;
   Component : TComponent;
   iBind : iBind4DComponent;
-
   lJson : TJsonObject;
   a : string;
 begin
@@ -524,7 +505,6 @@ begin
     if (TBind4DComponentFactory.New.Component(Attribute.Component).GetValueString = '') and
        (Attribute.ComponentZipCodeType = zcCEP) then
      exit;
-
     case Attribute.ComponentZipCodeType of
       zcCEP:
        begin
@@ -634,15 +614,12 @@ function TBind4D.StylesDefault: iBind4DComponentStyles;
 begin
   if not Assigned(FStylesDefault) then
     FStylesDefault := TBind4DComponentStyles.New(Self);
-
   Result := FStylesDefault;
 end;
-
 function TBind4D.Translator: iTranslator4D;
 begin
   Result := TTranslator4D.New;
 end;
-
 function TBind4D.ZipCode4B: iZC4B;
 begin
   if not Assigned(FZipCode4B) then

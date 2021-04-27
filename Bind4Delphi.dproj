@@ -75,7 +75,7 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
-        <DCC_UnitSearchPath>D:\Software\Lotus\PDV\modules\bind4d\src;D:\Software\Lotus\PDV\modules\bind4d;D:\Componentes\Madalozzo\ZipCode4Bind\scr;D:\Componentes\Madalozzo\ZipCode4Bind;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>D:\Software\Lotus\PDV\modules\bind4d\src;D:\Software\Lotus\PDV\modules\bind4d;D:\Componentes\Madalozzo\ZipCode4Bind;D:\Software\Lotus\PDV\modules\zipcode4Bind\scr;D:\Software\Lotus\PDV\modules\bind4d\modules\HStorage4Bind\trunk;D:\Software\Lotus\PDV\modules\bind4d\modules\HStorage4Bind\trunk\src;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
