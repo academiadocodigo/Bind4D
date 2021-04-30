@@ -85,6 +85,7 @@ type
       constructor Create; overload;
       property Query : String read FQuery write SetQuery;
   end;
+
   {$endregion}
 
   {$region 'Components Attributes'}
@@ -137,6 +138,7 @@ type
       property FontName : String read FFontName write SetFontName;
       property EspecialType : TEspecialType read FEspecialType write SetEspecialType;
   end;
+
   ComponentBindFormat = class(TCustomAttribute)
     private
     FEspecialType: TEspecialType;
@@ -146,6 +148,18 @@ type
       property EspecialType : TEspecialType read FEspecialType write SetEspecialType;
   end;
   {$endregion}
+
+  {$region 'Component ZipCode'}
+  ComponentZipCode = class(TCustomAttribute)
+  private
+    FzType: TTypeBindZipCode;
+    procedure SetzType(const Value: TTypeBindZipCode);
+  public
+    constructor Create(aZType: TTypeBindZipCode = zcNull);
+    property ComponentZipCodeType: TTypeBindZipCode read FzType write SetzType;
+  end;
+  {$endregion}
+
   {$region 'Json Attributes'}
   FieldJsonBind = class(TCustomAttribute)
   private
@@ -198,22 +212,24 @@ type
       property FieldIndex : Integer read FFieldIndex write SetFieldIndex;
     end;
   {$endregion}
-  
+
   {$region 'REST Attributes'}
   RestData = class(TCustomAttribute)
     private
-    FFieldValue: String;
-    FFieldKey: String;
-    FEndPoint: String;
-    FComponentName: string;
-    FOtherChange: Boolean;
-    FFieldBind: String;
-    procedure SetEndPoint(const Value: String);
-    procedure SetFieldKey(const Value: String);
-    procedure SetFieldValue(const Value: String);
-    procedure SetComponentName(const Value: string);
-    procedure SetOtherChange(const Value: Boolean);
-    procedure SetFieldBind(const Value: String);
+      FFieldValue: String;
+      FFieldKey: String;
+      FEndPoint: String;
+      FComponentName: string;
+      FOtherChange: Boolean;
+      FFieldBind: String;
+    FBaseURL: string;
+      procedure SetEndPoint(const Value: String);
+      procedure SetFieldKey(const Value: String);
+      procedure SetFieldValue(const Value: String);
+      procedure SetComponentName(const Value: string);
+      procedure SetOtherChange(const Value: Boolean);
+      procedure SetFieldBind(const Value: String);
+    procedure SetBaseURL(const Value: string);
     public
       constructor Create(aEndPoint, aFieldKey, aFieldValue : String); overload;
       constructor Create(aEndPoint, aFieldKey, aFieldValue : String; aComponentName : string; aFieldBind : String); overload;
@@ -221,10 +237,11 @@ type
       property FieldKey : String read FFieldKey write SetFieldKey;
       property FieldValue : String read FFieldValue write SetFieldValue;
       property FieldBind : String read FFieldBind write SetFieldBind;
+      property BaseURL : string read FBaseURL write SetBaseURL;
       property ComponentName : string read FComponentName write SetComponentName;
       property OtherChange : Boolean read FOtherChange write SetOtherChange;
   end;
-  
+
   RestQuickRegistration = class(TCustomAttribute)
     private
     FField: String;
@@ -240,6 +257,7 @@ type
       property Title : String read FTitle write SetTitle;
   end;
   {$endregion}
+
 implementation
 { fvNotNull }
 constructor fvNotNull.Create(aMsg : String; aErrorColor : TAlphaColor);
@@ -477,6 +495,12 @@ begin
   FFieldBind := aFieldBind;
   FOtherChange := True;
 end;
+
+procedure RestData.SetBaseURL(const Value: string);
+begin
+  FBaseURL := Value;
+end;
+
 procedure RestData.SetComponentName(const Value: string);
 begin
   FComponentName := Value;
@@ -538,6 +562,17 @@ end;
 procedure ComponentStylesDefault.SetDefaultStyle(const Value: String);
 begin
   FDefaultStyle := Value;
+end;
+
+{ ZipCode }
+constructor ComponentZipCode.Create(aZType: TTypeBindZipCode);
+begin
+  FzType:= aZType;
+end;
+
+procedure ComponentZipCode.SetzType(const Value: TTypeBindZipCode);
+begin
+  FzType := Value;
 end;
 
 end.

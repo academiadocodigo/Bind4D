@@ -8,7 +8,7 @@ uses
   {$ELSE}
     Vcl.ExtCtrls,
   {$ENDIF}
-  System.RTTI, Bind4D.Attributes;
+  System.RTTI, Bind4D.Attributes, System.JSON;
 type
   TNotifyEventWrapper = class(TComponent)
   private
@@ -43,6 +43,7 @@ type
       class procedure LoadDefaultResourceImage( aImage : TImage; aDefaultResource : String);
       class function SendImageHS4DStorage(var aImage : TImage; aAttr : HorseStorage) : string;
       class procedure GetImageHS4DStorage (aImage : TImage; aName : String);
+      class function GetZipCode4B(aZipCode: string): TJsonObject;
   end;
 implementation
 uses
@@ -444,6 +445,16 @@ begin
       .FromImage(aImage);
   end;
 end;
+class function TBind4DUtils.GetZipCode4B(aZipCode: string): TJsonObject;
+begin
+  result:=
+  TBind4D.New
+    .ZipCode4B
+      .GetZipCode
+        .ZipCode(aZipCode)
+      .ToJson;
+end;
+
 class procedure TBind4DUtils.LoadDefaultResourceImage(aImage: TImage;
   aDefaultResource: String);
 var
