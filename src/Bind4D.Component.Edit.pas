@@ -18,7 +18,7 @@ type
       FComponent : TEdit;
       FAttributes : iBind4DComponentAttributes;
       function onChangeAttribute : TBind4DComponentEdit;
-      function onExitAttribute : TBind4DComponentEdit;
+      //function onExitAttribute : TBind4DComponentEdit;
       function especialValidate : TBind4DComponentEdit;
       procedure TryValidations;
     public
@@ -294,17 +294,17 @@ begin
       end);
 end;
 
-function TBind4DComponentEdit.onExitAttribute: TBind4DComponentEdit;
-begin
-  Result := Self;
-  FComponent.OnExit :=
-  TBind4DUtils
-    .AnonProc2NotifyEvent(
-      FComponent,
-      procedure (Sender : TObject)
-      begin
-        TCommandMaster.New.Execute((Sender as TEdit));
-      end);
-end;
+//function TBind4DComponentEdit.onExitAttribute: TBind4DComponentEdit;
+//begin
+//  Result := Self;
+//  FComponent.OnExit :=
+//  TBind4DUtils
+//    .AnonProc2NotifyEvent(
+//      FComponent,
+//      procedure (Sender : TObject)
+//      begin
+//        TCommandMaster.New.Execute((Sender as TEdit));
+//      end);
+//end;
 
 end.
