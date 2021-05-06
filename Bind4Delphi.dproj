@@ -52,7 +52,7 @@
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <DCC_CBuilderOutput>All</DCC_CBuilderOutput>
         <SanitizedProjectName>Bind4Delphi</SanitizedProjectName>
-        <DCC_UnitSearchPath>modules\.dcp;modules\.dcu;modules;modules\aws4d\src;modules\dataset-serialize\src;modules\hstorage4d\src;modules\localcache4d\samples\LocalCache4D;modules\localcache4d\src;modules\restrequest4delphi\src;modules\translator4d\samples\GoogleTranslator;modules\translator4d\src;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>$(DCC_UnitSearchPath);modules\.dcp;modules\.dcu;modules;modules\HStorage4Bind\src;modules\aws4d\src;modules\dataset-serialize\src;modules\hstorage4d\src;modules\localcache4d\samples\LocalCache4D;modules\localcache4d\src;modules\restrequest4delphi\src;modules\translator4d\samples\GoogleTranslator;modules\translator4d\src</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
