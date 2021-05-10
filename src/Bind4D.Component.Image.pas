@@ -94,8 +94,6 @@ var
   Attribute : S3Storage;
   HorseAttribute : HorseStorage;
   AttImage : ImageAttribute;
-  lStream : TStringStream;
-  lImagem : TMemoryStream;
 begin
   Result := Self;
   try
@@ -174,8 +172,6 @@ function TBind4DComponentImage.GetValueString: String;
 var
   Attribute : S3Storage;
   HorseAttribute : HorseStorage;
-  lStream: TMemoryStream;
-  lImagem : TStringStream;
 begin
   try
     if RttiUtils.TryGet<HorseStorage>(FComponent, HorseAttribute) then

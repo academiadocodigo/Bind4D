@@ -408,7 +408,6 @@ function TBind4D.SetCaptionComponents : iBind4D;
 var
   Attribute : Translation;
   I: Integer;
-  Component : TComponent;
   iBind : iBind4DComponent;
 begin
   Result := Self;
@@ -493,13 +492,10 @@ end;
 function TBind4D.SetZipCodeValue: iBind4D;
 var
   Attribute : ComponentZipCode;
-  I: Integer;
-  Component : TComponent;
-  iBind : iBind4DComponent;
   lJson : TJsonObject;
-  a : string;
 begin
   Result := Self;
+  lJson := nil;
   for Attribute in RttiUtils.Get<ComponentZipCode>(FForm) do
   begin
     if (TBind4DComponentFactory.New.Component(Attribute.Component).GetValueString = '') and

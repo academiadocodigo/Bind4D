@@ -27,19 +27,21 @@ type
       FResquest : IRequest;
       FBaseURL : String;
       FDataSet : TFDMemTable;
+      FToken : String;
       FParam : TDictionary<string, string>;
     public
       constructor Create(aParent : iBind4D);
       destructor Destroy; override;
       class function New(aParent : iBind4D) : iBind4DRest;
-      function &End : iBind4D;
-      function BaseURL ( aValue : String ) : iBind4DRest;
+      function Accept ( aValue : String ) : iBind4DRest;
       function AddHeader ( aKey : String; aValue : String ) : iBind4DRest;
       function AddParam ( aKey : String; aValue : String ) : iBind4DRest;
-      function Accept ( aValue : String ) : iBind4DRest;
+      function BaseURL ( aValue : String ) : iBind4DRest;
+      function DataSet : TDataSet;
       function Get (aEndPoint : String = '') : iBind4DRest; overload;
       function Post (aEndPoint : String; aBody : TJsonObject)  : iBind4DRest;
-      function DataSet : TDataSet;
+      function Token ( aValue : String ) : iBind4DRest;
+      function &End : iBind4D;
   end;
 
 implementation
@@ -75,6 +77,7 @@ begin
   TRequest.New
   .BaseURL(aURL)
    .Accept('application/json')
+   .Token(FToken)
    .DataSetAdapter(FDataSet)
   .Get;
 
@@ -135,11 +138,19 @@ end;
 
 function TBind4DRest.Post(aEndPoint: String; aBody: TJsonObject): iBind4DRest;
 begin
-   TRequest.New
-  .BaseURL(FBaseURL + aEndPoint)
-   .Accept('application/json')
-   .AddBody(aBody.ToString)
+   TRequest
+   .New
+    .BaseURL(FBaseURL + aEndPoint)
+     .Accept('application/json')
+     .Token(FToken)
+     .AddBody(aBody.ToString)
   .Post;
+end;
+
+function TBind4DRest.Token(aValue: String): iBind4DRest;
+begin
+  Result := Self;
+  FToken := aValue;
 end;
 
 end.

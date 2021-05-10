@@ -54,13 +54,14 @@ type
   end;
   iBind4DRest = interface
     ['{DF7F5AF6-E03D-44A2-9358-CD4729741A30}']
+    function Accept ( aValue : String ) : iBind4DRest;
     function AddHeader ( aKey : String; aValue : String ) : iBind4DRest;
     function AddParam ( aKey : String; aValue : String ) : iBind4DRest;
-    function Accept ( aValue : String ) : iBind4DRest;
     function BaseURL ( aValue : String ) : iBind4DRest;
+    function DataSet : TDataSet;
     function Get (aEndPoint : String = '') : iBind4DRest; overload;
     function Post (aEndPoint : String; aBody : TJsonObject)  : iBind4DRest;
-    function DataSet : TDataSet;
+    function Token ( aValue : String ) : iBind4DRest;
     function &End : iBind4D;
   end;
 
