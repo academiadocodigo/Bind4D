@@ -49,6 +49,7 @@ uses
   Bind4D.Component.ComboBox,
   Bind4D.Component.SpeedButton,
   Bind4D.Component.Edit,
+  Bind4D.Component.Memo,
   Bind4D.Helpers, Bind4D.Component.Helpers, Bind4D.Component.Mock;
 
 { TBind4DComponentFactory }
@@ -72,6 +73,7 @@ begin
   if aValue.TryGet<TSpeedButton> then Result := aValue.Get<TSpeedButton>.asIBind4DComponent;
   if aValue.TryGet<TEdit> then Result := aValue.Get<TEdit>.asIBind4DComponent;
   if aValue.TryGet<TImage> then Result := aValue.Get<TImage>.asIBind4DComponent;
+  if aValue.TryGet<TMemo> then Result := aValue.Get<TMemo>.asIBind4DComponent;
   if not Assigned(Result) then Result := TBind4DComponentMock.New;
 
 end;

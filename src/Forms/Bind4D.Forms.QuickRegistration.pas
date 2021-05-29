@@ -129,8 +129,8 @@ var
 begin
   Result := Self;
   GetCursorPos(pt);
-  Self.Left := pt.x + 25;
-  Self.Top := pt.y - 85;
+  //Self.Left := pt.x + 25;
+  //Self.Top := pt.y - 85;
   ShowModal;
 end;
 

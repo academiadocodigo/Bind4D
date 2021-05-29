@@ -35,6 +35,7 @@ type
     function asIBind4DComponent : iBind4DComponent;
   end;
 
+
   TSpeedButtonHelper = class helper for TSpeedButton
   public
     function asIBind4DComponent : iBind4DComponent;
@@ -101,9 +102,15 @@ type
 
   {$ENDIF}
 
+  TMemoHelper = class helper for TMemo
+  public
+    function asIBind4DComponent : iBind4DComponent;
+  end;
+
 implementation
 
 uses
+  Bind4D.Utils.Rtti,
   Bind4D.Component.Edit,
   Bind4D.Component.SpeedButton,
   Bind4D.Component.ComboBox,
@@ -117,7 +124,7 @@ uses
   Bind4D.Component.ComboEdit,
   Bind4D.Component.Rectangle,
   Bind4D.Component.DateEdit,
-  Bind4D.Utils.Rtti,
+  Bind4D.Component.Memo,
   Bind4D.Component.Image;
 
 { TEditHelper }
@@ -223,6 +230,13 @@ end;
 function TImageHelper.asIBind4DComponent: iBind4DComponent;
 begin
   Result := TBind4DComponentImage.New(Self);
+end;
+
+{ TMemoHelper }
+
+function TMemoHelper.asIBind4DComponent: iBind4DComponent;
+begin
+  Result := TBind4DComponentMemo.New(Self);
 end;
 
 end.

@@ -36,11 +36,13 @@ begin
   FComponentList.Clear;
   FprpRttiList.Clear;
 end;
+
 constructor TBind4DUtilsRtti.Create;
 begin
   FComponentList := TDictionary<TCustomAttribute, TComponent>.Create;
   FprpRttiList := TDictionary<TComponent, TRttiField>.Create;
 end;
+
 destructor TBind4DUtilsRtti.Destroy;
 begin
   FprpRttiList.Free;
