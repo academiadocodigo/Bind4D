@@ -390,11 +390,13 @@ begin
 
   if aux <> '' then
   begin
+    aux := RightStr(aux,4);
+
     ValorInteiro := StrToInt(aux);
     ValorFloat := ValorInteiro / 100;
   end;
 
-  result :=  Format('%3.2f %%', [ValorFloat]);
+  result :=  Format('%3.2f', [ValorFloat]);
 end;
 
 class function TBind4DUtils.FormatStrJsonToDateTime(aValue: String): TDateTime;
