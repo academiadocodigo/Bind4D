@@ -12,7 +12,6 @@ object PageQuickRegistration: TPageQuickRegistration
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
-  Position = poScreenCenter
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
