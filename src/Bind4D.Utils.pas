@@ -35,6 +35,7 @@ type
       class function FormatDateTimeDataSet(aValue : String) : String;
       class function FormatTimeDataSet(aValue : String) : String;
       class function FormatarMoeda(valor: string): string;
+      class function FormataPercentual(valor: string): string;
       class function FormatarCelular(valor : string) : string;
       class function ApenasNumeros(valor : String) : String;
       class function SendImageS3Storage( var aImage : TImage; aAttr : S3Storage) : String;
@@ -62,11 +63,16 @@ class function TBind4DUtils.ApenasNumeros(valor: String): String;
 var
   i: Integer;
 begin
+
   for i := 0 to Length(valor) - 1 do
     if not CharInSet(valor[i], ['0' .. '9']) then
       delete(valor, i, 1);
+
   valor := StringReplace(valor, ' ', '', [rfReplaceAll]);
+  valor := StringReplace(valor, '%', '', [rfReplaceAll]);
+
   Result := valor;
+
 end;
 class function TBind4DUtils.ExtrairMoeda(aValue: String): String;
 begin
@@ -237,6 +243,7 @@ begin
   else
     Result := LeftStr(valor, Length(valor) - 2) + ',' + decimais;
   end;
+
 end;
 class function TBind4DUtils.FormatarPhone(valor: string): string;
 var
@@ -369,6 +376,29 @@ begin
   segundo := Copy(Result, 13, 2);
   Result := ano + '-' + mes + '-' + dia + ' ' + hora + ':' + minuto + ':' + segundo +'.000';
 end;
+class function TBind4DUtils.FormataPercentual(valor: string): string;
+var
+  aux: string;
+  i: Integer;
+  ValorInteiro : Integer;
+  ValorFloat : Double;
+begin
+  Result := EmptyStr;
+  aux := ApenasNumeros(Valor);
+  ValorFloat := 0.0;
+  ValorInteiro := 0;
+
+  if aux <> '' then
+  begin
+    aux := RightStr(aux,4);
+
+    ValorInteiro := StrToInt(aux);
+    ValorFloat := ValorInteiro / 100;
+  end;
+
+  result :=  Format('%3.2f', [ValorFloat]);
+end;
+
 class function TBind4DUtils.FormatStrJsonToDateTime(aValue: String): TDateTime;
 var
   i: Integer;

@@ -128,6 +128,9 @@ var
   aTeste: string;
 begin
   Result := Self;
+
+  ClearFieldForm;
+
   for Attribute in RttiUtils.Get<FieldDataSetBind>(FForm) do
   begin
     aTeste  := Attribute.FieldName;
@@ -268,8 +271,10 @@ function TBind4D.ClearFieldForm: iBind4D;
 var
   aComp : TComponent;
 begin
+
   for aComp in RttiUtils.GetComponents(FForm) do
     TBind4DComponentFactory.New.Component(aComp).Clear;
+
 end;
 constructor TBind4D.Create;
 begin
