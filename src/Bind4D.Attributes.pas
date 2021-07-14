@@ -200,7 +200,8 @@ type
     procedure SetFLimitWidth(const Value: Integer);
     procedure SetFieldIndex(const Value: Integer);
     public
-      constructor Create(aFieldName : String; aFdType : TFieldType; aVisible : Boolean = True; aWidth : Integer = 0; aDisplayName : String = ''; aEditMask : String = ''; aAlignment : TAlignment = taLeftJustify; aLimitWidth : Integer = 0; aFieldIndex : Integer = -1);
+      constructor Create(aFieldName : String; aFdType : TFieldType; aVisible : Boolean = True; aWidth : Integer = 0; aDisplayName : String = '';
+      aEditMask : String = ''; aAlignment : TAlignment = taLeftJustify; aLimitWidth : Integer = 0; aFieldIndex : Integer = -1);
       property FieldName : String read FFieldName write SetFieldName;
       property Width : Integer read FWidth write SetWidth;
       property DisplayName : String read FDisplayName write SetDisplayName;

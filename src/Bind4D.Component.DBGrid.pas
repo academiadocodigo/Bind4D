@@ -148,6 +148,7 @@ begin
   aField.Visible := aAttr.Visible;
   aField.DisplayWidth := Round((aAttr.Width * FComponent.Width ) / 1000);
   aField.Alignment := aAttr.Alignment;
+
   if aAttr.EditMask <> '' then
     case aAttr.FDType of
       ftString :

@@ -250,6 +250,18 @@ begin
                 (Sender as TEdit).SelStart := Length((Sender as TEdit).Text);
               end)
       end;
+      tePercent :
+      begin
+        TCommandMaster
+          .New
+            .Add(
+              FComponent,
+              procedure (Sender : TObject)
+              begin
+                (Sender as TEdit).Text := TBind4DUtils.FormataPercentual((Sender as TEdit).Text);
+                (Sender as TEdit).SelStart := Length((Sender as TEdit).Text);
+              end)
+      end;
       teNull : ;
     end;
   end;
