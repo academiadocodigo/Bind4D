@@ -136,7 +136,7 @@ begin
     aTeste  := Attribute.FieldName;
     TBind4DComponentFactory
       .New
-        .Component(Attribute.Component)
+        .Component(Attribute.Component(FForm))
           .Attributes
             .FieldType(Attribute.FDType)
             .ValueVariant(aDataSet.FieldByName(Attribute.FieldName).AsVariant)
@@ -324,7 +324,7 @@ begin
   Result := TJsonObject.Create;
   try
     for aAttr in RttiUtils.Get<FieldJsonBind>(FForm) do
-      aType.This.TryAddJsonPair(aAttr.Component, Result);
+      aType.This.TryAddJsonPair(aAttr.Component(FForm), Result);
   except on e : exception do
     begin
         if assigned(Result) then Result.Free;
@@ -337,7 +337,7 @@ var
   aAttr : FieldJsonBind;
 begin
   for aAttr in RttiUtils.Get<FieldJsonBind>(FForm) do
-    Result := Result + aType.This.GetJsonName(aAttr.Component) + ',';
+    Result := Result + aType.This.GetJsonName(aAttr.Component(FForm)) + ',';
   Result := Copy(Result, 1, Length(Result) -1);
 end;
 function TBind4D.HSD4Service: iHS4Bind;
@@ -365,7 +365,7 @@ begin
   begin
     TBind4DComponentFactory
       .New
-        .Component(Attribute.Component)
+        .Component(Attribute.Component(FForm))
           .Attributes
             .Width(Attribute.Width)
             .Heigth(Attribute.Heigth)
@@ -384,7 +384,7 @@ begin
   begin
     TBind4DComponentFactory
       .New
-        .Component(Attribute.Component)
+        .Component(Attribute.Component(FForm))
           .Attributes
             .Form(FForm)
             .EndPoint(Attribute.EndPoint)
@@ -399,7 +399,7 @@ begin
   begin
     TBind4DComponentFactory
       .New
-        .Component(Attr.Component)
+        .Component(Attr.Component(FForm))
           .Attributes
             .Form(FForm)
             .EndPoint(Attr.EndPoint)
@@ -428,7 +428,7 @@ begin
   begin
     TBind4DComponentFactory
       .New
-        .Component(Attribute.Component)
+        .Component(Attribute.Component(FForm))
           .Attributes
             .Text(Attribute.Query)
           .&End
@@ -477,7 +477,7 @@ begin
   begin
     TBind4DComponentFactory
       .New
-        .Component(Attribute.Component)
+        .Component(Attribute.Component(FForm))
           .Attributes
             .Color(Attribute.Color)
             .FontColor(Attribute.FontColor)
@@ -503,7 +503,7 @@ begin
   lJson := nil;
   for Attribute in RttiUtils.Get<ComponentZipCode>(FForm) do
   begin
-    if (TBind4DComponentFactory.New.Component(Attribute.Component).GetValueString = '') and
+    if (TBind4DComponentFactory.New.Component(Attribute.Component(FForm)).GetValueString = '') and
        (Attribute.ComponentZipCodeType = zcCEP) then
      exit;
     case Attribute.ComponentZipCodeType of
@@ -513,7 +513,7 @@ begin
                     .GetZipCode4B(
                       TBind4DComponentFactory
                        .New
-                        .Component(Attribute.Component)
+                        .Component(Attribute.Component(FForm))
                          .GetValueString);
        end;
       zcLogradouro:
@@ -522,7 +522,7 @@ begin
           begin
              TBind4DComponentFactory
               .New
-               .Component(Attribute.Component)
+               .Component(Attribute.Component(FForm))
                 .Attributes
                  .ValueVariant(lJson.GetValue<string>('logradouro'))
                 .&End
@@ -535,7 +535,7 @@ begin
           begin
              TBind4DComponentFactory
               .New
-               .Component(Attribute.Component)
+               .Component(Attribute.Component(FForm))
                 .Attributes
                  .ValueVariant(lJson.GetValue<string>('complemento'))
                 .&End
@@ -548,7 +548,7 @@ begin
           begin
              TBind4DComponentFactory
               .New
-               .Component(Attribute.Component)
+               .Component(Attribute.Component(FForm))
                 .Attributes
                  .ValueVariant(lJson.GetValue<string>('bairro'))
                 .&End
@@ -561,7 +561,7 @@ begin
           begin
              TBind4DComponentFactory
               .New
-               .Component(Attribute.Component)
+               .Component(Attribute.Component(FForm))
                 .Attributes
                  .ValueVariant(lJson.GetValue<string>('localidade'))
                 .&End
@@ -574,7 +574,7 @@ begin
           begin
              TBind4DComponentFactory
               .New
-               .Component(Attribute.Component)
+               .Component(Attribute.Component(FForm))
                 .Attributes
                  .ValueVariant(lJson.GetValue<string>('uf'))
                 .&End
@@ -587,7 +587,7 @@ begin
           begin
              TBind4DComponentFactory
               .New
-               .Component(Attribute.Component)
+               .Component(Attribute.Component(FForm))
                 .Attributes
                  .ValueVariant(lJson.GetValue<string>('ibge'))
                 .&End
@@ -600,7 +600,7 @@ begin
           begin
              TBind4DComponentFactory
               .New
-               .Component(Attribute.Component)
+               .Component(Attribute.Component(FForm))
                 .Attributes
                  .ValueVariant(lJson.GetValue<string>('ddd'))
                 .&End
@@ -638,7 +638,7 @@ begin
   begin
     TBind4DComponentFactory
       .New
-        .Component(Attribute.Component)
+        .Component(Attribute.Component(FForm))
         .Attributes
           .Form(FForm)
         .&End

@@ -175,7 +175,7 @@ begin
         TStringField(aField).EditMask := aAttr.EditMask;
     end;
 
-   if (RttiUtils.TryGet<Translation>(aAttr.Component, aAttranslation)) or
+   if (RttiUtils.TryGet<Translation>(aAttr.Component(Attributes.Form), aAttranslation)) or
       (Length(RttiUtils.GetAttClass<Translation>(Attributes.Form)) > 0)
    then
     aField.DisplayLabel :=
