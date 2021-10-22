@@ -4,7 +4,8 @@ uses
   System.Rtti,
   System.Classes,
   Bind4D.Component.Interfaces,
-  Bind4D.Component.Attributes;
+  Bind4D.Component.Attributes,
+  Vcl.Forms;
 
 type
 
@@ -28,7 +29,7 @@ type
 
   TComponentBindStyleHelper = class helper for TCustomAttribute
   public
-    function Component : TComponent; overload;
+    function Component(aform : TForm) : TComponent; overload;
   end;
 
 
@@ -80,9 +81,9 @@ end;
 
 { TComponentBindStyleHelper }
 
-function TComponentBindStyleHelper.Component: TComponent;
+function TComponentBindStyleHelper.Component(aForm: TForm) : TComponent;
 begin
-  Result := RttiUtils.GetComponent(Self);
+  Result := RttiUtils.GetComponent(aForm, Self);
 end;
 
 
