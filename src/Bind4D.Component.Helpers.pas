@@ -19,6 +19,7 @@ uses
     Vcl.DBGrids,
     Vcl.ComCtrls,
     Vcl.Buttons,
+    Vcl.CheckLst,
   {$ENDIF}
   System.Classes,
   Bind4D.Component.Interfaces;
@@ -100,9 +101,18 @@ type
     function asIBind4DComponent : iBind4DComponent;
   end;
 
+  TCheckListBoxHelper = class helper for TCheckListBox
+  public
+    function asIBind4DComponent : iBind4dComponent;
+  end;
   {$ENDIF}
 
   TMemoHelper = class helper for TMemo
+  public
+    function asIBind4DComponent : iBind4DComponent;
+  end;
+
+  TListBoxHelper = class helper for TListBox
   public
     function asIBind4DComponent : iBind4DComponent;
   end;
@@ -125,7 +135,9 @@ uses
   Bind4D.Component.Rectangle,
   Bind4D.Component.DateEdit,
   Bind4D.Component.Memo,
-  Bind4D.Component.Image;
+  Bind4D.Component.Image,
+  Bind4D.Component.ListBox,
+  Bind4D.Component.CheckListBox;
 
 { TEditHelper }
 
@@ -223,6 +235,13 @@ begin
   Result := TBind4DComponentMaskEdit.New(Self);
 end;
 
+{ TCheckListBoxHelper }
+
+function TCheckListBoxHelper.asIBind4DComponent: iBind4dComponent;
+begin
+  Result := TBind4DComponentCheckListBox.New(Self);
+end;
+
 {$ENDIF}
 
 { TImageHelper }
@@ -237,6 +256,13 @@ end;
 function TMemoHelper.asIBind4DComponent: iBind4DComponent;
 begin
   Result := TBind4DComponentMemo.New(Self);
+end;
+
+{ TListBoxHelper }
+
+function TListBoxHelper.asIBind4DComponent: iBind4DComponent;
+begin
+  Result := TBind4DComponentListBox.New(Self);
 end;
 
 end.

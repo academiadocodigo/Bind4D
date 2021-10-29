@@ -19,6 +19,7 @@ uses
     Vcl.DBGrids,
     Vcl.ComCtrls,
     Vcl.Buttons,
+    Vcl.CheckLst,
   {$ENDIF}
   Bind4D.Component.Interfaces,
   System.Classes;
@@ -50,7 +51,9 @@ uses
   Bind4D.Component.SpeedButton,
   Bind4D.Component.Edit,
   Bind4D.Component.Memo,
-  Bind4D.Helpers, Bind4D.Component.Helpers, Bind4D.Component.Mock;
+  Bind4D.Helpers,
+  Bind4D.Component.Helpers,
+  Bind4D.Component.Mock;
 
 { TBind4DComponentFactory }
 
@@ -64,6 +67,7 @@ begin
   if aValue.TryGet<TMaskEdit> then Result := aValue.Get<TMaskEdit>.asIBind4DComponent;
   if aValue.TryGet<TDBGrid> then Result := aValue.Get<TDBGrid>.asIBind4DComponent;
   if aValue.TryGet<TDateTimePicker> then Result := aValue.Get<TDateTimePicker>.asIBind4DComponent;
+  if aValue.TryGet<TCheckListBox> then Result := aValue.Get<TCheckListBox>.asIBind4DComponent;
   {$ENDIF}
   if aValue.TryGet<TPanel> then Result := aValue.Get<TPanel>.asIBind4DComponent;
   if aValue.TryGet<TLabel> then Result := aValue.Get<TLabel>.asIBind4DComponent;
@@ -74,6 +78,8 @@ begin
   if aValue.TryGet<TEdit> then Result := aValue.Get<TEdit>.asIBind4DComponent;
   if aValue.TryGet<TImage> then Result := aValue.Get<TImage>.asIBind4DComponent;
   if aValue.TryGet<TMemo> then Result := aValue.Get<TMemo>.asIBind4DComponent;
+  if aValue.TryGet<TListBox> then Result := aValue.Get<TListBox>.asIBind4DComponent;
+
   if not Assigned(Result) then Result := TBind4DComponentMock.New;
 
 end;

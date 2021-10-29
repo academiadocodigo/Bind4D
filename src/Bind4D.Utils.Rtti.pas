@@ -12,17 +12,21 @@ uses
 type
   TBind4DUtilsRtti = class
     private
-      FComponentList : TDictionary<TCustomAttribute, TComponent>;
-      FprpRttiList : TDictionary<TComponent, TRttiField>;
+      FComponentList : TDictionary<TForm, TDictionary<TCustomAttribute, TComponent>>;
+      FprpRttiList : TDictionary<TForm, TDictionary<TComponent, TRttiField>>;
     public
       constructor Create;
       destructor Destroy; override;
       function Get<T : TCustomAttribute>(aForm : TForm) : TArray<T>;
       function GetAttClass<T : TCustomAttribute>(aForm : TForm) : TArray<T>;
-      function GetComponent(aAttribute : TCustomAttribute) : TComponent;
+      function GetComponent(aForm: TForm; aAttribute : TCustomAttribute) : TComponent;
       function TryGet<T : TCustomAttribute>(aComponent : TComponent; out Attribute : T) : Boolean;
       function GetComponents(aForm : TForm) : TArray<TComponent>;
       function ClearCache : TBind4DUtilsRtti;
+      procedure CollectionNotifyEventComponent(Sender: TObject; const Item: TDictionary<TCustomAttribute, TComponent>;
+          Action: TCollectionNotification);
+      procedure CollectionNotifyEventPrpRtti(Sender: TObject; const Item: TDictionary<TComponent, TRttiField>;
+          Action: TCollectionNotification);
     end;
 var
   RttiUtils : TBind4DUtilsRtti;
@@ -37,15 +41,34 @@ begin
   FprpRttiList.Clear;
 end;
 
+procedure TBind4DUtilsRtti.CollectionNotifyEventComponent(Sender: TObject;
+  const Item: TDictionary<TCustomAttribute, TComponent>; Action: TCollectionNotification);
+begin
+  if Action = cnRemoved then
+    Item.Free;
+end;
+
+procedure TBind4DUtilsRtti.CollectionNotifyEventPrpRtti(Sender: TObject;
+  const Item: TDictionary<TComponent, TRttiField>;
+  Action: TCollectionNotification);
+begin
+  if Action = cnRemoved then
+    Item.Free;
+end;
+
 constructor TBind4DUtilsRtti.Create;
 begin
-  FComponentList := TDictionary<TCustomAttribute, TComponent>.Create;
-  FprpRttiList := TDictionary<TComponent, TRttiField>.Create;
+  FComponentList := TDictionary<TForm, TDictionary<TCustomAttribute, TComponent>>.Create;
+  FComponentList.OnValueNotify := CollectionNotifyEventComponent;
+  FprpRttiList := TDictionary<TForm, TDictionary<TComponent, TRttiField>>.Create;
+  FprpRttiList.OnValueNotify := CollectionNotifyEventPrpRtti;
 end;
 
 destructor TBind4DUtilsRtti.Destroy;
 begin
+  FprpRttiList.Clear;
   FprpRttiList.Free;
+  FComponentList.Clear;
   FComponentList.Free;
   inherited;
 end;
@@ -57,6 +80,8 @@ var
   vprpRtti : TRttiField;
   dec : Integer;
   aComponent : TComponent;
+  LprpRttiList : TDictionary<TComponent, TRttiField>;
+  LComponentList : TDictionary<TCustomAttribute, TComponent>;
 begin
   ctxRtti := TRttiContext.Create;
   dec := 0;
@@ -65,15 +90,25 @@ begin
     for prpRtti in typRtti.GetFields do
     begin
       aComponent := aForm.FindComponent(prpRtti.Name);
-      if not FprpRttiList.TryGetValue(aComponent, vprpRtti) then
-        FprpRttiList.Add(aComponent, prpRtti);
+      if not FprpRttiList.TryGetValue(aForm, LprpRttiList) then
+      begin
+        LprpRttiList := TDictionary<TComponent, TRttiField>.Create;
+        FprpRttiList.Add(aForm, LprpRttiList);
+      end;
+      if not LprpRttiList.TryGetValue(aComponent, vprpRtti) then
+        lprpRttiList.Add(aComponent, prpRtti);
       if prpRtti.Tem<T> then
       begin
         Inc(dec);
         SetLength(Result, dec);
         Result[dec-1] := prpRtti.GetAttribute<T>;
-        if not FComponentList.TryGetValue(Result[dec-1], aComponent) then
-          FComponentList.Add(Result[dec-1], aForm.FindComponent(prpRtti.Name));
+        if not FComponentList.TryGetValue(aForm, LComponentList) then
+        begin
+          LComponentList := TDictionary<TCustomAttribute, TComponent>.Create;
+          FComponentList.Add(aForm, LComponentList);
+        end;
+        if not LComponentList.TryGetValue(Result[dec-1], aComponent) then
+          LComponentList.Add(Result[dec-1], aForm.FindComponent(prpRtti.Name));
       end;
     end;
   finally
@@ -104,10 +139,13 @@ begin
     vCtxRtti.Free;
   end;
 end;
-function TBind4DUtilsRtti.GetComponent(
+function TBind4DUtilsRtti.GetComponent(aForm: TForm;
   aAttribute: TCustomAttribute): TComponent;
+var
+  LComponentList : TDictionary<TCustomAttribute, TComponent>;
 begin
-  FComponentList.TryGetValue(aAttribute, Result);
+  if FComponentList.TryGetValue(aForm, LComponentList) then
+    LComponentList.TryGetValue(aAttribute, Result);
 end;
 function TBind4DUtilsRtti.GetComponents(aForm: TForm): TArray<TComponent>;
 var
@@ -133,14 +171,18 @@ end;
 function TBind4DUtilsRtti.TryGet<T>(aComponent : TComponent; out Attribute : T) : Boolean;
 var
   prpRtti: TRttiField;
+  Lform : TForm;
+  LprpRttiList : TDictionary<TComponent, TRttiField>;
 begin
   Result := False;
-  if FprpRttiList.TryGetValue(aComponent, prpRtti) then
-    if prpRtti.Tem<T> then
-    begin
-      Attribute := prpRtti.GetAttribute<T>;
-      Result := not (Attribute = nil);
-    end;
+  LForm := aComponent.Owner as TForm;
+  if FprpRttiList.TryGetValue(LForm, LprpRttiList) then
+    if LprpRttiList.TryGetValue(aComponent, prpRtti) then
+      if prpRtti.Tem<T> then
+      begin
+        Attribute := prpRtti.GetAttribute<T>;
+        Result := not (Attribute = nil);
+      end;
 end;
 initialization
   RttiUtils := TBind4DUtilsRtti.Create;
