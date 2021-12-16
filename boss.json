@@ -7,10 +7,9 @@
 	"projects": [],
 	"dependencies": {
 		"https://github.com/bittencourtthulio/aws4d": "^1.0.7",
-		"https://github.com/bittencourtthulio/hstorage4d": "^1.0.1",
 		"https://github.com/bittencourtthulio/localcache4d": "^1.0.4",
 		"https://github.com/bittencourtthulio/translator4d": "^1.0.4",
-		"https://github.com/pmadalozzo/HStorage4Bind": "^1.0.1",
+		"https://github.com/juliocandrade/HStorage4Bind": "^1.0.1",
 		"https://github.com/pmadalozzo/zipcode4bind": "^1.0.1",
 		"https://github.com/viniciussanchez/dataset-serialize": "^v2.3.0",
 		"https://github.com/viniciussanchez/restrequest4delphi": "^v3.0.5"

@@ -26,14 +26,6 @@
 			"failed": false,
 			"changed": false
 		},
-		"https://github.com/bittencourtthulio/hstorage4d": {
-			"name": "hstorage4d",
-			"version": "1.0.2",
-			"hash": "3cf606bddab3b3f310daf0952e28dddd",
-			"artifacts": {},
-			"failed": false,
-			"changed": false
-		},
 		"https://github.com/bittencourtthulio/localcache4d": {
 			"name": "localcache4d",
 			"version": "1.0.4",
@@ -46,14 +38,6 @@
 			"name": "translator4d",
 			"version": "1.0.4",
 			"hash": "a952ed310e4f8770b0eef08a7b9c5967",
-			"artifacts": {},
-			"failed": false,
-			"changed": false
-		},
-		"https://github.com/pmadalozzo/hstorage4bind": {
-			"name": "HStorage4Bind",
-			"version": "1.0.1",
-			"hash": "6bf43044101a9b073f011960a385d8e7",
 			"artifacts": {},
 			"failed": false,
 			"changed": false
