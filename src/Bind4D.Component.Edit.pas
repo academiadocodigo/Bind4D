@@ -104,6 +104,8 @@ begin
   FComponent.Text := FAttributes.ValueVariant;
 end;
 function TBind4DComponentEdit.ApplyValue: iBind4DComponent;
+var
+  VariantD : Double;
 begin
   Result := Self;
   if VarIsNull(FAttributes.ValueVariant) then exit;
@@ -133,7 +135,8 @@ begin
       ftFloat,
       ftCurrency:
       begin
-        FComponent.Text := FloatToStr(FAttributes.ValueVariant);
+        VariantD := FAttributes.ValueVariant;
+        FComponent.Text := format('%n', [VariantD]);
       end;
     end;
 end;
