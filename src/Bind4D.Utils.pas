@@ -379,7 +379,6 @@ end;
 class function TBind4DUtils.FormataPercentual(valor: string): string;
 var
   aux: string;
-  i: Integer;
   ValorInteiro : Integer;
   ValorFloat : Double;
 begin

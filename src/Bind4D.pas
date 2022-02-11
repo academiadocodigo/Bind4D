@@ -269,11 +269,17 @@ begin
 end;
 function TBind4D.ClearFieldForm: iBind4D;
 var
-  aComp : TComponent;
+//  aComp : TComponent;
+  Attribute : FieldDataSetBind;
 begin
 
-  for aComp in RttiUtils.GetComponents(FForm) do
-    TBind4DComponentFactory.New.Component(aComp).Clear;
+  for Attribute in RttiUtils.Get<FieldDataSetBind>(FForm) do
+    TBind4DComponentFactory
+      .New
+        .Component(Attribute.Component(FForm)).Clear;
+
+//  for aComp in RttiUtils.GetComponents(FForm) do
+//    TBind4DComponentFactory.New.Component(aComp).Clear;
 
 end;
 constructor TBind4D.Create;
